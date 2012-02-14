@@ -1,0 +1,303 @@
+/* @group Aggregator */
+/* @end */
+
+/* @group Block */
+/* @end */
+
+/* @group Book */
+/* @end */
+
+/* @group Color */
+
+#placeholder {
+  left: 0;
+  right: auto;
+}
+
+/* Palette */
+.color-form .form-item {
+  padding-left: 0;
+  padding-right: 1em;
+}
+.color-form label {
+  float: right;
+  clear: right;
+}
+.color-form .form-text,
+.color-form .form-select {
+  float: right;
+}
+.color-form .form-text {
+  margin-right: 0;
+  margin-left: 5px;
+}
+#palette .hook {
+  float: right;
+}
+#palette .down,
+#palette .up,
+#palette .both {
+  background: url(images/hook-rtl.png) no-repeat 0 0;
+}
+#palette .up {
+  background-position: 0 -27px;
+}
+#palette .both {
+  background-position: 0 -54px;
+}
+#palette .lock {
+  float: right;
+  right: -10px;
+}
+.js #preview {
+  float: right;
+}
+
+/* @end */
+
+/* @group Dashboard */
+
+#dashboard div.dashboard-region {
+  float: right;
+}
+#dashboard #disabled-blocks .block, #dashboard .block-placeholder {
+  float: right;
+  margin: 3px 0 3px 3px;
+  padding: 6px 8px 6px 4px;
+}
+#dashboard .canvas-content a.button {
+  margin: 0 10px 0 0;
+}
+#dashboard .ui-sortable .block h2 {
+  background-position: right -39px;
+  padding: 0 19px;
+}
+#dashboard.customize-inactive #disabled-blocks .block:hover h2 {
+  background-position: right -39px;
+}
+#dashboard.customize-inactive .dashboard-region .ui-sortable .block:hover h2 {
+  background-position: right -36px;
+}
+#dashboard div#dashboard_main {
+  margin-left: 1%;
+  margin-right: 0;
+}
+
+/* @end */
+
+/* @group dblog */
+
+.form-item-type,
+.form-item-severity {
+  float: right;
+  padding-right: 0;
+  padding-left: .8em;
+}
+
+/* @end */
+
+/* @group field */
+/* @end */
+
+/* @group field_ui */
+
+/* 'Manage fields' overview */
+table.field-ui-overview tr.add-new .label-input {
+  float: right;
+}
+
+/* @end */
+
+/* @group file */
+/* @end */
+
+/* @group filter */
+/* @end */
+
+/* @group forum */
+/* @end */
+
+/* @group help */
+/* @end */
+
+/* @group image */
+/* @end */
+
+/* @group locale */
+/* @end */
+
+/* @group menu */
+/* @end */
+
+/* @group node */
+/* @end */
+
+/* @group openid */
+/* @end */
+
+/* @group overlay */
+
+html {
+  direction: rtl;
+}
+
+#overlay-title {
+  float: right;
+  left: auto;
+}
+#overlay {
+  padding: 0.2em;
+  padding-left: 26px;
+}
+#overlay-close-wrapper {
+  left: 0;
+  right: auto;
+}
+#overlay-close,
+#overlay-close:hover {
+  background: transparent url(images/close-rtl.png) no-repeat;
+  -moz-border-radius-topright: 0;
+  border-top-right-radius: 0;
+}
+
+/**
+ * Tabs on the overlay.
+ */
+#overlay-tabs {
+  left: 20px;
+  right: auto;
+}
+#overlay-tabs li {
+  margin: 0 -3px 0 0;
+}
+
+/* @end */
+
+/* @group simpletest */
+/* @end */
+
+/* @group statistics */
+/* @end */
+
+/* @group syslog */
+/* @end */
+
+/* @group system */
+
+/**
+ * Administration blocks.
+ */
+div.admin-panel .body {
+  padding: 0 8px 2px 4px;
+}
+div.admin .left {
+  float: right;
+  margin-left: 0;
+  margin-right: 1em;
+}
+div.admin .right {
+  float: left;
+  margin-left: 1em;
+  margin-right: 0;
+}
+div.admin .expert-link {
+  margin-right: 0;
+  margin-left: 1em;
+  padding-right: 0;
+  padding-left: 4px;
+  text-align: left;
+}
+
+/**
+ * Status report.
+ */
+table.system-status-report td.status-icon {
+  padding-left: 0;
+  padding-right: 6px;
+}
+table.system-status-report tr.merge-up td {
+  padding: 0 28px 8px 6px;
+}
+
+/**
+ * Appearance page.
+ */
+table.screenshot {
+  margin-left: 1em;
+}
+.system-themes-list-enabled .theme-selector .screenshot,
+.system-themes-list-enabled .theme-selector .no-screenshot {
+  float: right;
+  margin: 0 0 0 20px;
+}
+.system-themes-list-disabled .theme-selector {
+  float: right;
+  padding: 20px 0 20px 20px;
+}
+.theme-selector .operations li {
+  border-right: none;
+  border-left: 1px solid #cdcdcd;
+  float: right;
+}
+.theme-selector .operations li.last {
+  border-left: none;
+  padding: 0 0.7em 0 0;
+}
+.theme-selector .operations li.first {
+  padding: 0 0 0 0.7em;
+}
+
+/**
+ * Exposed filters.
+ */
+.exposed-filters .filters {
+  float: right;
+  margin-left: 1em;
+  margin-right: 0;
+}
+.exposed-filters .form-item label {
+  float: right;
+}
+/* Current filters */
+.exposed-filters .additional-filters {
+  float: right;
+  margin-left: 1em;
+  margin-right: 0;
+}
+
+/* @end */
+
+/* @group update */
+
+.update .project {
+  padding-right: .25em;
+}
+
+.update .version-status {
+  float: left;
+  padding-left: 10px;
+}
+
+.update .version-status .icon {
+  padding-right: .5em;
+}
+
+.update table.version .version-title {
+  padding-left: 1em;
+}
+
+.update table.version .version-details {
+  padding-left: .5em;
+  direction: ltr;
+}
+
+.update table.version .version-links {
+  text-align: left;
+  padding-left: 1em;
+}
+
+.update .check-manually {
+  padding-right: 1em;
+}
+
+/* @end */
