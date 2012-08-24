@@ -130,23 +130,38 @@ Drupal.TraySlider = function ($context, $toolbar, $tray, $toggle) {
  *
  */
 Drupal.TraySlider.prototype.init = function () {
-    this.collapse();
-    
-    this.$toggle
-    .on('click.drupal-toolbar', $.proxy(this, 'expand'));
+  this.state = 'closed';
+  this.collapse();
+  
+  this.$toggle
+  .on('click.drupal-toolbar', $.proxy(this, 'toggle'));
 };
 /**
  *
  */
-Drupal.TraySlider.prototype.expand = function (event) {
+Drupal.TraySlider.prototype.toggle = function (event) {
   event.preventDefault();
+  event.stopImmediatePropagation();
+  if (this.state === 'closed') {
+    this.expand();
+  }
+  else {
+    this.collapse();
+  }
+}
+/**
+ *
+ */
+Drupal.TraySlider.prototype.expand = function (event) {
   this.$tray.slideDown();
+  this.state = 'open';
 };
 /**
  *
  */
 Drupal.TraySlider.prototype.collapse = function () {
   this.$tray.slideUp();
+  this.state = 'closed';
 };
 
 })(jQuery);
