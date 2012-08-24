@@ -202,8 +202,14 @@ function toolbar_view() {
   $build['toolbar_tray_toggle'] = array(
     '#heading' => array('text' => t('Administrative tray toggle'), 'level' => 'h2', 'class' => 'element-invisible'),
     '#theme' => 'link',
-    '#path' => '#',
+    '#path' => 'admin',
     '#text' => t('Admin tray'),
+    '#options' => array(
+      'attributes' => array(
+        'class' => 'toolbar-toggle-tray',
+      ),
+    ),
+    
   );
 
   $build['toolbar_filter'] = array(
