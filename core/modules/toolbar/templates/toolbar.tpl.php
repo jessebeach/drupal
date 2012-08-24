@@ -24,11 +24,14 @@
     <?php print render($toolbar['toolbar_tray_toggle']); ?>
     <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
-    <?php print render($toolbar['toolbar_menu']); ?>
+    <?php //print render($toolbar['toolbar_menu']); ?>
     <?php if ($toolbar['toolbar_drawer']):?>
       <?php print render($toolbar['toolbar_toggle']); ?>
     <?php endif; ?>
   </div>
 
   <?php print render($toolbar['toolbar_drawer']); ?>
+  <div class="toolbar-tray">
+    <?php print render($toolbar['toolbar_menu']); ?>
+  </div>
 </nav>
