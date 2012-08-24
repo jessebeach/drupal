@@ -206,6 +206,20 @@ function toolbar_view() {
     '#text' => t('Admin tray'),
   );
 
+  $build['toolbar_filter'] = array(
+    '#type' => 'textfield',
+    '#value' => t('Search'),
+    '#attributes' => array(
+      'class' => array('filter')
+    ),
+  );
+
+  $build['toolbar_filter_button'] = array(
+    '#theme' => 'link',
+    '#path' => '#',
+    '#text' => t('Search'),
+  );
+
   $build['toolbar_menu'] = array(
     '#theme' => 'links__toolbar_menu',
     '#links' => $links,
