@@ -46,7 +46,7 @@ body.toolbar-drawer {
   display: none;
   visibility: hidden;
 }
-#toolbar a {
+#toolbar .toolbar-bar a {
   color: #fff;
   font-size: .846em;
   text-decoration: none;
@@ -126,4 +126,17 @@ body.toolbar-drawer {
 #toolbar div.toolbar-drawer {
   position: relative;
   padding: 0 10px;
+}
+
+/**
+ * Collapsed drawer of additional toolbar content.
+ */
+#toolbar .toolbar-tray {
+  padding: 20px;
+  background: #fff;
+}
+#toolbar .toolbar-tray a {
+  padding: 0 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
