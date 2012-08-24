@@ -36,7 +36,7 @@
   <div class="toolbar-tray">
     <div class="filter-search clearfix">
       <?php print render($toolbar['toolbar_filter']); ?>
-      <?php print render($toolbar['toolbar_filter_button']); ?>
+      <span class="close"><?php print t('x'); ?></span>
     </div>
     <div class="tray-menu clearfix">
       <?php print render($toolbar['toolbar_menu']); ?>
