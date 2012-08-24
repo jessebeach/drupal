@@ -55,7 +55,6 @@ body.toolbar-drawer {
 }
 #toolbar .toolbar-bar a {
   color: #fff;
-  margin: 0 10px 0 0;
 }
 #toolbar .toolbar-bar ul li,
 #toolbar .toolbar-bar ul li a {
@@ -141,8 +140,9 @@ body.toolbar-drawer {
 /**
  * Collapsed drawer of additional toolbar content.
  */
-a.toolbar-toggle-tray {
+#toolbar a.toolbar-toggle-tray {
   float: left;
+  padding: 0 10px;
 }
 #toolbar .toolbar-tray .filter-search {
   border: 1px solid #ccc;
