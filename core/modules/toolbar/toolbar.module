@@ -198,6 +198,14 @@ function toolbar_view() {
 
   // Retrieve the admin menu from the database.
   $links = toolbar_menu_navigation_links(toolbar_get_menu_tree());
+
+  $build['toolbar_tray_toggle'] = array(
+    '#heading' => array('text' => t('Administrative tray toggle'), 'level' => 'h2', 'class' => 'element-invisible'),
+    '#theme' => 'link',
+    '#path' => '#',
+    '#text' => t('Admin tray'),
+  );
+
   $build['toolbar_menu'] = array(
     '#theme' => 'links__toolbar_menu',
     '#links' => $links,

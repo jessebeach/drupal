@@ -21,6 +21,7 @@
 ?>
 <nav id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-menu clearfix">
+    <?php print render($toolbar['toolbar_tray_toggle']); ?>
     <?php print render($toolbar['toolbar_home']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
     <?php print render($toolbar['toolbar_menu']); ?>
