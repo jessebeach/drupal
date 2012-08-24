@@ -9,8 +9,11 @@ Drupal.toolbar = Drupal.toolbar || {};
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
-    var $toolbar = $('#toolbar').once('toolbar');
-    if ($toolbar.length) {
+    var $context = $(context);
+    // Set the initial state of the toolbar.
+    $context.find('#toolbar').once('toolbar', function (index, element) {
+      $(this).data('drupalToolbar', new Drupal.ToolBar(this));
+    });
 
       // Set the initial state of the toolbar.
       Drupal.toolbar.init();
@@ -28,33 +31,36 @@ Drupal.behaviors.toolbar = {
   }
 };
 
+Drupal.ToolBar = function (context) {
+  this.init.apply(this, arguments);
+};
 /**
  * Retrieve last saved cookie settings and set up the initial toolbar state.
  */
-Drupal.toolbar.init = function() {
+Drupal.ToolBar.prototype.init = function (toolbar) {
   // Retrieve the collapsed status from a stored cookie.
   var collapsed = $.cookie('Drupal.toolbar.collapsed');
 
   // Expand or collapse the toolbar based on the cookie value.
   if (collapsed === '1') {
-    Drupal.toolbar.collapse();
+    this.collapse();
   }
   else {
-    Drupal.toolbar.expand();
+    this.expand();
   }
+  
 };
-
 /**
  * Collapse the toolbar.
  */
-Drupal.toolbar.collapse = function() {
+Drupal.ToolBar.prototype.collapse = function() {
   var toggle_text = Drupal.t('Show shortcuts');
   $('#toolbar div.toolbar-drawer').addClass('collapsed');
   $('#toolbar a.toggle')
     .removeClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').removeClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
+  $('body').removeClass('toolbar-drawer').css('paddingTop', this.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     1,
@@ -71,14 +77,14 @@ Drupal.toolbar.collapse = function() {
 /**
  * Expand the toolbar.
  */
-Drupal.toolbar.expand = function() {
+Drupal.ToolBar.prototype.expand = function() {
   var toggle_text = Drupal.t('Hide shortcuts');
   $('#toolbar div.toolbar-drawer').removeClass('collapsed');
   $('#toolbar a.toggle')
     .addClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', Drupal.toolbar.height());
+  $('body').addClass('toolbar-drawer').css('paddingTop', this.height());
   $.cookie(
     'Drupal.toolbar.collapsed',
     0,
@@ -95,21 +101,25 @@ Drupal.toolbar.expand = function() {
 /**
  * Toggle the toolbar.
  */
-Drupal.toolbar.toggle = function() {
+Drupal.ToolBar.prototype.toggle = function() {
   if ($('#toolbar div.toolbar-drawer').hasClass('collapsed')) {
-    Drupal.toolbar.expand();
+    this.expand();
   }
   else {
-    Drupal.toolbar.collapse();
+    this.collapse();
   }
 };
 
-Drupal.toolbar.height = function() {
-  // @TODO this needs to be cached outside this function.
+Drupal.ToolBar.prototype.height = function() {
   var $toolbar = $('#toolbar');
   var height = $toolbar.outerHeight();
   $toolbar.attr('data-offset-top', height);
   return height;
 };
-
+/**
+ *
+ */
+Drupal.TraySlider = function (context) {
+  
+};
 })(jQuery);
