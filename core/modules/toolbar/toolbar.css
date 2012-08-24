@@ -144,14 +144,23 @@ body.toolbar-drawer {
   border-bottom: 1px solid #ccc;
   display: block;
 }
+#toolbar .toolbar-tray ul
 #toolbar .toolbar-tray ul li.last {
   border-bottom: 0 none;
 }
-#toolbar .toolbar-tray a {
+#toolbar .tray-menu a {
   color: #000;
   display: block;
   padding: 10px;
 }
-#toolbar .toolbar-tray a:hover {
+#toolbar .tray-menu a:hover {
   background-color: #fafafa;
+}
+#toolbar .toolbar-tray .filter {
+  padding: 9px;
+  border: 1px solid #ccc;
+  width: 10em;
+  margin: 10px;
+  float: left;
+  font-size: 1em;
 }
