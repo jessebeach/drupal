@@ -15,13 +15,13 @@ Drupal.behaviors.toolbar = {
     var $toggle = $toolbar.find('.toolbar-toggle-tray');
     // Set the initial state of the toolbar.
     $bar.once('toolbar-bar', function (index, element) {
-      var $this = $(this);
-      $this.data('drupalToolbar', new Drupal.ToolBar($this));
+      var $toolbar = $(this);
+      $toolbar.data('drupalToolbar', new Drupal.ToolBar($toolbar));
     });
     // Instantiate the toolbar tray.
     $tray.once('toolbar-slider', function (index, element) {
-      var $this = $(this);
-      $this.data('drupalToolbar', new Drupal.TraySlider($this, $toggle));
+      var $tray = $(this);
+      $tray.data('drupalToolbar', new Drupal.TraySlider($tray, $toggle));
     });
   }
 };
@@ -43,9 +43,11 @@ Drupal.ToolBar.prototype.init = function() {
     'closed': Drupal.t('Show shortcuts')
   };
   // Set up the toolbar drawer visibility toggle.
-  this.$toolbar
-  .find('a.toggle')
+  this.$toggle = this.$toolbar.find('a.toggle');
+  this.$toggle
   .on('click', $.proxy(this, 'toggle'));
+  // Store the shortcut bar drawer HTML element.
+  this.$drawer = this.$toolbar.find('.toolbar-drawer');
   // Retrieve the collapsed status from a stored cookie.
   this.collapsed = $.cookie('Drupal.toolbar.collapsed');
   // Expand or collapse the toolbar based on the cookie value.
@@ -55,35 +57,22 @@ Drupal.ToolBar.prototype.init = function() {
   else {
     this.expand();
   }
-  // Set the height
-  this.setHeight();
 };
 /**
  * Collapse the toolbar.
  */
 Drupal.ToolBar.prototype.collapse = function() {
   var toggle_text = this.labels.closed;
-  $('.toolbar-drawer', this.$toolbar).addClass('collapsed');
-  $('a.toggle', this.$toolbar)
+  this.$drawer.addClass('collapsed');
+  this.$toggle
   .removeClass('toggle-active')
   .attr('title',  toggle_text)
   .html(toggle_text);
-  //
+  // Remove the class from the body that would indicate the drawer is open.
   $('body')
-  .removeClass('toolbar-drawer')
-  .css('paddingTop', this.setHeight());
-  //
-  $.cookie(
-    'Drupal.toolbar.collapsed',
-    1,
-    {
-      path: Drupal.settings.basePath,
-      // The cookie should "never" expire.
-      expires: 36500
-    }
-  );
-  Drupal.toolbar.height();
-  $(document).trigger('offsettopchange');
+  .removeClass('toolbar-drawer');
+  // Set the height of the toolbar.
+  this.setHeight();
 };
 
 /**
@@ -91,41 +80,50 @@ Drupal.ToolBar.prototype.collapse = function() {
  */
 Drupal.ToolBar.prototype.expand = function() {
   var toggle_text = this.labels.opened;
-  $('#toolbar div.toolbar-drawer').removeClass('collapsed');
-  $('#toolbar a.toggle')
-    .addClass('toggle-active')
-    .attr('title',  toggle_text)
-    .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', this.setHeight());
+  this.$drawer.removeClass('collapsed');
+  this.$toggle
+  .addClass('toggle-active')
+  .attr('title',  toggle_text)
+  .html(toggle_text);
+  // Add a class to the body to indicate the drawer is open.
+  $('body').addClass('toolbar-drawer');
+  // Set the height of the toolbar.
+  this.setHeight();
+};
+
+/**
+ * Toggle the toolbar.
+ */
+Drupal.ToolBar.prototype.toggle = function(event) {
+  event.preventDefault();
+  if (this.collapsed === '1') {
+    this.expand();
+    this.collapsed = '0';
+  }
+  else {
+    this.collapse();
+    this.collapsed = '1';
+  }
+  // Store the drawer state in a cookie.
   $.cookie(
     'Drupal.toolbar.collapsed',
-    0,
+    this.collapsed,
     {
       path: Drupal.settings.basePath,
       // The cookie should "never" expire.
       expires: 36500
     }
   );
-  Drupal.toolbar.height();
-  $(document).trigger('offsettopchange');
-};
-
-/**
- * Toggle the toolbar.
- */
-Drupal.ToolBar.prototype.toggle = function() {
-  if ($('#toolbar div.toolbar-drawer').hasClass('collapsed')) {
-    this.expand();
-  }
-  else {
-    this.collapse();
-  }
 };
 
 Drupal.ToolBar.prototype.setHeight = function() {
   this.height = this.$toolbar.outerHeight();
   this.$toolbar.attr('data-offset-top', this.height);
-  return this.height;
+  // Alter the padding on the top of the body element.
+  // @todo, this should be moved to drupal.js and register for
+  // the offsettopchange event.
+  $('body').css('paddingTop', this.height);
+  $(document).trigger('offsettopchange');
 };
 /**
  *
