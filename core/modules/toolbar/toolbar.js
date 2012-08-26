@@ -45,7 +45,7 @@ Drupal.ToolBar.prototype.init = function() {
   // Set up the toolbar drawer visibility toggle.
   this.$toggle = this.$toolbar.find('a.toggle');
   this.$toggle
-  .on('click', $.proxy(this, 'toggle'));
+  .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
   // Store the shortcut bar drawer HTML element.
   this.$drawer = this.$toolbar.find('.toolbar-drawer');
   // Retrieve the collapsed status from a stored cookie.
@@ -144,7 +144,14 @@ Drupal.TraySlider.prototype.init = function () {
   this.collapse();
   
   this.$toggle
-  .on('click.drupal-toolbar', $.proxy(this, 'toggle'));
+  .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
+  // Register for offsettopchange events.
+  $(document)
+  .on({
+    // Offset value vas changed by a third party script.
+    'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
+  });
+  this.displace();
 };
 /**
  *
@@ -172,6 +179,26 @@ Drupal.TraySlider.prototype.expand = function (event) {
 Drupal.TraySlider.prototype.collapse = function () {
   this.$tray.slideUp();
   this.state = 'closed';
+};
+/**
+ *
+ */
+Drupal.TraySlider.prototype.displace = function (event) {
+  this.$tray.css('top', this.computeOffsetTop());
+};
+/**
+ * Sum all [data-offset-top] values and cache it.
+ * @todo move this out of tableheader.js into a move generic place like drupal.js.
+ */
+Drupal.TraySlider.prototype.computeOffsetTop = function () {
+  var $offsets = $('[data-offset-top]');
+  var value, sum = 0;
+  for (var i = 0, il = $offsets.length; i < il; i++) {
+    value = parseInt($offsets[i].getAttribute('data-offset-top'), 10);
+    sum += !isNaN(value) ? value : 0;
+  }
+  this.offsetTop = sum;
+  return sum;
 };
 
 })(jQuery);
