@@ -9,57 +9,70 @@ Drupal.toolbar = Drupal.toolbar || {};
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
-    var $context = $(context);
+    var $toolbar = $(context).find('#toolbar');
+    var $bar = $toolbar.find('.toolbar-bar');
+    var $tray = $toolbar.find('.toolbar-tray');
+    var $toggle = $toolbar.find('.toolbar-toggle-tray');
     // Set the initial state of the toolbar.
-    $context.find('#toolbar').once('toolbar', function (index, element) {
-      $(this).data('drupalToolbar', new Drupal.ToolBar($context, $(this)));
+    $bar.once('toolbar-bar', function (index, element) {
+      var $this = $(this);
+      $this.data('drupalToolbar', new Drupal.ToolBar($this));
     });
     // Instantiate the toolbar tray.
-    var $tray = $('.toolbar-tray');
-    var $toggle = $('.toolbar-toggle-tray');
-    $context.find('#toolbar').once('toolbar-slider', function (index, element) {
-      $(this).data('drupalToolbar', new Drupal.TraySlider($context, $(this), $tray, $toggle));
-    });
-    // Toggling toolbar drawer.
-    $context.find('#toolbar a.toggle').once('toolbar-toggle').click(function(e) {
-      Drupal.toolbar.toggle();
-      // Allow resize event handlers to recalculate sizes/positions.
-      $(window).triggerHandler('resize');
-      return false;
+    $tray.once('toolbar-slider', function (index, element) {
+      var $this = $(this);
+      $this.data('drupalToolbar', new Drupal.TraySlider($this, $toggle));
     });
   }
 };
 
-Drupal.ToolBar = function ($context, $toolbar) {
+Drupal.ToolBar = function ($toolbar) {
+  this.$toolbar = $toolbar;
+  this.labels;
+  this.collapsed;
+  // Init the object.
   this.init.apply(this, arguments);
 };
 /**
- * Retrieve last saved cookie settings and set up the initial toolbar state.
+ *
  */
-Drupal.ToolBar.prototype.init = function ($context, $toolbar) {
+Drupal.ToolBar.prototype.init = function() {
+  // Labels
+  this.labels = {
+    'opened': Drupal.t('Hide shortcuts'),
+    'closed': Drupal.t('Show shortcuts')
+  };
+  // Set up the toolbar drawer visibility toggle.
+  this.$toolbar
+  .find('a.toggle')
+  .on('click', $.proxy(this, 'toggle'));
   // Retrieve the collapsed status from a stored cookie.
-  var collapsed = $.cookie('Drupal.toolbar.collapsed');
-
+  this.collapsed = $.cookie('Drupal.toolbar.collapsed');
   // Expand or collapse the toolbar based on the cookie value.
-  if (collapsed === '1') {
+  if (this.collapsed === '1') {
     this.collapse();
   }
   else {
     this.expand();
   }
-  
+  // Set the height
+  this.setHeight();
 };
 /**
  * Collapse the toolbar.
  */
 Drupal.ToolBar.prototype.collapse = function() {
-  var toggle_text = Drupal.t('Show shortcuts');
-  $('#toolbar div.toolbar-drawer').addClass('collapsed');
-  $('#toolbar a.toggle')
-    .removeClass('toggle-active')
-    .attr('title',  toggle_text)
-    .html(toggle_text);
-  $('body').removeClass('toolbar-drawer').css('paddingTop', this.height());
+  var toggle_text = this.labels.closed;
+  $('.toolbar-drawer', this.$toolbar).addClass('collapsed');
+  $('a.toggle', this.$toolbar)
+  .removeClass('toggle-active')
+  .attr('title',  toggle_text)
+  .html(toggle_text);
+  //
+  $('body')
+  .removeClass('toolbar-drawer')
+  .css('paddingTop', this.setHeight());
+  //
   $.cookie(
     'Drupal.toolbar.collapsed',
     1,
@@ -77,13 +90,13 @@ Drupal.ToolBar.prototype.collapse = function() {
  * Expand the toolbar.
  */
 Drupal.ToolBar.prototype.expand = function() {
-  var toggle_text = Drupal.t('Hide shortcuts');
+  var toggle_text = this.labels.opened;
   $('#toolbar div.toolbar-drawer').removeClass('collapsed');
   $('#toolbar a.toggle')
     .addClass('toggle-active')
     .attr('title',  toggle_text)
     .html(toggle_text);
-  $('body').addClass('toolbar-drawer').css('paddingTop', this.height());
+  $('body').addClass('toolbar-drawer').css('paddingTop', this.setHeight());
   $.cookie(
     'Drupal.toolbar.collapsed',
     0,
@@ -109,21 +122,20 @@ Drupal.ToolBar.prototype.toggle = function() {
   }
 };
 
-Drupal.ToolBar.prototype.height = function() {
-  var $toolbar = $('#toolbar');
-  var height = $toolbar.outerHeight();
-  $toolbar.attr('data-offset-top', height);
-  return height;
+Drupal.ToolBar.prototype.setHeight = function() {
+  this.height = this.$toolbar.outerHeight();
+  this.$toolbar.attr('data-offset-top', this.height);
+  return this.height;
 };
 /**
  *
  */
-Drupal.TraySlider = function ($context, $toolbar, $tray, $toggle) {
-  this.$context = $context;
-  this.$toolbar = $toolbar;
+Drupal.TraySlider = function ($tray, $toggle) {
   this.$tray = $tray;
   this.$toggle = $toggle;
-  
+  this.state;
+  this.width;
+  // Init the object.
   this.init.apply(this, arguments);
 };
 /**

@@ -31,8 +31,11 @@ body.toolbar-drawer {
  */
 #toolbar {
   background-color: #fff;
-  color: #ccc;
   font: normal small "Lucida Grande", Verdana, sans-serif;
+}
+#toolbar .toolbar-bar {
+  background: #666;
+  color: #ccc;
   left: 0;
   margin: 0 -20px;
   padding: 0 20px;
@@ -42,8 +45,12 @@ body.toolbar-drawer {
   box-shadow: 0 3px 20px #000;
   z-index: 600;
 }
-#toolbar .toolbar-bar {
-  background: #666;
+#toolbar .toolbar-tray {
+  background-color: #ffffff;
+  left: 0;
+  position: absolute;
+  top: 0;
+  z-index: 600;
 }
 #toolbar div.collapsed {
   display: none;
