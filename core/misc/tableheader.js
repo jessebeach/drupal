@@ -130,6 +130,7 @@ $.extend(TableHeader, {
 
   /**
    * Sum all [data-offset-top] values and cache it.
+   * @todo move this out of tableheader.js into a move generic place like drupal.js.
    */
   computeOffsetTop: function () {
     var $offsets = $('[data-offset-top]');
