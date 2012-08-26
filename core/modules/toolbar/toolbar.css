@@ -47,7 +47,15 @@ body.toolbar-drawer {
 }
 #toolbar .toolbar-tray {
   background-color: #ffffff;
+  bottom: 0;
+  -moz-box-shadow: -10px 0 10px -10px black inset;
+  -webkit-box-shadow: -10px 0 10px -10px black inset;
+  box-shadow: -10px 0 10px -10px black inset;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   left: 0;
+  padding-right: 10px;
   position: absolute;
   top: 0;
   z-index: 600;
