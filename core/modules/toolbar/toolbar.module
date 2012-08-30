@@ -115,10 +115,10 @@ function _toolbar_is_collapsed() {
 /**
  * Implements hook_page_build().
  *
- * Add admin toolbar to the page_bottom region automatically.
+ * Add admin toolbar to the page_top region automatically.
  */
 function toolbar_page_build(&$page) {
-  $page['page_bottom']['toolbar'] = array(
+  $page['page_top']['toolbar'] = array(
     '#pre_render' => array('toolbar_pre_render'),
     '#access' => user_access('access toolbar'),
     'toolbar_drawer' => array(),
@@ -144,7 +144,7 @@ function toolbar_pre_render($toolbar) {
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
 function toolbar_preprocess_html(&$vars) {
-  if (isset($vars['page']['page_bottom']['toolbar']) && user_access('access toolbar')) {
+  if (isset($vars['page']['page_top']['toolbar']) && user_access('access toolbar')) {
     $vars['attributes']['class'][] = 'toolbar';
     if (!_toolbar_is_collapsed()) {
       $vars['attributes']['class'][] = 'toolbar-drawer';
@@ -165,7 +165,7 @@ function toolbar_preprocess_toolbar(&$variables) {
 /**
  * Implements hook_system_info_alter().
  *
- * Indicate that the 'page_bottom' region (in which the toolbar will be displayed)
+ * Indicate that the 'page_top' region (in which the toolbar will be displayed)
  * is an overlay supplemental region that should be refreshed whenever its
  * content is updated.
  *
@@ -174,7 +174,7 @@ function toolbar_preprocess_toolbar(&$variables) {
  */
 function toolbar_system_info_alter(&$info, $file, $type) {
   if ($type == 'theme') {
-    $info['overlay_supplemental_regions'][] = 'page_bottom';
+    $info['overlay_supplemental_regions'][] = 'page_top';
   }
 }
 
@@ -203,20 +203,6 @@ function toolbar_view() {
 
   // Retrieve the admin menu from the database.
   $links = toolbar_menu_navigation_links(toolbar_get_menu_tree());
-
-  $build['toolbar_tray_toggle'] = array(
-    '#heading' => array('text' => t('Administrative tray toggle'), 'level' => 'h2', 'class' => 'element-invisible'),
-    '#theme' => 'link',
-    '#path' => 'admin',
-    '#text' => t('Admin tray'),
-    '#options' => array(
-      'attributes' => array(
-        'class' => 'toolbar-toggle-tray',
-      ),
-      'html' => FALSE,
-    ),
-    
-  );
 
   $build['toolbar_filter'] = array(
     '#type' => 'textfield',
@@ -265,29 +251,38 @@ function toolbar_view() {
   $build['toolbar_user'] = array(
     '#theme' => 'links__toolbar_user',
     '#links' => $links,
-    '#attributes' => array('id' => 'toolbar-user'),
+    '#attributes' => array(
+      'id' => 'toolbar-user',
+      'class' => array('menu'),
+    ),
   );
 
   // Add a "home" link.
   $link = array(
     'home' => array(
-      'title' => '<span class="home-link">Home</span>',
+      'title' => 'Home',
       'href' => '<front>',
-      'html' => TRUE,
-      'attributes' => array('title' => t('Home')),
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Home'),
+        'class' => array('button', 'home-link'),
+      ),
     ),
   );
   $build['toolbar_home'] = array(
     '#theme' => 'links',
     '#links' => $link,
-    '#attributes' => array('id' => 'toolbar-home'),
+    '#attributes' => array(
+      'id' => 'toolbar-home',
+      'class' => array('menu'),
+    ),
   );
 
   // Add an anchor to be able to toggle the visibility of the drawer.
   $build['toolbar_toggle'] = array(
     '#theme' => 'toolbar_toggle',
     '#collapsed' => _toolbar_is_collapsed(),
-    '#attributes' => array('class' => array('toggle')),
+    '#attributes' => array('class' => array('button', 'toggle', 'toggle-drawer',)),
   );
 
   // Prepare the drawer links CSS classes.
@@ -300,6 +295,20 @@ function toolbar_view() {
   }
   $build['toolbar_drawer']['#type'] = 'container';
   $build['toolbar_drawer']['#attributes']['class'] = $toolbar_drawer_classes;
+  
+  // Append the admin tray toggle.
+  $build['toolbar_tray_toggle'] = array(
+    '#heading' => array('text' => t('Administrative tray toggle'), 'level' => 'h2', 'class' => 'element-invisible'),
+    '#theme' => 'link',
+    '#path' => 'admin',
+    '#text' => t('Admin tray'),
+    '#options' => array(
+      'attributes' => array(
+        'class' => array('button', 'toggle', 'toggle-tray'),
+      ),
+      'html' => FALSE,
+    ),
+  );
 
   return $build;
 }

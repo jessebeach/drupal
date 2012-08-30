@@ -22,10 +22,9 @@
 <nav id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-bar">
     <div class="toolbar-menu clearfix">
-      <?php print render($toolbar['toolbar_tray_toggle']); ?>
       <?php print render($toolbar['toolbar_home']); ?>
       <?php print render($toolbar['toolbar_user']); ?>
-      <?php //print render($toolbar['toolbar_menu']); ?>
+      <?php print render($toolbar['toolbar_tray_toggle']); ?>
       <?php if ($toolbar['toolbar_drawer']):?>
         <?php print render($toolbar['toolbar_toggle']); ?>
       <?php endif; ?>

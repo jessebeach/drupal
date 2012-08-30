@@ -7,30 +7,6 @@
 /**
  * Toolbar.
  */
-.toolbar #edit-shortcuts {
-  line-height: 24px;
-  padding: 5px 10px;
-}
-#edit-shortcuts:focus,
-#edit-shortcuts:hover,
-#edit-shortcuts.active {
-  text-decoration: underline;
-}
-#shortcut-toolbar ul {
-  line-height: 24px;
-  margin-left: 5px; /* LTR */
-  padding: 5px 0;
-}
-#shortcut-toolbar a {
-  border-radius: 5px;
-  margin-right: 5px; /* LTR */
-  padding: 0 5px;
-}
-#shortcut-toolbar a:focus,
-#shortcut-toolbar a:hover,
-#shortcut-toolbar a.active:focus {
-  background: #555;
-}
 #shortcut-toolbar a.active:hover,
 #shortcut-toolbar a.active {
   background-color: #000;

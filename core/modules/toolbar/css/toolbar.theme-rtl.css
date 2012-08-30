@@ -1,0 +1,13 @@
+#toolbar .toolbar-menu {
+  padding-left: 60px;
+  padding-right: 50px;
+}
+#toolbar .toolbar-menu .toggle-drawer {
+  left: 20px;
+  right: auto;
+}
+
+#toolbar .toolbar-bar .menu li + li {
+  margin-left: auto;
+  margin-right: 1em;
+}
