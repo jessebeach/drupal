@@ -37,9 +37,7 @@ body.toolbar-drawer {
   background: #666;
   color: #ccc;
   left: 0;
-  margin: 0 -20px;
-  padding: 0 20px;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
   box-shadow: 0 3px 20px #000;
@@ -60,7 +58,7 @@ body.toolbar-drawer {
   top: 0;
   z-index: 600;
 }
-#toolbar div.collapsed {
+#toolbar .collapsed {
   display: none;
   visibility: hidden;
 }
@@ -75,9 +73,16 @@ body.toolbar-drawer {
 #toolbar .toolbar-bar ul li a {
   float: left; /* LTR */
 }
-#toolbar .toolbar-tray ul li,
-#toolbar .toolbar-tray ul li a {
 
+/**
+ *
+ */
+@media screen and (min-width: 48em) {
+  #toolbar .toolbar-bar {
+    margin: 0 -20px;
+    padding: 0 20px;
+    position: fixed;
+  }  
 }
 
 /**
