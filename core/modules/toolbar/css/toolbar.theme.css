@@ -12,14 +12,12 @@
 }
 #toolbar .toolbar-bar {
   background: #666666;
+  border-bottom: 1px solid black;
   color: #cccccc;
-  box-shadow: 0 3px 20px black;
 }
 #toolbar .toolbar-tray {
   background-color: white;
-  -moz-box-shadow: -10px 0 10px -10px black inset;
-  -webkit-box-shadow: -10px 0 10px -10px black inset;
-  box-shadow: -10px 0 10px -10px black inset;
+  border-right: 1px solid black;
   padding-right: 10px;
 }
 
@@ -38,7 +36,7 @@
 }
 #toolbar .toolbar-menu {
   padding-left: 50px;
-  padding-right: 60px; /* LTR */
+  padding-right: 20px; /* LTR */
 }
 #toolbar .toolbar-menu {
   background-color: #292929;
