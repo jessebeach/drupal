@@ -183,7 +183,7 @@ Drupal.TraySlider.prototype.expand = function (event) {
     'left': 0
   });
   $('body').animate({
-    'padding-left': this.width
+    'margin-left': this.width
   });
   this.state = 'open';
 };
@@ -195,7 +195,7 @@ Drupal.TraySlider.prototype.collapse = function () {
     'left': this.width * -1
   });
   $('body').animate({
-    'padding-left': 0
+    'margin-left': 0
   });
   this.state = 'closed';
 };
