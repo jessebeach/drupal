@@ -115,10 +115,10 @@ function _toolbar_is_collapsed() {
 /**
  * Implements hook_page_build().
  *
- * Add admin toolbar to the page_top region automatically.
+ * Add admin toolbar to the page_bottom region automatically.
  */
 function toolbar_page_build(&$page) {
-  $page['page_top']['toolbar'] = array(
+  $page['page_bottom']['toolbar'] = array(
     '#pre_render' => array('toolbar_pre_render'),
     '#access' => user_access('access toolbar'),
     'toolbar_drawer' => array(),
@@ -144,7 +144,7 @@ function toolbar_pre_render($toolbar) {
  * Add some page classes, so global page theming can adjust to the toolbar.
  */
 function toolbar_preprocess_html(&$vars) {
-  if (isset($vars['page']['page_top']['toolbar']) && user_access('access toolbar')) {
+  if (isset($vars['page']['page_bottom']['toolbar']) && user_access('access toolbar')) {
     $vars['attributes']['class'][] = 'toolbar';
     if (!_toolbar_is_collapsed()) {
       $vars['attributes']['class'][] = 'toolbar-drawer';
@@ -165,7 +165,7 @@ function toolbar_preprocess_toolbar(&$variables) {
 /**
  * Implements hook_system_info_alter().
  *
- * Indicate that the 'page_top' region (in which the toolbar will be displayed)
+ * Indicate that the 'page_bottom' region (in which the toolbar will be displayed)
  * is an overlay supplemental region that should be refreshed whenever its
  * content is updated.
  *
@@ -174,7 +174,7 @@ function toolbar_preprocess_toolbar(&$variables) {
  */
 function toolbar_system_info_alter(&$info, $file, $type) {
   if ($type == 'theme') {
-    $info['overlay_supplemental_regions'][] = 'page_top';
+    $info['overlay_supplemental_regions'][] = 'page_bottom';
   }
 }
 
