@@ -11,9 +11,6 @@
   float: none;
   zoom: 1;
 }
-#toolbar div.toolbar-menu {
-  padding: 5px 50px 5px 50px;
-}
 #toolbar-user {
   float: left;
 }

@@ -12,7 +12,7 @@ Drupal.behaviors.toolbar = {
     var $toolbar = $(context).find('#toolbar');
     var $bar = $toolbar.find('.toolbar-bar');
     var $tray = $toolbar.find('.toolbar-tray');
-    var $toggle = $toolbar.find('.toolbar-toggle-tray');
+    var $toggle = $toolbar.find('.toggle-tray');
     // Set the initial state of the toolbar.
     $bar.once('toolbar-bar', function (index, element) {
       var $toolbar = $(this);
@@ -43,7 +43,7 @@ Drupal.ToolBar.prototype.init = function() {
     'closed': Drupal.t('Show shortcuts')
   };
   // Set up the toolbar drawer visibility toggle.
-  this.$toggle = this.$toolbar.find('a.toggle');
+  this.$toggle = this.$toolbar.find('.toggle-drawer');
   this.$toggle
   .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
   // Store the shortcut bar drawer HTML element.
@@ -65,7 +65,7 @@ Drupal.ToolBar.prototype.collapse = function() {
   var toggle_text = this.labels.closed;
   this.$drawer.addClass('collapsed');
   this.$toggle
-  .removeClass('toggle-active')
+  .removeClass('active')
   .attr('title',  toggle_text)
   .html(toggle_text);
   // Remove the class from the body that would indicate the drawer is open.
@@ -82,7 +82,7 @@ Drupal.ToolBar.prototype.expand = function() {
   var toggle_text = this.labels.opened;
   this.$drawer.removeClass('collapsed');
   this.$toggle
-  .addClass('toggle-active')
+  .addClass('active')
   .attr('title',  toggle_text)
   .html(toggle_text);
   // Add a class to the body to indicate the drawer is open.
@@ -183,7 +183,7 @@ Drupal.TraySlider.prototype.expand = function (event) {
     'left': 0
   });
   $('body').animate({
-    'margin-left': this.width
+    'padding-left': this.width
   });
   this.state = 'open';
 };
@@ -195,7 +195,7 @@ Drupal.TraySlider.prototype.collapse = function () {
     'left': this.width * -1
   });
   $('body').animate({
-    'margin-left': 0
+    'padding-left': 0
   });
   this.state = 'closed';
 };

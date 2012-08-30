@@ -1,20 +1,21 @@
-
-body.toolbar {
-  padding-top: 2.2em;
-}
-body.toolbar-drawer {
-  padding-top: 5.3em;
-}
-
 /**
+ * @file toolbar.admin.css
+ *
+ *
  * Aggressive resets so we can achieve a consistent look in hostile CSS
  * environments.
  */
+body.toolbar {
+  width: 100%;
+}
 #toolbar,
 #toolbar * {
   border: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   font-size: 100%;
-  line-height: inherit;
+  line-height: 1;
   list-style: none;
   margin: 0;
   outline: 0;
@@ -24,36 +25,18 @@ body.toolbar-drawer {
 }
 
 /**
- * Base styles.
- *
- * We use a keyword for the toolbar font size to make it display consistently
- * across different themes, while still allowing browsers to resize the text.
+ * Administration menu.
  */
-#toolbar {
-  background-color: #fff;
-  font: normal small "Lucida Grande", Verdana, sans-serif;
-}
 #toolbar .toolbar-bar {
-  background: #666;
-  color: #ccc;
   left: 0;
   position: absolute;
   right: 0;
   top: 0;
-  box-shadow: 0 3px 20px #000;
   z-index: 600;
 }
 #toolbar .toolbar-tray {
-  background-color: #ffffff;
   bottom: 0;
-  -moz-box-shadow: -10px 0 10px -10px black inset;
-  -webkit-box-shadow: -10px 0 10px -10px black inset;
-  box-shadow: -10px 0 10px -10px black inset;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
   left: 0;
-  padding-right: 10px;
   position: absolute;
   top: 0;
   z-index: 600;
@@ -62,91 +45,36 @@ body.toolbar-drawer {
   display: none;
   visibility: hidden;
 }
-#toolbar a {
-  font-size: .846em;
-  text-decoration: none;
-}
-#toolbar .toolbar-bar a {
-  color: #fff;
-}
-#toolbar .toolbar-bar ul li,
-#toolbar .toolbar-bar ul li a {
-  float: left; /* LTR */
-}
-
-/**
- *
- */
-@media screen and (min-width: 48em) {
-  #toolbar .toolbar-bar {
-    margin: 0 -20px;
-    padding: 0 20px;
-    position: fixed;
-  }  
-}
-
-/**
- * Administration menu.
- */
 #toolbar .toolbar-menu {
-  background: #000;
-  line-height: 20px;
-  padding: 5px 50px 5px 10px; /* LTR */
   position: relative;
 }
-#toolbar-home a span {
-  background: url(toolbar.png) no-repeat 0 -45px;
-  display: block;
-  height: 14px;
-  margin: 3px 0px;
-  text-indent: -9999px;
-  vertical-align: text-bottom;
-  width: 11px;
+#toolbar .toolbar-bar li {
+  float: left; /* LTR */
 }
 #toolbar-user {
   float: right; /* LTR */
 }
-.toolbar-bar #toolbar-menu {
+#toolbar-home {
   float: left; /* LTR */
 }
-#toolbar .toolbar-menu a.toggle {
-  background: url(toolbar.png) 0 -20px no-repeat;
-  bottom: 0;
-  cursor: pointer;
-  height: 25px;
-  overflow: hidden;
-  position: absolute;
-  right: 10px; /* LTR */
-  text-indent: -9999px;
-  width: 25px;
+#toolbar .toolbar-bar li a {
+  display: inline-block;
+  line-height: 2.1818em; /* ~24px */
 }
-#toolbar div.toolbar-menu a.toggle:focus,
-#toolbar div.toolbar-menu a.toggle:hover {
-  background-position:  -50px -20px;
-}
-#toolbar div.toolbar-menu a.toggle-active {
-  background-position:  -25px -20px;
-}
-#toolbar div.toolbar-menu a.toggle-active.toggle:focus,
-#toolbar div.toolbar-menu a.toggle-active.toggle:hover {
-  background-position:  -75px -20px;
-}
-#toolbar div.toolbar-menu ul li a {
-  padding: 0 10px;
-  border-radius: 10px;
-}
-#toolbar div.toolbar-menu ul li a:focus,
-#toolbar div.toolbar-menu ul li a:hover,
-#toolbar div.toolbar-menu ul li a:active,
-#toolbar div.toolbar-menu ul li a.active:focus {
-  background: #444;
-}
-#toolbar div.toolbar-menu ul li a.active:hover,
-#toolbar div.toolbar-menu ul li a.active:active,
-#toolbar div.toolbar-menu ul li a.active,
-#toolbar div.toolbar-menu ul li.active-trail a {
-  background: url(toolbar.png) 0 0 repeat-x;
-  text-shadow: #333 0 1px 0;
+
+/**
+ * Wide screens.
+ */
+@media screen and (min-width: 48em) {
+  body.toolbar {
+    padding-top: 2.2em;
+  }
+  body.toolbar-drawer {
+    padding-top: 5.3em;
+  }
+  #toolbar .toolbar-bar {
+    position: fixed;
+  }
 }
 
 /**
@@ -154,7 +82,6 @@ body.toolbar-drawer {
  */
 #toolbar .toolbar-drawer {
   position: relative;
-  padding: 0 10px;
 }
 
 /**
@@ -162,56 +89,25 @@ body.toolbar-drawer {
  */
 #toolbar a.toolbar-toggle-tray {
   float: left;
-  padding: 0 10px;
-}
-#toolbar .toolbar-tray .filter-search {
-  border: 1px solid #ccc;
-  margin: 10px;
 }
 #toolbar .toolbar-tray ul li {
-  border-bottom: 1px solid #ccc;
   display: block;
-}
-#toolbar .toolbar-tray ul
-#toolbar .toolbar-tray ul li.last {
-  border-bottom: 0 none;
 }
 #toolbar .tray-menu {
   clear: both;
 }
 #toolbar .tray-menu a {
-  color: #000;
   display: block;
-  padding: 10px;
 }
 #toolbar .tray-menu a:hover {
   background-color: #fafafa;
 }
 #toolbar .toolbar-tray .filter {
-  color: #ccc;
   float: left;
-  font-size: 1em;
-  padding: 4px;
-  width: 10em;
 }
 #toolbar .toolbar-tray .form-item {
   float: left;
 }
 #toolbar .toolbar-tray span.close {
   float: left;
-  margin: 3px 4px 0 0;
-}
-#toolbar .toolbar-tray .filter-search a {
-  background-image: url("toolbar.png");
-  border-color: #E4E4E4 #D2D2D2 #B4B4B4;
-  border-radius: 10px;
-  color: #fff;
-  cursor: pointer;
-  display: block;
-  float: left;
-  height: 16px;
-  margin: 13px 0 0;
-  -moz-border-radius: 10px;
-  overflow: hidden;
-  padding: 2px 10px;
 }
