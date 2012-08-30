@@ -191,8 +191,8 @@ function toolbar_view() {
     '#theme' => 'toolbar',
     '#attached'=> array(
       'css' => array(
-        $module_path . '/toolbar.admin.css',
-        $module_path . '/toolbar.theme.css',
+        $module_path . '/css/toolbar.admin.css',
+        $module_path . '/css/toolbar.theme.css',
       ),
       'library' => array(
         array('system', 'jquery.cookie'),
