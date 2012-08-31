@@ -93,9 +93,9 @@
 #toolbar .toolbar-tray {
   background-color: white;
   border-right: 1px solid black;
-  padding-left: 0.75em;
-  padding-right: 0.75em;
-  padding-top: 1em;
+}
+#toolbar .toolbar-tray > .lining {
+  padding: 1em 0.75em;
 }
 #toolbar .toolbar-tray > * + * {
   margin-top: 1em;

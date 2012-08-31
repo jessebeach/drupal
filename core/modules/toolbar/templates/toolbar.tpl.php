@@ -27,8 +27,10 @@
   </div>
 
   <div class="toolbar-tray">
-    <?php print render($toolbar['toolbar_filter']); ?>
-    <?php print render($toolbar['toolbar_drawer']); ?>
-    <?php print render($toolbar['toolbar_menu']); ?>
+    <div class="lining">
+      <?php print render($toolbar['toolbar_filter']); ?>
+      <?php print render($toolbar['toolbar_drawer']); ?>
+      <?php print render($toolbar['toolbar_menu']); ?>
+    </div>
   </div>
 </nav>
