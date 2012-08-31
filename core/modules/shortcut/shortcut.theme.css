@@ -5,21 +5,6 @@
  */
 
 /**
- * Toolbar.
- */
-#shortcut-toolbar a.active:hover,
-#shortcut-toolbar a.active {
-  background-color: #000;
-}
-#shortcut-toolbar .icon {
-  background-color: #444;
-  border-radius: 5px;
-  height: 30px;
-  margin-right: 5px; /* LTR */
-  width: 30px;
-}
-
-/**
  * Add/remove links.
  */
 .add-or-remove-shortcuts .icon {
@@ -40,16 +25,4 @@
 .remove-shortcut a:focus .icon,
 .remove-shortcut a:hover .icon {
   background-position: -12px -12px; /* LTR */
-}
-.add-or-remove-shortcuts .text {
-  padding: 0 6px 0 10px; /* LTR */
-}
-.add-or-remove-shortcuts a:focus .text,
-.add-or-remove-shortcuts a:hover .text {
-  background-color: #5f605b;
-  border-radius: 0 5px 5px 0; /* LTR */
-  color: #fff;
-  cursor: pointer;
-  font-size: 10px;
-  line-height: 12px;
 }
