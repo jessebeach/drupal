@@ -28,7 +28,11 @@ body.toolbar {
  * Administration menu.
  */
 #toolbar .toolbar-bar {
-  position: relative;
+  left: 0;
+  min-height: 2.2em;
+  position: absolute;
+  right: 0;
+  top: 0;
   z-index: 600;
 }
 #toolbar .toolbar-bar li {
@@ -70,11 +74,6 @@ body.toolbar {
     padding-top: 2.2em;
   }
   #toolbar .toolbar-bar {
-    left: 0;
-    min-height: 2.2em;
     position: fixed;
-    right: 0;
-    top: 0;
-    z-index: 600;
   }
 }
