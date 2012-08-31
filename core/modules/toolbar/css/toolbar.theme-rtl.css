@@ -1,8 +1,7 @@
-#toolbar .toolbar-menu {
-  padding-left: 20px;
-  padding-right: 50px;
+#toolbar .toolbar-bar {
+  padding: 0.3333em 20px 0.3333em 50px; /* LTR */
 }
-#toolbar .toolbar-menu .toggle-drawer {
+#toolbar .toolbar-bar .toggle-drawer {
   left: 20px;
   right: auto;
 }

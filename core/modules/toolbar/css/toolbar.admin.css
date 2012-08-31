@@ -28,28 +28,15 @@ body.toolbar {
  * Administration menu.
  */
 #toolbar .toolbar-bar {
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 600;
-}
-#toolbar .toolbar-tray {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  top: 0;
-  z-index: 600;
-}
-#toolbar .collapsed {
-  display: none;
-  visibility: hidden;
-}
-#toolbar .toolbar-menu {
   position: relative;
+  z-index: 600;
 }
 #toolbar .toolbar-bar li {
   float: left; /* LTR */
+}
+#toolbar .toolbar-bar li a {
+  display: inline-block;
+  line-height: 2.1818em; /* ~24px */
 }
 #toolbar-user {
   float: right; /* LTR */
@@ -57,9 +44,22 @@ body.toolbar {
 #toolbar-home {
   float: left; /* LTR */
 }
-#toolbar .toolbar-bar li a {
-  display: inline-block;
-  line-height: 2.1818em; /* ~24px */
+/**
+ * Toolbar tray. 
+ */
+#toolbar .toolbar-tray {
+  bottom: 0;
+  left: 0; /* LTR */
+  position: absolute;
+  top: 0;
+  z-index: 600;
+}
+#toolbar .toolbar-tray li a {
+  display: block;
+}
+/* This style seems to belong neither in toolbar nor in shortcut. */
+#toolbar .toolbar-tray #shortcut-toolbar + a {
+  margin-top: 0.3333em;
 }
 
 /**
@@ -69,45 +69,12 @@ body.toolbar {
   body.toolbar {
     padding-top: 2.2em;
   }
-  body.toolbar-drawer {
-    padding-top: 5.3em;
-  }
   #toolbar .toolbar-bar {
+    left: 0;
+    min-height: 2.2em;
     position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 600;
   }
-}
-
-/**
- * Collapsed drawer of shortcut toolbar content.
- */
-#toolbar .toolbar-drawer {
-  position: relative;
-}
-
-/**
- * Collapsed drawer of additional toolbar content.
- */
-#toolbar a.toolbar-toggle-tray {
-  float: left;
-}
-#toolbar .toolbar-tray ul li {
-  display: block;
-}
-#toolbar .tray-menu {
-  clear: both;
-}
-#toolbar .tray-menu a {
-  display: block;
-}
-#toolbar .tray-menu a:hover {
-  background-color: #fafafa;
-}
-#toolbar .toolbar-tray .filter {
-  float: left;
-}
-#toolbar .toolbar-tray .form-item {
-  float: left;
-}
-#toolbar .toolbar-tray span.close {
-  float: left;
 }
