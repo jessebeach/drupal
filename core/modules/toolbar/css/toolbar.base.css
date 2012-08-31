@@ -54,11 +54,13 @@ body.toolbar {
 #toolbar .toolbar-tray {
   bottom: 0;
   left: 0; /* LTR */
-  max-height: 100%;
-  overflow: scroll;
   position: absolute;
   top: 0;
   z-index: 600;
+}
+#toolbar .toolbar-tray > .lining {
+  max-height: 100%;
+  overflow: scroll;
 }
 #toolbar .toolbar-tray li a {
   display: block;
