@@ -190,12 +190,7 @@ function toolbar_view() {
   $build = array(
     '#theme' => 'toolbar',
     '#attached'=> array(
-      'css' => array(
-        $module_path . '/css/toolbar.base.css',
-        $module_path . '/css/toolbar.theme.css',
-      ),
       'library' => array(
-        array('system', 'jquery.cookie'),
         array('toolbar', 'drupal.toolbar'),
       ),
     ),
@@ -405,10 +400,11 @@ function toolbar_library_info() {
     'title' => 'Toolbar',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'toolbar') . '/toolbar.js' => array(),
+      drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'toolbar') . '/toolbar.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.base.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.theme.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
