@@ -10,12 +10,6 @@
 #edit-shortcuts {
   float: right; /* LTR */
 }
-#shortcut-toolbar ul {
-  float: left; /* LTR */
-}
-#shortcut-toolbar .icon {
-  float: left; /* LTR */
-}
 
 /**
  * Add/remove links.
