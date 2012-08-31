@@ -205,23 +205,20 @@ function toolbar_view() {
   $links = toolbar_menu_navigation_links(toolbar_get_menu_tree());
 
   $build['toolbar_filter'] = array(
-    '#type' => 'textfield',
-    '#value' => t('Search'),
+    '#type' => 'search',
     '#attributes' => array(
-      'class' => array('filter')
+      'class' => array('filter'),
+      'placeholder' => t('Search'),
     ),
-  );
-
-  $build['toolbar_filter_button'] = array(
-    '#theme' => 'link',
-    '#path' => '#',
-    '#text' => t('Search'),
   );
 
   $build['toolbar_menu'] = array(
     '#theme' => 'links__toolbar_menu',
     '#links' => $links,
-    '#attributes' => array('id' => 'toolbar-menu'),
+    '#attributes' => array(
+      'id' => 'toolbar-menu',
+      'class' => array('tray-menu', 'clearfix',),
+    ),
     '#heading' => array('text' => t('Administrative toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 

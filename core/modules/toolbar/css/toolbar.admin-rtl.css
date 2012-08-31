@@ -14,7 +14,7 @@
 #toolbar-user {
   float: left;
 }
-#toolbar ul#toolbar-user li {
+#toolbar #toolbar-user li {
   float: none;
   display: inline;
 }
@@ -23,12 +23,4 @@
 }
 #toolbar-home {
   float: right;
-}
-#toolbar ul li.home a {
-  position: absolute;
-  right: 10px;
-}
-#toolbar div.toolbar-menu a.toggle {
-  left: 10px;
-  right: auto;
 }
