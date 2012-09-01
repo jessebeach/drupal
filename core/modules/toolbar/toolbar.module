@@ -386,6 +386,7 @@ function toolbar_library_info() {
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
+      array('system', 'jquery.flexipanda'),
     ),
   );
 

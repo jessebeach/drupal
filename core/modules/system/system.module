@@ -1884,6 +1884,22 @@ function system_library_info() {
     ),
   );
 
+  // Flexible menus.
+  $libraries['jquery.flexipanda'] = array(
+    'title' => 'FlexiPanda responsive menus',
+    'website' => 'http://jessebeach.github.com/flexiPanda/',
+    'version' => '1.0.0', // Shipped with jQuery UI.
+    'js' => array(
+      'core/misc/ui/menus/flexipanda/jquery.flexipanda.js' => array(),
+    ),
+    'css' => array(
+      'core/misc/ui/menus/flexipanda/css/jquery.flexipanda.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+    ),
+  );
+
   $libraries['drupal.tableselect'] = array(
     'title' => 'Tableselect',
     'version' => VERSION,
