@@ -30,7 +30,10 @@
     <div class="lining">
       <?php print render($toolbar['toolbar_filter']); ?>
       <?php print render($toolbar['toolbar_drawer']); ?>
-      <?php print render($toolbar['toolbar_menu']); ?>
+      <nav class="toolbar-menu">
+        <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
+        <?php print render($toolbar['toolbar_menu']); ?>
+      </nav>
     </div>
   </div>
 </nav>

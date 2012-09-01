@@ -197,7 +197,10 @@ function toolbar_view() {
   );
 
   // Retrieve the admin menu from the database.
-  $links = toolbar_menu_navigation_links(toolbar_get_menu_tree());
+  $tree = toolbar_get_menu_tree();
+  // Add attributes to the links before rendering.
+  toolbar_menu_navigation_links($tree);
+  $build['toolbar_menu'] = menu_tree_output($tree);
 
   $build['toolbar_filter'] = array(
     '#type' => 'search',
@@ -205,16 +208,6 @@ function toolbar_view() {
       'class' => array('filter'),
       'placeholder' => t('Search'),
     ),
-  );
-
-  $build['toolbar_menu'] = array(
-    '#theme' => 'links__toolbar_menu',
-    '#links' => $links,
-    '#attributes' => array(
-      'id' => 'toolbar-menu',
-      'class' => array('tray-menu', 'clearfix',),
-    ),
-    '#heading' => array('text' => t('Administrative toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
   // Add logout & user account links or login link.
@@ -315,14 +308,13 @@ function toolbar_get_menu_tree() {
   $tree = array();
   $admin_link = db_query('SELECT * FROM {menu_links} WHERE menu_name = :menu_name AND module = :module AND link_path = :path', array(':menu_name' => 'management', ':module' => 'system', ':path' => 'admin'))->fetchAssoc();
   if ($admin_link) {
-    $tree = menu_build_tree('management', array(
-      'expanded' => array($admin_link['mlid']),
-      'min_depth' => $admin_link['depth'] + 1,
-      'max_depth' => $admin_link['depth'] + 1,
-    ));
+    $tree = menu_tree_all_data('management');
   }
-
-  return $tree;
+  // Return the sub-menus of the management menu root.
+  foreach ($tree as $key => $menu) {
+    return (!empty($tree[$key]['below'])) ? $tree[$key]['below'] : array();
+  }
+  return array();
 }
 
 /**
@@ -334,34 +326,16 @@ function toolbar_get_menu_tree() {
  * @return
  *   An array of links as defined above.
  */
-function toolbar_menu_navigation_links($tree) {
-  $links = array();
-  foreach ($tree as $item) {
-    if (!$item['link']['hidden'] && $item['link']['access']) {
-      // Make sure we have a path specific ID in place, so we can attach icons
-      // and behaviors to the items.
-      $id = str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['href']);
-
-      $link = $item['link']['localized_options'];
-      $link['href'] = $item['link']['href'];
-      // Add icon placeholder.
-      $link['title'] = '<span class="icon"></span>' . check_plain($item['link']['title']);
-      // Add admin link ID.
-      $link['attributes'] = array('id' => 'toolbar-link-' . $id);
-      if (!empty($item['link']['description'])) {
-        $link['title'] .= ' <span class="element-invisible">(' . $item['link']['description'] . ')</span>';
-        $link['attributes']['title'] = $item['link']['description'];
-      }
-      $link['html'] = TRUE;
-
-      $class = ' path-' . $id;
-      if (toolbar_in_active_trail($item['link']['href'])) {
-        $class .= ' active-trail';
-      }
-      $links['menu-' . $item['link']['mlid'] . $class] = $link;
+function toolbar_menu_navigation_links(&$tree) {
+  foreach ($tree as $key => $item) {
+    // Configure sub-items.
+    if (!empty($item['below'])) {
+      toolbar_menu_navigation_links($tree[$key]['below']);
     }
+    // Make sure we have a path specific ID in place, so we can attach icons
+    // and behaviors to the items.
+    $tree[$key]['link']['localized_options']['attributes']['id'] = 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']);
   }
-  return $links;
 }
 
 /**
