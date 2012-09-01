@@ -159,6 +159,11 @@ Drupal.TraySlider.prototype.init = function () {
     'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
   });
   this.displace();
+  // Turn on flexiPanda
+  this.$tray.find('.toolbar-menu > .menu').flexiPanda({
+    debug: false,
+    mode: 'slider'
+  });
 };
 /**
  *
