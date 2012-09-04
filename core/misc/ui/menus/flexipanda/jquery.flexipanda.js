@@ -63,6 +63,9 @@
     }
     var context = context || this;
     var $context = ('jquery' in context) ? context : $(context);
+    if ($context.length === 0) {
+      return;
+    }
     var options = options || {};
     // 'args' here needs to be made more robust so it isn't assumed that the value
     // is a single string.
@@ -74,14 +77,12 @@
       var timeout;
       // Add a timer to the context
       var data = $context.data();
-      if (data && 'plugin' in data) {
-        data = data[plugin];
-      }
-      else {
-        return;
+      if (!data) {
+        $context.data(plugin, {});
+        data = $context.data();
       }
       // Store timeouts and intervals on the object.
-      if (!data.timers) {
+      if (!('timers' in data)) {
         data.timers = {timeouts: [], intervals: []};
       }
       if ('type' in options && options.type === 'interval') {
@@ -646,19 +647,19 @@
     };
     // Clean the trail after a delay.
     event.data = {
-      delay: 200,
+      delay: 150,
       args: 'clean'
     };
     buildTriggerDelay.call($item, event);
     // The parent item of this item is now the active item.
     event.data = {
-      delay: 250,
+      delay: 200,
       args: 'activate'
     };
     buildTriggerDelay.call($item.flexiPanda('parentItem'), event);
     // Reflow to get the height calculation.
     event.data = {
-      delay: 300,
+      delay: 250,
       args: 'reflowed'
     };
     buildTriggerDelay.call($wrapper, event);
