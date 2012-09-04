@@ -105,8 +105,14 @@
   border-radius: 3px;
   margin: 10px 0 10px 10px;
 }
-#toolbar .toolbar-tray ul li {
-  border-bottom: 1px solid #ccc;
+#toolbar .toolbar-tray .menu ul {
+  background-color: rgba(90, 90, 90, 0.1);
+}
+#toolbar .toolbar-tray .menu ul {
+  text-indent: 1em;
+}
+#toolbar .toolbar-tray ul li + li {
+  border-top: 1px solid #ccc;
 }
 #toolbar .toolbar-tray ul
 #toolbar .toolbar-tray ul li.last {
@@ -187,16 +193,20 @@
 .fp-back .fp-handle::after {
   -webkit-transform: rotate(35deg);
 }
-.fp-mode-slider .fp-item + .fp-item {
-  border-top: 1px solid #ccc;
-}
-.fp-mode-slider .fp-link {
+.fp-mode-accordion .fp-link {
   line-height: 1;
   padding-bottom: 1em;
   padding-top:  1em;
 }
-.fp-mode-slider .fp-handle {
+.fp-mode-accordion .fp-handle {
   width: 2em;
+}
+.fp-mode-accordion .fp-handle {
+  -webkit-transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 0.1s ease-in;
+}
+.fp-mode-accordion .fp-handle.fp-open {
+  -webkit-transform: rotate(90deg);
 }
 .fp-back .fp-handle {
   left: 0;

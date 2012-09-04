@@ -540,7 +540,6 @@
     // Mark up the back buttons.
     .trigger('listChange')
     .trigger('reflowed');
-
   }
   /**
    * Bring the Slider menu back to the root and clean active items.
@@ -663,6 +662,35 @@
       args: 'reflowed'
     };
     buildTriggerDelay.call($wrapper, event);
+  }
+  /**
+   * Accordion
+   */
+  /**
+   * Build the Slider menu when it is instantiated.
+   */
+  function accordionSetup(event) {
+    var $this = $(this);
+    // Mark up the lists and items.
+    $this
+    .trigger('listChange');
+  }
+  /**
+   *
+   */
+  function accordionToggle(event) {
+    // The toggle.
+    var $toggle = $(this);
+    var $list = $toggle.closest('.fp-item').flexiPanda('childList');
+    var isHidden = $list.hasClass('fp-dormant');
+    // Toggle the item list visibility.
+    $list
+      ['slide' + ((isHidden) ? 'Down' : 'Up')]()
+      [((isHidden) ? 'remove' : 'add') + 'Class']('fp-dormant');
+    // Twist the toggle.
+    $toggle
+      [((isHidden) ? 'add' : 'remove') + 'Class']('fp-open');
+
   }
   /**
    * Saves the dimensions of each item in its data() object.
@@ -878,10 +906,10 @@
         // Click mode
           $wrapper
           .delegate('.fp-item', 'click.flexiPanda.clickMode', itemClick)
-          .delegate('.fp-list, .fp-item', 'refresh.flexiPanda', setItemData)
-          .delegate('.fp-pegged', 'rebounded.flexiPanda', {edge: options.edge}, reposition)
-          .delegate('.fp-item', 'clean.flexiPanda', cleanItem)
-          .delegate('.fp-item', 'activate.flexiPanda.hoverMode', activateItem)
+          .delegate('.fp-list, .fp-item', 'refresh.flexiPanda.clickMode', setItemData)
+          .delegate('.fp-pegged', 'rebounded.flexiPanda.clickMode', {edge: options.edge}, reposition)
+          .delegate('.fp-item', 'clean.flexiPanda.clickMode', cleanItem)
+          .delegate('.fp-item', 'activate.flexiPanda.clickMode', activateItem)
           .addClass('fp-mode-click');
           break;
         case 'hover' :
@@ -889,10 +917,10 @@
           $wrapper
           .delegate('.fp-root', 'mouseenter.flexiPanda.hoverMode', buildClearDelay)
           .delegate('.fp-root', 'mouseleave.flexiPanda.hoverMode', {delay: options.delays.menu, args: 'exit'}, buildTriggerDelay)
-          .delegate('.fp-root', 'exit.flexiPanda', cleanMenu)
-          .delegate('.fp-list, .fp-item', 'refresh.flexiPanda', setItemData)
-          .delegate('.fp-pegged', 'rebounded.flexiPanda', {edge: options.edge}, reposition)
-          .delegate('.fp-item', 'clean.flexiPanda', cleanItem)
+          .delegate('.fp-root', 'exit.flexiPanda.hoverMode', cleanMenu)
+          .delegate('.fp-list, .fp-item', 'refresh.flexiPanda.hoverMode', setItemData)
+          .delegate('.fp-pegged', 'rebounded.flexiPanda.hoverMode', {edge: options.edge}, reposition)
+          .delegate('.fp-item', 'clean.flexiPanda.hoverMode', cleanItem)
           .delegate('.fp-item', 'mouseenter.flexiPanda.hoverMode', activateItem)
           .addClass('fp-mode-hover');
           $ul
@@ -906,10 +934,19 @@
           .bind('setup.flexiPanda.sliderMode', sliderSetup)
           .bind('reset.flexiPanda.sliderMode', sliderReset)
           .delegate('.fp-handle:not(.fp-back .fp-handle)', 'click.flexiPanda.sliderMode', slideForward)
-          .delegate('.fp-item', 'clean.flexiPanda', cleanItem)
-          .delegate('.fp-item', 'activate.flexiPanda.hoverMode', activateItem)
+          .delegate('.fp-item', 'clean.flexiPanda.sliderMode', cleanItem)
+          .delegate('.fp-item', 'activate.flexiPanda.sliderMode', activateItem)
           .delegate('.fp-back', 'click.flexiPanda.sliderMode', slideBack)
           .addClass('fp-mode-slider');
+          break;
+        case 'accordion' :
+          // Mobile slider mode
+          $wrapper
+          .bind('setup.flexiPanda.accordionMode', accordionSetup)
+          .delegate('.fp-item', 'clean.flexiPanda.accordionMode', cleanItem)
+          .delegate('.fp-item', 'activate.flexiPanda.accordionMode', activateItem)
+          .delegate('.fp-handle', 'click.flexiPanda.accordionMode', accordionToggle)
+          .addClass('fp-mode-accordion');
           break;
         default:
         }
@@ -974,7 +1011,7 @@
       }
       return this.pushStack(parent.get());
     },
-    childLists: function () {
+    childList: function () {
       var children = $();
       // Just return if this is zero length.
       if (this.length === 0) {

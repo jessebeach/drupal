@@ -162,7 +162,7 @@ Drupal.TraySlider.prototype.init = function () {
   // Turn on flexiPanda
   this.$tray.find('.toolbar-menu > .menu').flexiPanda({
     debug: false,
-    mode: 'slider'
+    mode: 'accordion'
   });
 };
 /**
