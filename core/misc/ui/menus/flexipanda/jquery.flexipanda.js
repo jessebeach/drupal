@@ -1,7 +1,7 @@
 /*jslint bitwise: true, eqeqeq: true, immed: true, newcap: true, nomen: false,
  onevar: false, plusplus: false, regexp: true, undef: true, white: true, indent: 2
  browser: true */
- 
+
 /*global jQuery: true debug: true window: true */
 
 /**
@@ -156,7 +156,7 @@
     .children('a')
     .addClass(linkClass)
     .end()
-    .trigger('prepare');    
+    .trigger('prepare');
     // Indicate the level of each menu.
     markListLevels($root);
     // Set visibility
@@ -169,7 +169,7 @@
     $ul
     // Trigger debugging.
     .trigger('debug', {enable: options.debug});
-    
+
     $li
     // Establish item data.
     .trigger('refresh')
@@ -291,7 +291,7 @@
     }
   }
   /**
-   * 
+   *
    */
   function setOrientation(orientation) {
     var $this = $(this);
@@ -339,7 +339,7 @@
       top: document.documentElement.clientTop,
       height: document.documentElement.clientHeight,
       width: document.documentElement.clientWidth
-    }, 
+    },
     edge = '';
     for (edge in client) {
       if (client.hasOwnProperty(edge)) {
@@ -429,12 +429,12 @@
     event.stopPropagation();
     var $this = $(this);
     // Remove any margins from position shifting.
-    $this.css({margin: 0});    
+    $this.css({margin: 0});
     var data = $this.trigger('refresh').data().flexiPanda,
     dimensions = data.dimensions,
     // Check if the item falls within the bounds of the viewport within the
     // configured tolerance.
-    bounds = checkBounds(dimensions.item),    
+    bounds = checkBounds(dimensions.item),
     // idealBounds is the placement of the item if the viewport had no limits.
     idealBounds = checkBounds(dimensions.ideal),
     edge = '',
@@ -460,16 +460,16 @@
         idealBounds[edge] = bounds[edge] = true;
       }
     }
-    // Move the item. 
+    // Move the item.
     // move() will deal with conflicting vectors
     if (!$.isEmptyObject(vectors)) {
       move.call(this, vectors);
       data = $this.trigger({type: 'refresh', cache: false}).data().flexiPanda;
     }
-    // Shift the lists by adjusting margins to correct lists against the edge 
+    // Shift the lists by adjusting margins to correct lists against the edge
     // of the screen and lists occluding other lists.
     shiftPosition.call(this, data, event.data.edge);
-    
+
     // Trigger refresh on the child lists. Parent lists have to be repositioned
     // before child lists.
     $this.find('.fp-level-' + (data.level + 1)).trigger('rebounded');
@@ -533,14 +533,14 @@
           }),
           'class': 'fp-back'
         })
-      ) 
+      )
     })
     .end()
     .end()
     // Mark up the back buttons.
     .trigger('listChange')
     .trigger('reflowed');
-    
+
   }
   /**
    * Bring the Slider menu back to the root and clean active items.
@@ -558,7 +558,7 @@
     .end()
     .end()
     .trigger('reflowed');
-    
+
   }
   /**
    * Since the Slider wrapper is set to overflow hidden, we need to manage
@@ -638,7 +638,7 @@
     // The level determines how far to move the menu i.e. level * 100.
     var level = Number($list.data()[plugin].level) - 2;
     var sign = (level === 0) ? '' : '-';
-    
+
     // Slide the menu
     slide.call($root, level, sign);
     // Clean the active item. A little hinky, but it works.
@@ -675,7 +675,7 @@
     checkDataFreshness.call(this, data);
     // Only process the item's data if cache is false (meaning the
     // cache is intentionally busted) or if the item has not been
-    // processed yet. This function gets called a lot and it 
+    // processed yet. This function gets called a lot and it
     // interacts heavily with the DOM, so it should be run without cause.
     if (!cache || !data.processed) {
       data.classes = this.classList;
@@ -809,7 +809,7 @@
    */
   function handleResize(event) {
     $('.fp-wrapper')
-    .trigger('reflowed');    
+    .trigger('reflowed');
   }
   // private function for debugging
   function getDebugger($element) {
@@ -823,10 +823,10 @@
   function debug(event) {
     event.stopPropagation();
     var $this = $(this);
-    
+
     var $debugger = getDebugger($this),
         items = $.proxy(renderItemData, this)();
-    
+
     if (items.length > 0) {
       $debugger
       .html(items)
@@ -894,7 +894,7 @@
           .delegate('.fp-pegged', 'rebounded.flexiPanda', {edge: options.edge}, reposition)
           .delegate('.fp-item', 'clean.flexiPanda', cleanItem)
           .delegate('.fp-item', 'mouseenter.flexiPanda.hoverMode', activateItem)
-          .addClass('fp-mode-hover');					
+          .addClass('fp-mode-hover');
           $ul
           // Move sub menus that might be positioned outside the viewport.
           .trigger('rebounded');
@@ -991,7 +991,7 @@
       }
       // Just return a null set if none of the cases match.
       return this.pushStack(children.get());
-      
+
     },
     root : function () {
       return this.pushStack(this.closest('.fp-root').get());
@@ -1012,7 +1012,7 @@
       $.error('Method ' +  method + ' does not exist on jQuery.flexiPanda');
     }
   };
-    
+
   // FlexiPanda plugin defaults.
   $.fn.flexiPanda.defaults = {
     dev: true,
