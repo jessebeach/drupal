@@ -21,15 +21,14 @@
 ?>
 <nav id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-bar clearfix">
-    <?php print render($toolbar['toolbar_home']); ?>
+    <?php print render($toolbar['toolbar_actions']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
-    <?php print render($toolbar['toolbar_tray_toggle']); ?>
   </div>
 
   <div class="toolbar-tray" name="toolbar-tray">
     <div class="lining">
       <?php print render($toolbar['toolbar_filter']); ?>
-      <?php print render($toolbar['toolbar_drawer']); ?>
+      <?php print render($toolbar['toolbar_shortcuts']); ?>
       <nav class="toolbar-menu">
         <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
         <?php print render($toolbar['toolbar_menu']); ?>
