@@ -195,13 +195,12 @@ function toolbar_view() {
       ),
     ),
   );
-
   // Retrieve the admin menu from the database.
   $tree = toolbar_get_menu_tree();
   // Add attributes to the links before rendering.
   toolbar_menu_navigation_links($tree);
   $build['toolbar_menu'] = menu_tree_output($tree);
-
+  // Add a search form element for the jump-to form element.
   $build['toolbar_filter'] = array(
     '#type' => 'search',
     '#attributes' => array(
@@ -233,6 +232,7 @@ function toolbar_view() {
       ),
     );
   }
+
   $build['toolbar_user'] = array(
     '#theme' => 'links__toolbar_user',
     '#links' => $links,
@@ -242,10 +242,19 @@ function toolbar_view() {
     ),
   );
 
-  // Add a "home" link.
-  $link = array(
+  // Build the default toolbar action links.
+  $links = array(
+    'toolbar_tray_toggle' => array(
+      'title' => t('Administrative tray toggle'),
+      'href' => current_path(),
+      'html' => FALSE,
+      'attributes' => array(
+        'class' => array('button', 'toggle', 'toggle-tray'),
+        'role' => 'button',
+      ),
+    ),
     'home' => array(
-      'title' => 'Home',
+      'title' => t('Home'),
       'href' => '<front>',
       'html' => FALSE,
       'attributes' => array(
@@ -254,46 +263,26 @@ function toolbar_view() {
       ),
     ),
   );
-  $build['toolbar_home'] = array(
+
+  // Toolbar action links.
+  $build['toolbar_actions'] = array(
     '#theme' => 'links',
-    '#links' => $link,
+    '#links' => $links,
     '#attributes' => array(
-      'id' => 'toolbar-home',
+      'id' => 'toolbar-actions',
       'class' => array('menu'),
     ),
+    '#heading' => array('text' => t('Administrative toolbar actions'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
-  // Add an anchor to be able to toggle the visibility of the drawer.
-  $build['toolbar_toggle'] = array(
-    '#theme' => 'toolbar_toggle',
-    '#collapsed' => _toolbar_is_collapsed(),
-    '#attributes' => array('class' => array('button', 'toggle', 'toggle-drawer',)),
-  );
-
-  // Prepare the drawer links CSS classes.
-  $toolbar_drawer_classes = array(
-    'toolbar-drawer',
-    'clearfix',
-  );
-  if (_toolbar_is_collapsed()) {
-    $toolbar_drawer_classes[] = 'collapsed';
-  }
-  $build['toolbar_drawer']['#type'] = 'container';
-  $build['toolbar_drawer']['#attributes']['class'] = $toolbar_drawer_classes;
-
-  // Append the admin tray toggle.
-  $build['toolbar_tray_toggle'] = array(
-    '#heading' => array('text' => t('Administrative tray toggle'), 'level' => 'h2', 'class' => 'element-invisible'),
-    '#theme' => 'link',
-    '#path' => current_path(),
-    '#text' => t('Admin tray'),
-    '#options' => array(
-      'attributes' => array(
-        'class' => array('button', 'toggle', 'toggle-tray'),
-        'role' => 'button',
+  // Shortcuts.
+  $build['toolbar_shortcuts'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array(
+        'toolbar-shortcuts',
+        'clearfix',
       ),
-      'fragment' => 'toolbar-tray',
-      'html' => FALSE,
     ),
   );
 
