@@ -26,7 +26,6 @@
   border-bottom: 1px solid black;
   color: #cccccc;
   line-height: 20px;
-  padding: 0.3333em 20px 0.3333em 50px; /* LTR */
 }
 #toolbar .toolbar-bar .menu li + li {
   margin-left: 1em; /* LTR */
@@ -53,35 +52,12 @@
 #toolbar .toolbar-bar .home-link {
   background-position: 9px -19px;
 }
-#toolbar .toolbar-bar .toggle-drawer {
-  background-color: #666;
-  background-position: -1px -2px;
-  border-bottom: 0 none;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  bottom: 0;
-  position: absolute;
-  right: 20px;
-  width: 25px;
-}
-#toolbar .toolbar-bar .toggle-drawer:focus,
-#toolbar .toolbar-bar .toggle-drawer:hover {
-  background-position:  -51px -2px;
-}
-#toolbar .toolbar-bar .toggle-drawer.active {
-  background-position:  -26px -2px;
-}
-#toolbar .toolbar-bar .toggle-drawer.active:focus,
-#toolbar .toolbar-bar .toggle-drawer.active:hover {
-  background-position:  -76px -2px;
-}
-
 #toolbar .toolbar-bar .toggle-tray {
   background-position: -13px -19px;
-  left: 10px;
-  position: absolute;
-};
-
+}
+#toolbar .toolbar-bar .toggle-tray.active {
+  background-color: white;
+}
 #toolbar .toolbar-bar li a {
   padding: 0 10px;
   -moz-border-radius: 10px;

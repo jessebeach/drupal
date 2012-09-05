@@ -1,11 +1,3 @@
-#toolbar .toolbar-bar {
-  padding: 0.3333em 20px 0.3333em 50px; /* LTR */
-}
-#toolbar .toolbar-bar .toggle-drawer {
-  left: 20px;
-  right: auto;
-}
-
 #toolbar .toolbar-bar .menu li + li {
   margin-left: auto;
   margin-right: 1em;
