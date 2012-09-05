@@ -12,7 +12,7 @@ Drupal.behaviors.toolbar = {
     var $toolbar = $(context).find('#toolbar');
     var $bar = $toolbar.find('.toolbar-bar');
     var $tray = $toolbar.find('.toolbar-tray');
-    var $toggle = $toolbar.find('.toggle-tray');
+    var $trigger = $toolbar.find('.toggle-tray');
     // Set the initial state of the toolbar.
     $bar.once('toolbar-bar', function (index, element) {
       var $toolbar = $(this);
@@ -21,7 +21,7 @@ Drupal.behaviors.toolbar = {
     // Instantiate the toolbar tray.
     $tray.once('toolbar-slider', function (index, element) {
       var $tray = $(this);
-      $tray.data('drupalToolbar', new Drupal.TraySlider($tray, $toggle));
+      $tray.data('drupalToolbar', new Drupal.TraySlider($tray, $trigger));
     });
   }
 };
@@ -43,8 +43,8 @@ Drupal.ToolBar.prototype.init = function() {
     'closed': Drupal.t('Show shortcuts')
   };
   // Set up the toolbar drawer visibility toggle.
-  this.$toggle = this.$toolbar.find('.toggle-drawer');
-  this.$toggle
+  this.$trigger = this.$toolbar.find('.toggle-drawer');
+  this.$trigger
   .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
   // Store the shortcut bar drawer HTML element.
   this.$drawer = this.$toolbar.find('.toolbar-drawer');
@@ -64,7 +64,7 @@ Drupal.ToolBar.prototype.init = function() {
 Drupal.ToolBar.prototype.collapse = function() {
   var toggle_text = this.labels.closed;
   this.$drawer.addClass('collapsed');
-  this.$toggle
+  this.$trigger
   .removeClass('active')
   .attr('title',  toggle_text)
   .html(toggle_text);
@@ -81,7 +81,7 @@ Drupal.ToolBar.prototype.collapse = function() {
 Drupal.ToolBar.prototype.expand = function() {
   var toggle_text = this.labels.opened;
   this.$drawer.removeClass('collapsed');
-  this.$toggle
+  this.$trigger
   .addClass('active')
   .attr('title',  toggle_text)
   .html(toggle_text);
@@ -128,9 +128,9 @@ Drupal.ToolBar.prototype.setHeight = function() {
 /**
  *
  */
-Drupal.TraySlider = function ($tray, $toggle) {
+Drupal.TraySlider = function ($tray, $trigger) {
   this.$tray = $tray;
-  this.$toggle = $toggle;
+  this.$trigger = $trigger;
   this.state;
   this.width;
   this.maxWidth;
@@ -143,41 +143,69 @@ Drupal.TraySlider = function ($tray, $toggle) {
 Drupal.TraySlider.prototype.init = function () {
   this.state = 'closed';
   this.maxWidth = 200;
+  this.ui = {
+    'activeClass': 'active'
+  };
   this.width = this.getWidth();
-  // Place the menu off screen.
-  this.$tray.css({
-    'width': this.width,
-    'left': this.width * -1
-  });
   // Add a click handler to the toggle.
-  this.$toggle
-  .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
+  this.$trigger
+    .on({
+      'setup.DrupalToolbar': $.proxy(this, 'toggleTrigger'),
+      'click.DrupalToolbar': $.proxy(this, 'handleTriggerClick'),
+      'toggled.DrupalToolbar': $.proxy(this, 'toggleTrigger')
+    })
+    .trigger('setup', this.state);
+  this.$tray
+    // Place the menu off screen.
+    .css({
+      'width': this.width,
+      'left': this.width * -1
+    })
+    // Register event handlers.
+    .on({
+      'setup.DrupalToolbar': $.proxy(this, 'displace'),
+      'toggled.DrupalToolbar': $.proxy(this, 'toggleTray')
+    })
+    // Turn on flexiPanda
+    .find('.toolbar-menu > .menu').flexiPanda({
+      debug: false,
+      mode: 'accordion'
+    })
+    // Triger setup.
+    .trigger('setup', this.state);
   // Register for offsettopchange events.
   $(document)
-  .on({
-    // Offset value vas changed by a third party script.
-    'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
-  });
-  this.displace();
-  // Turn on flexiPanda
-  this.$tray.find('.toolbar-menu > .menu').flexiPanda({
-    debug: false,
-    mode: 'accordion'
-  });
+    .on({
+      // Offset value vas changed by a third party script.
+      'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
+    });
 };
 /**
  *
  */
-Drupal.TraySlider.prototype.toggle = function (event) {
+Drupal.TraySlider.prototype.handleTriggerClick = function (event) {
   event.preventDefault();
   event.stopImmediatePropagation();
-  if (this.state === 'closed') {
+  this.state = (this.state === 'closed') ? 'open' : 'closed';
+  this.$tray.trigger('toggled', this.state);
+  this.$trigger.trigger('toggled', this.state);
+};/**
+ *
+ */
+Drupal.TraySlider.prototype.toggleTrigger = function (event, state) {
+  this.$trigger[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+};
+/**
+ *
+ */
+Drupal.TraySlider.prototype.toggleTray = function (event, state) {
+  if (state === 'open') {
     this.expand();
   }
   else {
     this.collapse();
   }
-}
+};
 /**
  *
  */
@@ -190,7 +218,6 @@ Drupal.TraySlider.prototype.expand = function (event) {
   $('body').animate({
     'padding-left': this.width
   });
-  this.state = 'open';
 };
 /**
  *
@@ -202,7 +229,6 @@ Drupal.TraySlider.prototype.collapse = function () {
   $('body').animate({
     'padding-left': 0
   });
-  this.state = 'closed';
 };
 /**
  *
