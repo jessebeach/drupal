@@ -26,7 +26,7 @@
     <?php print render($toolbar['toolbar_tray_toggle']); ?>
   </div>
 
-  <div class="toolbar-tray">
+  <div class="toolbar-tray" name="toolbar-tray">
     <div class="lining">
       <?php print render($toolbar['toolbar_filter']); ?>
       <?php print render($toolbar['toolbar_drawer']); ?>
