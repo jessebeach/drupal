@@ -216,11 +216,17 @@ function toolbar_view() {
         'title' => t('Hello <strong>@username</strong>', array('@username' => user_format_name($user))),
         'href' => 'user',
         'html' => TRUE,
-        'attributes' => array('title' => t('User account')),
+        'attributes' => array(
+          'title' => t('User account'),
+          'class' => array('tab'),
+        ),
       ),
       'logout' => array(
         'title' => t('Log out'),
         'href' => 'user/logout',
+        'attributes' => array(
+          'class' => array('tab'),
+        ),
       ),
     );
   }
@@ -229,6 +235,9 @@ function toolbar_view() {
       'login' => array(
         'title' => t('Log in'),
         'href' => 'user',
+        'attributes' => array(
+          'class' => array('tab'),
+        ),
       ),
     );
   }
@@ -240,16 +249,17 @@ function toolbar_view() {
       'id' => 'toolbar-user',
       'class' => array('menu'),
     ),
+    '#heading' => array('text' => t('Administrative toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
   // Build the default toolbar action links.
   $links = array(
     'toolbar_tray_toggle' => array(
-      'title' => t('Administrative tray toggle'),
-      'href' => current_path(),
+      'title' => t('Menu'),
+      'href' => '',
       'html' => FALSE,
       'attributes' => array(
-        'class' => array('button', 'toggle', 'toggle-tray'),
+        'class' => array('tab', 'toggle', 'toggle-tray'),
         'role' => 'button',
       ),
     ),
@@ -259,7 +269,7 @@ function toolbar_view() {
       'html' => FALSE,
       'attributes' => array(
         'title' => t('Home'),
-        'class' => array('button', 'home-link'),
+        'class' => array('tab', 'home-link'),
       ),
     ),
   );
