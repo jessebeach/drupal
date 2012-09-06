@@ -19,7 +19,7 @@
  * @ingroup themeable
  */
 ?>
-<nav id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
+<div id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-bar clearfix">
     <?php print render($toolbar['toolbar_actions']); ?>
     <?php print render($toolbar['toolbar_user']); ?>
@@ -35,4 +35,4 @@
       </nav>
     </div>
   </div>
-</nav>
+</div>

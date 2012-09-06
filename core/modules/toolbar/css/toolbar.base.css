@@ -14,8 +14,6 @@ body.toolbar {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  font-size: 100%;
-  line-height: 1;
   list-style: none;
   margin: 0;
   outline: 0;
@@ -23,33 +21,37 @@ body.toolbar {
   text-align: left; /* LTR */
   vertical-align: baseline;
 }
+#toolbar {
+  font-size: 100%;
+  font-size: 1rem;
+  line-height: 1;
+}
 
 /**
  * Administration menu.
  */
+#toolbar-actions {
+  float: left; /* LTR */
+}
+#toolbar-user {
+  float: right; /* LTR */
+}
 #toolbar .toolbar-bar {
   left: 0;
-  min-height: 2.2em;
   position: absolute;
   right: 0;
   top: 0;
   z-index: 600;
 }
-#toolbar .toolbar-bar li {
+#toolbar .toolbar-bar .menu li {
+  display: block;
   float: left; /* LTR */
 }
-#toolbar .toolbar-bar li a {
+#toolbar .toolbar-bar .menu a {
   display: inline-block;
-  line-height: 2.1818em; /* ~24px */
-}
-#toolbar-user {
-  float: right; /* LTR */
-}
-#toolbar-home {
-  float: left; /* LTR */
 }
 /**
- * Toolbar tray. 
+ * Toolbar tray.
  */
 #toolbar .toolbar-tray {
   bottom: 0;
