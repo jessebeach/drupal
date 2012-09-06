@@ -26,7 +26,7 @@
   </div>
 
   <div class="toolbar-tray" name="toolbar-tray">
-    <div class="lining">
+    <div class="lining slider">
       <?php print render($toolbar['toolbar_filter']); ?>
       <?php print render($toolbar['toolbar_shortcuts']); ?>
       <nav class="toolbar-menu">
