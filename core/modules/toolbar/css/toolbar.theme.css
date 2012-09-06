@@ -43,7 +43,7 @@
 #toolbar .toolbar-bar .tab {
   background-attachment: scroll;
   background-color: transparent;
-  background-image: url("../images/toolbar.png");
+  /*background-image: url("../images/toolbar.png");*/
   background-repeat: no-repeat;
   cursor: pointer;
   padding: 1em 2em;
@@ -59,12 +59,12 @@
  * Toolbar tray.
  */
 #toolbar .toolbar-tray {
-  background-color: white;
-  border-right: 1px solid black;
   font-size: 0.8125em;
   font-size: 0.8125rem;
 }
 #toolbar .toolbar-tray > .lining {
+  background-color: white;
+  border-right: 1px solid black;
   padding: 1em 0.75em;
 }
 #toolbar .toolbar-tray .lining > * + * {

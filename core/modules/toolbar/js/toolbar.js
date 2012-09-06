@@ -142,11 +142,10 @@ Drupal.TraySlider = function ($tray, $trigger) {
  */
 Drupal.TraySlider.prototype.init = function () {
   this.state = 'closed';
-  this.maxWidth = 200;
   this.ui = {
-    'activeClass': 'active'
+    'activeClass': 'active',
+    'trayOpenBodyClass': 'menu-tray-open'
   };
-  this.width = this.getWidth();
   // Add a click handler to the toggle.
   this.$trigger
     .on({
@@ -156,11 +155,6 @@ Drupal.TraySlider.prototype.init = function () {
     })
     .trigger('setup', this.state);
   this.$tray
-    // Place the menu off screen.
-    .css({
-      'width': this.width,
-      'left': this.width * -1
-    })
     // Register event handlers.
     .on({
       'setup.DrupalToolbar': $.proxy(this, 'displace'),
@@ -199,36 +193,9 @@ Drupal.TraySlider.prototype.toggleTrigger = function (event, state) {
  *
  */
 Drupal.TraySlider.prototype.toggleTray = function (event, state) {
-  if (state === 'open') {
-    this.expand();
-  }
-  else {
-    this.collapse();
-  }
-};
-/**
- *
- */
-Drupal.TraySlider.prototype.expand = function (event) {
-  this.width = this.getWidth();
-  this.$tray.animate({
-    'width': this.width,
-    'left': 0
-  });
-  $('body').animate({
-    'padding-left': this.width
-  });
-};
-/**
- *
- */
-Drupal.TraySlider.prototype.collapse = function () {
-  this.$tray.animate({
-    'left': this.width * -1
-  });
-  $('body').animate({
-    'padding-left': 0
-  });
+  this.$tray[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+  // Add a class to the body so it can be styled to react to the tray.
+  $('body')[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
 };
 /**
  *
@@ -252,15 +219,5 @@ Drupal.TraySlider.prototype.computeOffsetTop = function () {
   this.offsetTop = sum;
   return sum;
 };
-/**
- *
- */
-Drupal.TraySlider.prototype.getWidth = function (event) {
-  var maxClient = document.documentElement.clientWidth;
-  var candidate = maxClient * 0.9;
-  var width = (candidate > this.maxWidth) ? this.maxWidth : candidate;
-  return width;
-};
-
 
 })(jQuery);
