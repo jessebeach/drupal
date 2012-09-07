@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, undefined) {
 
 "use strict";
 
@@ -42,8 +42,23 @@ Drupal.ToolBar.prototype.init = function() {
     'opened': Drupal.t('Hide shortcuts'),
     'closed': Drupal.t('Show shortcuts')
   };
+  // Recalculate the offset top on screen resize.
+  var setHeight = $.proxy(this, 'setHeight');
+  // Use debounce if it exists.
+  setHeight = ('debounce' in Drupal) ? Drupal.debounce(setHeight, 250) : setHeight;
+  $(window)
+    .on({
+      'resize.DrupalToolbar': setHeight
+    });
+  // Toolbar event handlers.
+  this.$toolbar
+    .on({
+      'setup.DrupalToolbar': setHeight
+    })
+    .trigger('setup');
   // Set up the toolbar drawer visibility toggle.
-  this.$trigger = this.$toolbar.find('.toggle-drawer');
+  /*
+this.$trigger = this.$toolbar.find('.toggle-drawer');
   this.$trigger
   .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
   // Store the shortcut bar drawer HTML element.
@@ -57,6 +72,7 @@ Drupal.ToolBar.prototype.init = function() {
   else {
     this.expand();
   }
+*/
 };
 /**
  * Collapse the toolbar.
