@@ -82,7 +82,8 @@ body.toolbar {
     -webkit-transition: padding-left, 0.2s ease-out;
   }
   body.menu-tray-open {
-    padding-left: 24rem;
+    padding-left: 256px;
+    padding-left: 16rem;
   }
   #toolbar .toolbar-bar,
   #toolbar .toolbar-tray {
@@ -103,7 +104,8 @@ body.toolbar {
   top: 0;
 }
 #toolbar .toolbar-tray {
-  width: 24rem;
+  width: 256px;
+  width: 16rem;
   max-width: 80%;
 }
 #toolbar .toolbar-tray .slider {
