@@ -1,0 +1,70 @@
+/* @group FlexiPanda menus (mobile slidy menus) */
+
+.fp-link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fp-mode-slider .fp-list {
+  padding-left: 2em;
+}
+.fp-item .fp-box {
+  padding-bottom: 0.75em;
+  padding-top: 0.75em;
+}
+.fp-handle {
+  top: 0;
+}
+.fp-handle::after,
+.fp-handle::before {
+  background-color: #999;
+  border-radius: 0px;
+  content: " ";
+  display: block;
+  height: 1em;
+  left: 50%;
+  position: absolute;
+  width: 2px;
+}
+.fp-handle::before {
+  -webkit-transform: rotate(-145deg);
+  top: 1.1em;
+}
+.fp-handle::after {
+  -webkit-transform: rotate(145deg);
+  top: 0.3em;
+}
+.fp-return .fp-handle::before,
+.fp-back .fp-handle::before {
+  -webkit-transform: rotate(-35deg);
+}
+.fp-return .fp-handle::after,
+.fp-back .fp-handle::after {
+  -webkit-transform: rotate(35deg);
+}
+.fp-mode-accordion .fp-link {
+  line-height: 1;
+  padding-bottom: 1em;
+  padding-top:  1em;
+}
+.fp-mode-accordion .fp-handle {
+  width: 2em;
+  height: 2em;
+}
+.fp-mode-accordion .fp-handle {
+  -webkit-transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 0.1s ease-in;
+}
+.fp-mode-accordion .fp-handle.fp-open {
+  -webkit-transform: rotate(90deg);
+}
+.fp-back .fp-handle {
+  left: 0;
+  right: auto;
+}
+#toolbar .fp-back .fp-handle + * {
+  margin-left: 2em;
+  margin-right: 0;
+}
+
+/* end */
