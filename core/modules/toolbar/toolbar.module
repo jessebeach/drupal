@@ -380,6 +380,7 @@ function toolbar_library_info() {
     'css' => array(
       drupal_get_path('module', 'toolbar') . '/css/toolbar.base.css',
       drupal_get_path('module', 'toolbar') . '/css/toolbar.theme.css',
+      drupal_get_path('module', 'toolbar') . '/css/toolbar.accordion.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
