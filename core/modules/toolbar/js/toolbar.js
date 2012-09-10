@@ -218,12 +218,8 @@ $.extend(Drupal.TraySlider.prototype, {
    *
    */
   displace: function (event) {
-    this.$tray
-    .position({
-      'my': 'left top',
-      'at': 'left top', /* LTR */
-      'offset': '0 ' + this.computeOffsetTop() + 'px',
-      'of': window
+    this.$tray.css({
+      'top': this.computeOffsetTop() + 'px'
     });
   },
   /**
@@ -307,6 +303,7 @@ $.extend(Drupal.TraySlider.prototype, {
     var listClass = 'fp-list';
     var itemClass = 'fp-item';
     var linkClass = 'fp-link';
+    var boxClass = 'fp-box';
     var handleClass = 'fp-handle';
     // Get lists and items.
     // @TODO, we want to allow arbitrary HTML in item bodies,
@@ -336,20 +333,26 @@ $.extend(Drupal.TraySlider.prototype, {
       // Add a class to item links.
       .children('a')
       .addClass(linkClass)
-      .end()
-      .children('.' + linkClass)
       .wrap(
         $('<div>', {
-          'class': 'fp-box'
+          'class': boxClass
         })
       )
-      .parent()
-      .prepend(
-        $('<span>', {
-          'class': handleClass,
-          text: ''
-        })
-      );
+      .end()
+      // Add a handle to each list item if it has a menu.
+      .each(function (index, element) {
+        var $item = $(this);
+        if ($item.children('.' + listClass).length > 0) {
+          $item
+            .children('.' + boxClass)
+            .prepend(
+              $('<span>', {
+                'class': handleClass,
+                text: ''
+              })
+            );
+        }
+      });
   },
   /**
    * Adds an fp-level class to each list based on its depth in the menu.
