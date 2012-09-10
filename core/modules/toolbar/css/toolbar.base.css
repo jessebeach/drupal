@@ -127,3 +127,69 @@ body.toolbar {
 #toolbar .toolbar-tray #shortcut-toolbar + a {
   margin-top: 0.3333em;
 }
+/**
+ * Accordion
+ */
+/* @group Behavior */
+
+.fp-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+.fp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.fp-item {
+  display: block;
+}
+.fp-box {
+  position: relative;
+}
+.fp-dormant {
+	display: none;
+}
+.fp-calculate {
+  display: block !important;
+  visibility: hidden !important;
+  width: 100% !important;
+}
+.fp-trail > .fp-list { /* Show the sub-menus */
+  display: block;
+}
+.fp-active > .fp-list {
+  z-index: 51; /* Pull the active trail li's above the other li's */
+}
+.fp-wrapper .fp-box {
+  display: block;
+  line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
+  width: auto;
+}
+.fp-link {
+  display: block;
+}
+.fp-handle {
+  bottom: 0;
+  display: block;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  z-index: 1;
+}
+.fp-handle + * {
+  margin-right: 60px;
+}
+.fp-back .fp-handle {
+  left: 0;
+  right: auto;
+}
+.fp-back .fp-handle + * {
+  margin-left: 60px;
+  margin-right: 0;
+}
+.fp-handle:hover {
+  cursor: pointer;
+}
