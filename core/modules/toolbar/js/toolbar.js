@@ -176,11 +176,6 @@ Drupal.TraySlider.prototype.init = function () {
       'setup.DrupalToolbar': $.proxy(this, 'displace'),
       'toggled.DrupalToolbar': $.proxy(this, 'toggleTray')
     })
-    // Turn on flexiPanda
-    .find('.toolbar-menu > .menu').flexiPanda({
-      debug: false,
-      mode: 'accordion'
-    })
     // Triger setup.
     .trigger('setup', this.state);
   // Register for offsettopchange events.
@@ -217,8 +212,14 @@ Drupal.TraySlider.prototype.toggleTray = function (event, state) {
  *
  */
 Drupal.TraySlider.prototype.displace = function (event) {
-  this.$tray.css({
-    'top': this.computeOffsetTop()
+  console.log(this.computeOffsetTop());
+  this.$tray
+  .addClass('positioned')
+  .position({
+    'my': 'left top',
+    'at': 'left top', /* LTR */
+    'offset': '0 ' + this.computeOffsetTop() + 'px',
+    'of': window
   });
 };
 /**
