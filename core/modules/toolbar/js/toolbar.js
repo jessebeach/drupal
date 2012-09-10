@@ -176,6 +176,8 @@ Drupal.TraySlider.prototype.init = function () {
       'setup.DrupalToolbar': $.proxy(this, 'displace'),
       'toggled.DrupalToolbar': $.proxy(this, 'toggleTray')
     })
+    // The tray will be positioned at the edge of the window.
+    .addClass('positioned')
     // Triger setup.
     .trigger('setup', this.state);
   // Register for offsettopchange events.
@@ -214,7 +216,6 @@ Drupal.TraySlider.prototype.toggleTray = function (event, state) {
 Drupal.TraySlider.prototype.displace = function (event) {
   console.log(this.computeOffsetTop());
   this.$tray
-  .addClass('positioned')
   .position({
     'my': 'left top',
     'at': 'left top', /* LTR */
