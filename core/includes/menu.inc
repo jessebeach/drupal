@@ -1018,10 +1018,6 @@ function menu_tree_output($tree) {
     else {
       $class[] = 'leaf';
     }
-    // Add the level of the menu item.
-    if (!empty($data['link']['depth'])) {
-      $class[] = 'level-' . $data['link']['depth'];
-    }
     // Set a class if the link is in the active trail.
     if ($data['link']['in_active_trail']) {
       $class[] = 'active-trail';
