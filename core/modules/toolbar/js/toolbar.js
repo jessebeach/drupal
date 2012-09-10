@@ -151,50 +151,45 @@ $.extend(Drupal.ToolBar.prototype, {
 Drupal.TraySlider = function ($tray, $trigger) {
   this.$tray = $tray;
   this.$trigger = $trigger;
-  this.state;
-  this.width;
-  this.maxWidth;
-  // Init the object.
-  this.init.apply(this, arguments);
+  // Initiate the object.
+  this.state = 'closed';
+  this.ui = {
+    'activeClass': 'active',
+    'trayOpenBodyClass': 'menu-tray-open'
+  };
+  // Add a click handler to the toggle.
+  this.$trigger
+    .on({
+      'setup.DrupalToolbar': $.proxy(this, 'toggleTrigger'),
+      'click.DrupalToolbar': $.proxy(this, 'handleTriggerClick'),
+      'toggled.DrupalToolbar': $.proxy(this, 'toggleTrigger')
+    })
+    .trigger('setup', this.state);
+  // The tray has a couple setup methods to run.
+  var setup = $.Callbacks();
+  setup.add($.proxy(this, 'renderAccordion'));
+  setup.add($.proxy(this, 'displace'));
+  this.$tray
+    // Register event handlers.
+    .on({
+      'setup.DrupalToolbar': setup.fire,
+      'toggled.DrupalToolbar': $.proxy(this, 'toggleTray')
+    })
+    // The tray will be positioned at the edge of the window.
+    .addClass('positioned')
+    // Triger setup.
+    .trigger('setup', this.state);
+  // Register for offsettopchange events.
+  $(document)
+    .on({
+      // Offset value vas changed by a third party script.
+      'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
+    });
 };
 /**
  * Extend the prototype of the TraySlider class.
  */
 $.extend(Drupal.TraySlider.prototype, {
-  /**
-   *
-   */
-  init: function () {
-    this.state = 'closed';
-    this.ui = {
-      'activeClass': 'active',
-      'trayOpenBodyClass': 'menu-tray-open'
-    };
-    // Add a click handler to the toggle.
-    this.$trigger
-      .on({
-        'setup.DrupalToolbar': $.proxy(this, 'toggleTrigger'),
-        'click.DrupalToolbar': $.proxy(this, 'handleTriggerClick'),
-        'toggled.DrupalToolbar': $.proxy(this, 'toggleTrigger')
-      })
-      .trigger('setup', this.state);
-    this.$tray
-      // Register event handlers.
-      .on({
-        'setup.DrupalToolbar': $.proxy(this, 'displace'),
-        'toggled.DrupalToolbar': $.proxy(this, 'toggleTray')
-      })
-      // The tray will be positioned at the edge of the window.
-      .addClass('positioned')
-      // Triger setup.
-      .trigger('setup', this.state);
-    // Register for offsettopchange events.
-    $(document)
-      .on({
-        // Offset value vas changed by a third party script.
-        'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
-      });
-  },
   /**
    *
    */
@@ -223,7 +218,6 @@ $.extend(Drupal.TraySlider.prototype, {
    *
    */
   displace: function (event) {
-    console.log(this.computeOffsetTop());
     this.$tray
     .position({
       'my': 'left top',
@@ -245,6 +239,150 @@ $.extend(Drupal.TraySlider.prototype, {
     }
     this.offsetTop = sum;
     return sum;
+  },
+  /**
+   * Accordion behavior.
+   */
+  renderAccordion: function (event) {
+    event.stopPropagation();
+    var context = this;
+    this.$tray.find('.toolbar-menu > .menu').each(function (index, element) {
+      var $root = $(this).addClass('fp-root');
+        // Wrap the list in a div to provide a positioning context.
+      var $wrapper = $root.wrap($('<div>')
+        .css({
+            height: '100%',
+            position: 'relative'
+          })
+          .addClass('fp-wrapper')
+        )
+        .parent()
+        .addClass('fp-mode-accordion')
+        // Bind event handlers.
+        .on({
+          'setup.flexiPanda.accordionMode': context.accordionSetup
+        });
+      // Create a set of list-manipulation callbacks.
+      // Called when items are added or removed.
+      var listUpdate = $.Callbacks();
+      // Set visibility
+      listUpdate.add(context.initItems);
+      listUpdate.add($.proxy(context, 'markListLevels', $root));
+      listUpdate.add($.proxy(context, 'setLevelVisibility', $root, 1));
+      $wrapper
+        .on('listChange.flexiPanda', listUpdate.fire)
+        .on('clean.flexiPanda.accordionMode', '.fp-item', context.cleanItem)
+        .on('activate.flexiPanda.accordionMode', '.fp-item', context.activateItem)
+        .on('click.flexiPanda.accordionMode', '.fp-handle', context.accordionToggle)
+        .trigger('setup');
+    });
+  },
+  accordionSetup: function (event) {
+    event.stopPropagation();
+    // Mark up the lists and items.
+    $(this)
+    .trigger('listChange');
+
+  },
+  cleanItem: function (event) {},
+  activateItem: function (event) {},
+  accordionToggle: function (event) {
+    // The toggle.
+    var $toggle = $(this);
+    var $list = $toggle.closest('.fp-item').children('.fp-list');
+    var isHidden = $list.hasClass('fp-dormant');
+    // Toggle the item list visibility.
+    $list
+      ['slide' + ((isHidden) ? 'Down' : 'Up')]()
+      [((isHidden) ? 'remove' : 'add') + 'Class']('fp-dormant');
+    // Twist the toggle.
+    $toggle
+      [((isHidden) ? 'add' : 'remove') + 'Class']('fp-open');
+
+  },
+  initItems: function (event) {
+    // The accordion wrapper.
+    var $wrapper = $(this);
+    var rootClass = 'fp-root';
+    var listClass = 'fp-list';
+    var itemClass = 'fp-item';
+    var linkClass = 'fp-link';
+    var handleClass = 'fp-handle';
+    // Get lists and items.
+    // @TODO, we want to allow arbitrary HTML in item bodies,
+    // so this selection will need to be tighter.
+    var $root = $wrapper.children('.' + rootClass);
+    var $ul = $wrapper.find('ul').not('.' + listClass);
+    var $li = $wrapper.find('li').not('.' + itemClass);
+    // Basic setup
+    $ul
+      .addClass(listClass)
+      .each(function (index, element) {
+        $(this).data('flexiPanda', {
+          processed: false,
+          type: 'list',
+          level: NaN
+        });
+      });
+    // Initialize items and their links.
+    $li
+      .addClass(itemClass)
+      .each(function (index, element) {
+        $(this).data('flexiPanda', {
+          processed: false,
+          type: 'item'
+        });
+      })
+      // Add a class to item links.
+      .children('a')
+      .addClass(linkClass)
+      .end()
+      .children('.' + linkClass)
+      .wrap(
+        $('<div>', {
+          'class': 'fp-box'
+        })
+      )
+      .parent()
+      .prepend(
+        $('<span>', {
+          'class': handleClass,
+          text: ''
+        })
+      );
+  },
+  /**
+   * Adds an fp-level class to each list based on its depth in the menu.
+   */
+  markListLevels: function ($lists, level, event) {
+    level = (typeof level === 'object') ? 1 : level;
+    $lists
+    .addClass('fp-level-' + level)
+    .each(function (index, element) {
+      $(this).data().flexiPanda.level = level;
+    });
+    $lists = $lists.children('li').children('ul');
+    if ($lists.length > 0) {
+      this.markListLevels($lists, (level + 1));
+    }
+  },
+  setLevelVisibility: function ($lists, visibleAfter) {
+    var level;
+    $lists
+    .each(function (index, element) {
+      var $this = $(this);
+      level = $(this).data().flexiPanda.level;
+      if (level > visibleAfter) {
+        $this.addClass('fp-dormant');
+      }
+      else {
+        $this.addClass('fp-visible');
+      }
+    });
+    $lists = $lists.children('li').children('ul');
+    if ($lists.length > 0) {
+      this.setLevelVisibility($lists, visibleAfter);
+    }
   }
 });
-})(jQuery);
+}(jQuery));

@@ -57,8 +57,6 @@
 /**
  * Toolbar tray.
  */
-#toolbar .toolbar-tray {
-}
 #toolbar .toolbar-tray > .lining {
   background-color: white;
   border-right: 1px solid black;
@@ -220,14 +218,14 @@
  * are not sophisticated enough for this enhancement.
  */
 @media screen {
-  #toolbar .toolbar-tray .level-2 > .fp-box > a,
+  #toolbar .toolbar-tray .fp-level-1 > .fp-item > .fp-box > a,
   #toolbar #toolbar-actions a,
   #toolbar #toolbar-user a {
     background-attachment: scroll;
-  background-position: 0.4545em center;
-  background-repeat: no-repeat;
-  background-size: 2em;
-  padding-left: 2.75em;
+    background-position: 0.4545em center;
+    background-repeat: no-repeat;
+    background-size: 2em;
+    padding-left: 2.75em;
   }
   #toolbar #toolbar-actions .home a {
     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwb2x5Z29uIHBvaW50cz0iODIuMDAxLDQwLjU3NyA4Mi4wMDEsMTYuNzY4IDY4LDE2Ljc2OCA2OCwyNi4xOTQgNDkuOTk4LDcuNjk1IDAsNTkuMDcyIDEyLDU5LjA3MiAxMiw5Mi4zMDYgNDIuOTk2LDkyLjMwNiANCgk0Mi45OTYsNjUuMTE0IDU3LjAwMSw2NS4xMTQgNTcuMDAxLDkyLjMwNiA4Ny45OTUsOTIuMzA2IDg3Ljk5NSw1OS4wNzIgMTAwLDU5LjA3MiAiLz4NCjwvc3ZnPg0K);
