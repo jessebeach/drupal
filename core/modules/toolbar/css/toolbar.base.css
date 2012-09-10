@@ -21,7 +21,11 @@ body.toolbar {
   margin: 0;
   outline: 0;
   padding: 0;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
   text-align: left; /* LTR */
+  -webkit-text-size-adjust: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
   vertical-align: baseline;
 }
 #toolbar {
@@ -41,10 +45,15 @@ body.toolbar {
 }
 #toolbar .toolbar-bar {
   left: 0;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
   z-index: 600;
+}
+@media screen and (max-width:28.124em) {
+  #toolbar .toolbar-bar {
+    position: absolute;
+  }
 }
 #toolbar .toolbar-bar .menu li {
   display: block;
@@ -55,70 +64,50 @@ body.toolbar {
 }
 /**
  * Toolbar tray.
- *
- * At small screen sizes, the tray overlays the page content.
- *
- * This strategy uses movement of the tray, which is stationary
- * for the large screen strategy. Because the page doesn't need
- * move at the same speed of the tray, we can move the tray and
- * the inner slider at the same time.
  */
-@media screen and (max-width:47.9999em) {
-  #toolbar .toolbar-tray {
-    left: -100%;
-    -webkit-transition: left, 0.2s ease-out;
-  }
-  #toolbar .toolbar-tray.active {
-    left: 0;
-  }
-}
-/**
- * At larger screen sizes, the tray pushes the page content.
- *
- * This strategy uses z-index to hide the tray.
- */
-@media screen and (min-width:48em) {
-  body {
-    -webkit-transition: padding-left, 0.2s ease-out;
-  }
-  body.menu-tray-open {
-    padding-left: 256px;
-    padding-left: 16rem;
-  }
-  #toolbar .toolbar-bar,
-  #toolbar .toolbar-tray.positioned {
-    position: fixed;
-  }
-  #toolbar .toolbar-tray.positioned {
-    z-index: -1000;
-  }
-  #toolbar .toolbar-tray.positioned.active {
-    z-index: 600;
-  }
-}
-#toolbar .toolbar-tray.positioned,
-#toolbar .toolbar-tray.positioned > .slider {
-  bottom: 0;
-  left: 0; /* LTR */
-  position: absolute;
-  top: 0;
-}
 #toolbar .toolbar-tray.positioned {
-  width: 256px;
-  width: 16rem;
-  max-width: 80%;
+  bottom: 0;
+  left: -320px;
+  left: -20rem;
+  max-width: 92%;
+  overflow-y: auto;
+  position: fixed;
+  width: 320px;
+  width: 20rem;
+  z-index: 600;
 }
 #toolbar .toolbar-tray.positioned > .slider {
   left: -100%; /* LTR */
-  -webkit-transition: left, 0.2s ease-out;
+  overflow:hidden;
+  position: absolute;
+  -webkit-transition: left, 0.3333s ease-out;
   width: 100%;
 }
+#toolbar .toolbar-tray.positioned.active,
 #toolbar .toolbar-tray.positioned.active > .slider {
   left: 0; /* LTR */
 }
-#toolbar .toolbar-tray.positioned > .lining {
-  max-height: 100%;
-  overflow: scroll;
+/**
+ * At larger screen sizes, the tray pushes the page content
+ * using padding instead of left.
+ */
+@media screen and (max-width:28.124em) {
+  body.menu-tray-open {
+    overflow: hidden;
+  }
+  #toolbar .toolbar-tray.positioned {
+    position: absolute;
+  }
+}
+/**
+ * At larger screen sizes, the tray pushes the page content
+ * using padding instead of left.
+ */
+@media screen and (min-width:28.125em) {
+  body.menu-tray-open {
+    padding-left: 320px;
+    padding-left: 20rem;
+  }
 }
 #toolbar .toolbar-tray.positioned li a {
   display: block;
@@ -132,44 +121,44 @@ body.toolbar {
  */
 /* @group Behavior */
 
-.fp-wrapper {
+#toolbar .fp-wrapper {
   position: relative;
   overflow: hidden;
 }
-.fp-list {
+#toolbar .fp-list {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.fp-item {
+#toolbar .fp-item {
   display: block;
 }
-.fp-box {
+#toolbar .fp-box {
   position: relative;
 }
-.fp-dormant {
+#toolbar .fp-dormant {
 	display: none;
 }
-.fp-calculate {
+#toolbar .fp-calculate {
   display: block !important;
   visibility: hidden !important;
   width: 100% !important;
 }
-.fp-trail > .fp-list { /* Show the sub-menus */
+#toolbar .fp-trail > .fp-list { /* Show the sub-menus */
   display: block;
 }
-.fp-active > .fp-list {
+#toolbar .fp-active > .fp-list {
   z-index: 51; /* Pull the active trail li's above the other li's */
 }
-.fp-wrapper .fp-box {
+#toolbar .fp-wrapper .fp-box {
   display: block;
   line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
   width: auto;
 }
-.fp-link {
+#toolbar .fp-link {
   display: block;
 }
-.fp-handle {
+#toolbar .fp-handle {
   bottom: 0;
   display: block;
   height: 100%;
@@ -179,17 +168,9 @@ body.toolbar {
   width: 60px;
   z-index: 1;
 }
-.fp-handle + * {
+#toolbar .fp-handle + * {
   margin-right: 60px;
 }
-.fp-back .fp-handle {
-  left: 0;
-  right: auto;
-}
-.fp-back .fp-handle + * {
-  margin-left: 60px;
-  margin-right: 0;
-}
-.fp-handle:hover {
+#toolbar .fp-handle:hover {
   cursor: pointer;
 }
