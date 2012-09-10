@@ -86,41 +86,41 @@ body.toolbar {
     padding-left: 16rem;
   }
   #toolbar .toolbar-bar,
-  #toolbar .toolbar-tray {
+  #toolbar .toolbar-tray.positioned {
     position: fixed;
   }
-  #toolbar .toolbar-tray {
+  #toolbar .toolbar-tray.positioned {
     z-index: -1000;
   }
-  #toolbar .toolbar-tray.active {
+  #toolbar .toolbar-tray.positioned.active {
     z-index: 600;
   }
 }
-#toolbar .toolbar-tray,
-#toolbar .toolbar-tray .slider {
+#toolbar .toolbar-tray.positioned,
+#toolbar .toolbar-tray.positioned > .slider {
   bottom: 0;
   left: 0; /* LTR */
   position: absolute;
   top: 0;
 }
-#toolbar .toolbar-tray {
+#toolbar .toolbar-tray.positioned {
   width: 256px;
   width: 16rem;
   max-width: 80%;
 }
-#toolbar .toolbar-tray .slider {
+#toolbar .toolbar-tray.positioned > .slider {
   left: -100%; /* LTR */
   -webkit-transition: left, 0.2s ease-out;
   width: 100%;
 }
-#toolbar .toolbar-tray.active .slider {
+#toolbar .toolbar-tray.positioned.active > .slider {
   left: 0; /* LTR */
 }
-#toolbar .toolbar-tray > .lining {
+#toolbar .toolbar-tray.positioned > .lining {
   max-height: 100%;
   overflow: scroll;
 }
-#toolbar .toolbar-tray li a {
+#toolbar .toolbar-tray.positioned li a {
   display: block;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
