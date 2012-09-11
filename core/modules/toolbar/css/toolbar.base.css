@@ -80,7 +80,9 @@ body.toolbar {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
-  -webkit-transition: left, 0.3333s ease-out;
+  -moz-transition: left, 0.2s ease-out;
+  -webkit-transition: left, 0.2s ease-out;
+  transition: left, 0.2s ease-out;
   width: 100%;
 }
 #toolbar .toolbar-tray.positioned.active,
