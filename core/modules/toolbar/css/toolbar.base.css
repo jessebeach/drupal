@@ -123,56 +123,79 @@ body.toolbar {
  */
 /* @group Behavior */
 
-#toolbar .fp-wrapper {
+#toolbar .fleximenu {
   position: relative;
   overflow: hidden;
 }
-#toolbar .fp-list {
+#toolbar ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#toolbar .fp-item {
+#toolbar li {
   display: block;
 }
-#toolbar .fp-box {
+#toolbar .box {
   position: relative;
 }
-#toolbar .fp-dormant {
+#toolbar .dormant {
 	display: none;
 }
-#toolbar .fp-calculate {
-  display: block !important;
-  visibility: hidden !important;
-  width: 100% !important;
-}
-#toolbar .fp-trail > .fp-list { /* Show the sub-menus */
+#toolbar .trail > ul { /* Show the sub-menus */
   display: block;
 }
-#toolbar .fp-active > .fp-list {
+#toolbar .active > ul {
   z-index: 51; /* Pull the active trail li's above the other li's */
 }
-#toolbar .fp-wrapper .fp-box {
+#toolbar .fleximenu .box {
   display: block;
   line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
   width: auto;
 }
-#toolbar .fp-link {
+#toolbar .fleximenu a {
   display: block;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-#toolbar .fp-handle {
+#toolbar .handle {
   bottom: 0;
   display: block;
-  height: 100%;
+  height: 2em;
   position: absolute;
-  right: 0;
+  right: 10px;
   top: 0;
-  width: 60px;
+  -webkit-transform: rotate(0deg);
+  -webkit-transition: -webkit-transform 0.1s ease-in;
+  width: 2em;
   z-index: 1;
 }
-#toolbar .fp-handle + * {
+#toolbar .handle::after,
+#toolbar .handle::before {
+  background-color: #999;
+  border-radius: 0px;
+  content: " ";
+  display: block;
+  height: 1em;
+  left: 50%;
+  position: absolute;
+  width: 2px;
+}
+#toolbar .handle::before {
+  -webkit-transform: rotate(-145deg);
+  top: 1.1em;
+}
+#toolbar .handle::after {
+  -webkit-transform: rotate(145deg);
+  top: 0.3em;
+}
+#toolbar .handle.open {
+  -webkit-transform: rotate(90deg);
+}
+#toolbar .handle + * {
   margin-right: 60px;
 }
-#toolbar .fp-handle:hover {
+#toolbar .handle:hover {
   cursor: pointer;
 }
