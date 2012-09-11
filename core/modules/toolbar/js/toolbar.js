@@ -243,20 +243,19 @@ $.extend(Drupal.TraySlider.prototype, {
     event.stopPropagation();
     var context = this;
     this.$tray.find('.toolbar-menu > .menu').each(function (index, element) {
-      var $root = $(this).addClass('fp-root');
+      var $root = $(this).addClass('root');
         // Wrap the list in a div to provide a positioning context.
       var $wrapper = $root.wrap($('<div>')
         .css({
             height: '100%',
             position: 'relative'
           })
-          .addClass('fp-wrapper')
+          .addClass('fleximenu')
         )
         .parent()
-        .addClass('fp-mode-accordion')
         // Bind event handlers.
         .on({
-          'setup.flexiPanda.accordionMode': context.accordionSetup
+          'setup.DrupalToolbar': context.accordionSetup
         });
       // Create a set of list-manipulation callbacks.
       // Called when items are added or removed.
@@ -266,10 +265,10 @@ $.extend(Drupal.TraySlider.prototype, {
       listUpdate.add($.proxy(context, 'markListLevels', $root));
       listUpdate.add($.proxy(context, 'setLevelVisibility', $root, 1));
       $wrapper
-        .on('listChange.flexiPanda', listUpdate.fire)
-        .on('clean.flexiPanda.accordionMode', '.fp-item', context.cleanItem)
-        .on('activate.flexiPanda.accordionMode', '.fp-item', context.activateItem)
-        .on('click.flexiPanda.accordionMode', '.fp-handle', context.accordionToggle)
+        .on('listChange.DrupalToolbar', listUpdate.fire)
+        .on('clean.DrupalToolbar.accordionMode', 'li', context.cleanItem)
+        .on('activate.DrupalToolbar.accordionMode', 'li', context.activateItem)
+        .on('click.DrupalToolbar.accordionMode', '.handle', context.accordionToggle)
         .trigger('setup');
     });
   },
@@ -285,41 +284,35 @@ $.extend(Drupal.TraySlider.prototype, {
   accordionToggle: function (event) {
     // The toggle.
     var $toggle = $(this);
-    var $item = $toggle.closest('.fp-item');
-    var $list = $item.children('.fp-list');
-    var isHidden = $list.hasClass('fp-dormant');
+    var $item = $toggle.closest('li');
+    var $list = $item.children('ul');
+    var isHidden = $list.hasClass('dormant');
     // Toggle the item open state.
     $item
-      [((isHidden) ? 'add' : 'remove') + 'Class']('fp-open');
+      [((isHidden) ? 'add' : 'remove') + 'Class']('open');
     // Toggle the item list visibility.
     $list
       ['slide' + ((isHidden) ? 'Down' : 'Up')]()
-      [((isHidden) ? 'remove' : 'add') + 'Class']('fp-dormant');
+      [((isHidden) ? 'remove' : 'add') + 'Class']('dormant');
     // Twist the toggle.
     $toggle
-      [((isHidden) ? 'add' : 'remove') + 'Class']('fp-open');
+      [((isHidden) ? 'add' : 'remove') + 'Class']('open');
 
   },
   initItems: function (event) {
     // The accordion wrapper.
     var $wrapper = $(this);
-    var rootClass = 'fp-root';
-    var listClass = 'fp-list';
-    var itemClass = 'fp-item';
-    var linkClass = 'fp-link';
-    var boxClass = 'fp-box';
-    var handleClass = 'fp-handle';
+    var rootClass = 'root';
+    var boxClass = 'box';
+    var handleClass = 'handle';
     // Get lists and items.
-    // @TODO, we want to allow arbitrary HTML in item bodies,
-    // so this selection will need to be tighter.
     var $root = $wrapper.children('.' + rootClass);
-    var $ul = $wrapper.find('ul').not('.' + listClass);
-    var $li = $wrapper.find('li').not('.' + itemClass);
+    var $ul = $wrapper.find('ul').once('fleximenu');
+    var $li = $wrapper.find('li').once('fleximenu');
     // Basic setup
     $ul
-      .addClass(listClass)
       .each(function (index, element) {
-        $(this).data('flexiPanda', {
+        $(this).data('DrupalToolbar', {
           processed: false,
           type: 'list',
           level: NaN
@@ -327,16 +320,14 @@ $.extend(Drupal.TraySlider.prototype, {
       });
     // Initialize items and their links.
     $li
-      .addClass(itemClass)
       .each(function (index, element) {
-        $(this).data('flexiPanda', {
+        $(this).data('DrupalToolbar', {
           processed: false,
           type: 'item'
         });
       })
       // Add a class to item links.
       .children('a')
-      .addClass(linkClass)
       .wrap(
         $('<div>', {
           'class': boxClass
@@ -346,7 +337,7 @@ $.extend(Drupal.TraySlider.prototype, {
       // Add a handle to each list item if it has a menu.
       .each(function (index, element) {
         var $item = $(this);
-        if ($item.children('.' + listClass).length > 0) {
+        if ($item.children('ul').length > 0) {
           $item
             .children('.' + boxClass)
             .prepend(
@@ -359,14 +350,14 @@ $.extend(Drupal.TraySlider.prototype, {
       });
   },
   /**
-   * Adds an fp-level class to each list based on its depth in the menu.
+   * Adds a level class to each list based on its depth in the menu.
    */
   markListLevels: function ($lists, level, event) {
     level = (typeof level === 'object') ? 1 : level;
     $lists
-    .addClass('fp-level-' + level)
+    .addClass('level-' + level)
     .each(function (index, element) {
-      $(this).data().flexiPanda.level = level;
+      $(this).data().DrupalToolbar.level = level;
     });
     $lists = $lists.children('li').children('ul');
     if ($lists.length > 0) {
@@ -378,12 +369,12 @@ $.extend(Drupal.TraySlider.prototype, {
     $lists
     .each(function (index, element) {
       var $this = $(this);
-      level = $(this).data().flexiPanda.level;
+      level = $(this).data().DrupalToolbar.level;
       if (level > visibleAfter) {
-        $this.addClass('fp-dormant');
+        $this.addClass('dormant');
       }
       else {
-        $this.addClass('fp-visible');
+        $this.addClass('visible');
       }
     });
     $lists = $lists.children('li').children('ul');
