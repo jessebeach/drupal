@@ -285,8 +285,12 @@ $.extend(Drupal.TraySlider.prototype, {
   accordionToggle: function (event) {
     // The toggle.
     var $toggle = $(this);
-    var $list = $toggle.closest('.fp-item').children('.fp-list');
+    var $item = $toggle.closest('.fp-item');
+    var $list = $item.children('.fp-list');
     var isHidden = $list.hasClass('fp-dormant');
+    // Toggle the item open state.
+    $item
+      [((isHidden) ? 'add' : 'remove') + 'Class']('fp-open');
     // Toggle the item list visibility.
     $list
       ['slide' + ((isHidden) ? 'Down' : 'Up')]()
