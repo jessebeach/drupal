@@ -734,8 +734,6 @@ function shortcut_toolbar_pre_render($toolbar) {
       drupal_get_path('module', 'shortcut') . '/shortcut.theme.css',
     ),
   );
-  $links['#prefix'] = '<div id="shortcut-toolbar">';
-  $links['#suffix'] = '</div>';
   $shortcut_set = shortcut_current_displayed_set();
   $configure_link = NULL;
   if (shortcut_set_edit_access($shortcut_set)) {
@@ -752,7 +750,7 @@ function shortcut_toolbar_pre_render($toolbar) {
     'configure' => $configure_link,
   );
 
-  $toolbar['toolbar_drawer'][] = $drawer;
+  $toolbar['toolbar_shortcuts'][] = $drawer;
   return $toolbar;
 }
 

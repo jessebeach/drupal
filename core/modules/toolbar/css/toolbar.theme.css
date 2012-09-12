@@ -64,6 +64,9 @@
   -webkit-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.4);
 }
+#toolbar .toolbar-tray a {
+  color: #333333;
+}
 #toolbar .toolbar-tray .lining {
   padding-bottom: 1em;
   padding-top: 1em;
@@ -86,8 +89,7 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
-#toolbar .toolbar-tray li a {
-  color: #333333;
+#toolbar .toolbar-tray .toolbar-menu li a {
   padding: 1em 0;
   text-indent: 3px;
 }
@@ -264,3 +266,27 @@
 }
 
 /* @end */
+
+/* Shortcuts */
+#toolbar .toolbar-shortcuts {
+  padding-left: 0.40em;
+  padding-right: 0.40em;
+}
+#toolbar .toolbar-shortcuts .menu li {
+  display: block;
+  float: left; /* LTR */
+  padding: 0 0.35em;
+  margin-bottom: 0.5em;
+}
+#toolbar .toolbar-shortcuts .menu a {
+  display: inline-block;
+}
+#toolbar .toolbar-shortcuts .menu a {
+  background-color: #DDDDDD;
+  border-radius: 0.4545em;
+  line-height: 1;
+  padding: 0.7857em 1em;
+}
+#toolbar #edit-shortcuts {
+  padding: 0.7857em 0.35em;
+}
