@@ -200,19 +200,7 @@ body.toolbar {
   cursor: pointer;
 }
 /* Shortcuts */
-#toolbar .toolbar-shortcuts {
-  padding-left: 0.40em;
-  padding-right: 0.40em;
-}
-#toolbar .toolbar-shortcuts .menu li {
-  display: block;
-  float: left; /* LTR */
-  padding: 0 0.35em;
-  margin-bottom: 0.5em;
-}
-#toolbar .toolbar-shortcuts .menu a {
-  display: inline-block;
-}
 #toolbar #edit-shortcuts {
+  clear: left;
   display: block;
 }
