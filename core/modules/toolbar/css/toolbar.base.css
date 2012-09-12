@@ -111,7 +111,7 @@ body.toolbar {
     padding-left: 20rem;
   }
 }
-#toolbar .toolbar-tray.positioned li a {
+#toolbar .toolbar-tray .toolbar-menu li a {
   display: block;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
@@ -198,4 +198,21 @@ body.toolbar {
 }
 #toolbar .handle:hover {
   cursor: pointer;
+}
+/* Shortcuts */
+#toolbar .toolbar-shortcuts {
+  padding-left: 0.40em;
+  padding-right: 0.40em;
+}
+#toolbar .toolbar-shortcuts .menu li {
+  display: block;
+  float: left; /* LTR */
+  padding: 0 0.35em;
+  margin-bottom: 0.5em;
+}
+#toolbar .toolbar-shortcuts .menu a {
+  display: inline-block;
+}
+#toolbar #edit-shortcuts {
+  display: block;
 }
