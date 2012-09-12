@@ -1,3 +1,8 @@
+/**
+ * @file toolbar.js
+ *
+ * Defines the behavior of the Drupal administration toolbar.
+ */
 (function ($, undefined) {
 
 "use strict";
@@ -7,133 +12,62 @@
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
-    var $toolbar = $(context).find('#toolbar');
-    var $bar = $toolbar.find('.toolbar-bar');
-    var $tray = $toolbar.find('.toolbar-tray');
-    var $trigger = $toolbar.find('.toggle-tray');
-    // Set the initial state of the toolbar.
-    $bar.once('toolbar-bar', function (index, element) {
-      var $toolbar = $(this);
-      $toolbar.data('drupalToolbar', new Drupal.ToolBar($toolbar));
-    });
-    // Instantiate the toolbar tray.
-    $tray.once('toolbar-slider', function (index, element) {
-      var $tray = $(this);
-      $tray.data('drupalToolbar', new Drupal.TraySlider($tray, $trigger));
-    });
+    var $toolbar = $(context).find('#toolbar').once('toolbar');
+    if ($toolbar.length) {
+      var $bar = $toolbar.find('.toolbar-bar');
+      var $tray = $toolbar.find('.toolbar-tray');
+      var $trigger = $toolbar.find('.toggle-tray');
+      // Instanstiate the bar.
+      if ($bar.length) {
+        ToolBar.bar = new ToolBar($bar);
+      }
+      // Instantiate the tray.
+      if ($tray.length && $trigger.length) {
+        ToolBar.tray = new TraySlider($tray, $trigger);
+      }
+    }
   }
 };
-
-Drupal.ToolBar = function ($toolbar) {
+/**
+ * Store references to the ToolBar and TraySlider objects in the ToolBar object.
+ *
+ * These references will be available in Drupal.ToolBar.bar and
+ * Drupal.ToolBar.tray.
+ */
+$.extend(ToolBar, {
+  bar: null,
+  tray: null
+});
+/**
+ * A toolbar is an administration action button container.
+ */
+function ToolBar ($toolbar) {
   this.$toolbar = $toolbar;
-  this.labels;
-  this.collapsed;
-  // Init the object.
-  this.init.apply(this, arguments);
+  // Recalculate the offset top on screen resize.
+  var setHeight = $.proxy(this, 'setHeight');
+  // Use debounce if it exists.
+  setHeight = ('debounce' in Drupal) ? Drupal.debounce(setHeight, 250) : setHeight;
+  $(window)
+    .on({
+      'resize.toolbar': setHeight
+    });
+  // Toolbar event handlers.
+  this.$toolbar
+    .on({
+      'setup.toolbar': setHeight
+    })
+    .trigger('setup');
 };
 
 /**
  * Extend the prototype of the TraySlider class.
  */
-$.extend(Drupal.ToolBar.prototype, {
+$.extend(ToolBar.prototype, {
   /**
+   * The height of the toolbar offsets the top of the page content.
    *
-   */
-  init: function() {
-    // Labels
-    this.labels = {
-      'opened': Drupal.t('Hide shortcuts'),
-      'closed': Drupal.t('Show shortcuts')
-    };
-    // Recalculate the offset top on screen resize.
-    var setHeight = $.proxy(this, 'setHeight');
-    // Use debounce if it exists.
-    setHeight = ('debounce' in Drupal) ? Drupal.debounce(setHeight, 250) : setHeight;
-    $(window)
-      .on({
-        'resize.DrupalToolbar': setHeight
-      });
-    // Toolbar event handlers.
-    this.$toolbar
-      .on({
-        'setup.DrupalToolbar': setHeight
-      })
-      .trigger('setup');
-    // Set up the toolbar drawer visibility toggle.
-    /*
-  this.$trigger = this.$toolbar.find('.toggle-drawer');
-    this.$trigger
-    .on('click.DrupalToolbar', $.proxy(this, 'toggle'));
-    // Store the shortcut bar drawer HTML element.
-    this.$drawer = this.$toolbar.find('.toolbar-drawer');
-    // Retrieve the collapsed status from a stored cookie.
-    this.collapsed = $.cookie('Drupal.toolbar.collapsed');
-    // Expand or collapse the toolbar based on the cookie value.
-    if (this.collapsed === '1') {
-      this.collapse();
-    }
-    else {
-      this.expand();
-    }
-  */
-  },
-  /**
-   * Collapse the toolbar.
-   */
-  collapse: function() {
-    var toggle_text = this.labels.closed;
-    this.$drawer.addClass('collapsed');
-    this.$trigger
-    .removeClass('active')
-    .attr('title',  toggle_text)
-    .html(toggle_text);
-    // Remove the class from the body that would indicate the drawer is open.
-    $('body')
-    .removeClass('toolbar-drawer');
-    // Set the height of the toolbar.
-    this.setHeight();
-  },
-  /**
-   * Expand the toolbar.
-   */
-  expand: function() {
-    var toggle_text = this.labels.opened;
-    this.$drawer.removeClass('collapsed');
-    this.$trigger
-    .addClass('active')
-    .attr('title',  toggle_text)
-    .html(toggle_text);
-    // Add a class to the body to indicate the drawer is open.
-    $('body').addClass('toolbar-drawer');
-    // Set the height of the toolbar.
-    this.setHeight();
-  },
-  /**
-   * Toggle the toolbar.
-   */
-  toggle: function(event) {
-    event.preventDefault();
-    if (this.collapsed === '1') {
-      this.expand();
-      this.collapsed = '0';
-    }
-    else {
-      this.collapse();
-      this.collapsed = '1';
-    }
-    // Store the drawer state in a cookie.
-    $.cookie(
-      'Drupal.toolbar.collapsed',
-      this.collapsed,
-      {
-        path: Drupal.settings.basePath,
-        // The cookie should "never" expire.
-        expires: 36500
-      }
-    );
-  },
-  /**
-   *
+   * Page components can register with the offsettopchange event to know when
+   * the height of the toolbar changes.
    */
   setHeight: function() {
     this.height = this.$toolbar.outerHeight();
@@ -148,7 +82,7 @@ $.extend(Drupal.ToolBar.prototype, {
 /**
  *
  */
-Drupal.TraySlider = function ($tray, $trigger) {
+function TraySlider ($tray, $trigger) {
   this.$tray = $tray;
   this.$trigger = $trigger;
   // Initiate the object.
@@ -160,9 +94,9 @@ Drupal.TraySlider = function ($tray, $trigger) {
   // Add a click handler to the toggle.
   this.$trigger
     .on({
-      'setup.DrupalToolbar': $.proxy(this, 'toggleTrigger'),
-      'click.DrupalToolbar': $.proxy(this, 'handleTriggerClick'),
-      'toggled.DrupalToolbar': $.proxy(this, 'toggleTrigger')
+      'setup.toolbar': $.proxy(this, 'toggleTrigger'),
+      'click.toolbar': $.proxy(this, 'handleTriggerClick'),
+      'toggled.toolbar': $.proxy(this, 'toggleTrigger')
     })
     .trigger('setup', this.state);
   // The tray has a couple setup methods to run.
@@ -172,8 +106,8 @@ Drupal.TraySlider = function ($tray, $trigger) {
   this.$tray
     // Register event handlers.
     .on({
-      'setup.DrupalToolbar': setup.fire,
-      'toggled.DrupalToolbar': $.proxy(this, 'toggleTray')
+      'setup.toolbar': setup.fire,
+      'toggled.toolbar': $.proxy(this, 'toggleTray')
     })
     // The tray will be positioned at the edge of the window.
     .addClass('positioned')
@@ -183,13 +117,13 @@ Drupal.TraySlider = function ($tray, $trigger) {
   $(document)
     .on({
       // Offset value vas changed by a third party script.
-      'offsettopchange.DrupalToolbar': $.proxy(this, 'displace')
+      'offsettopchange.toolbar': $.proxy(this, 'displace')
     });
 };
 /**
  * Extend the prototype of the TraySlider class.
  */
-$.extend(Drupal.TraySlider.prototype, {
+$.extend(TraySlider.prototype, {
   /**
    *
    */
@@ -255,7 +189,7 @@ $.extend(Drupal.TraySlider.prototype, {
         .parent()
         // Bind event handlers.
         .on({
-          'setup.DrupalToolbar': context.accordionSetup
+          'setup.toolbar': context.accordionSetup
         });
       // Create a set of list-manipulation callbacks.
       // Called when items are added or removed.
@@ -265,10 +199,10 @@ $.extend(Drupal.TraySlider.prototype, {
       listUpdate.add($.proxy(context, 'markListLevels', $root));
       listUpdate.add($.proxy(context, 'setLevelVisibility', $root, 1));
       $wrapper
-        .on('listChange.DrupalToolbar', listUpdate.fire)
-        .on('clean.DrupalToolbar.accordionMode', 'li', context.cleanItem)
-        .on('activate.DrupalToolbar.accordionMode', 'li', context.activateItem)
-        .on('click.DrupalToolbar.accordionMode', '.handle', context.accordionToggle)
+        .on('listChange.toolbar', listUpdate.fire)
+        .on('clean.toolbar.accordionMode', 'li', context.cleanItem)
+        .on('activate.toolbar.accordionMode', 'li', context.activateItem)
+        .on('click.toolbar.accordionMode', '.handle', context.accordionToggle)
         .trigger('setup');
     });
   },
@@ -312,7 +246,7 @@ $.extend(Drupal.TraySlider.prototype, {
     // Basic setup
     $ul
       .each(function (index, element) {
-        $(this).data('DrupalToolbar', {
+        $(this).data('toolbar', {
           processed: false,
           type: 'list',
           level: NaN
@@ -321,7 +255,7 @@ $.extend(Drupal.TraySlider.prototype, {
     // Initialize items and their links.
     $li
       .each(function (index, element) {
-        $(this).data('DrupalToolbar', {
+        $(this).data('toolbar', {
           processed: false,
           type: 'item'
         });
@@ -357,7 +291,7 @@ $.extend(Drupal.TraySlider.prototype, {
     $lists
     .addClass('level-' + level)
     .each(function (index, element) {
-      $(this).data().DrupalToolbar.level = level;
+      $(this).data().toolbar.level = level;
     });
     $lists = $lists.children('li').children('ul');
     if ($lists.length > 0) {
@@ -369,7 +303,7 @@ $.extend(Drupal.TraySlider.prototype, {
     $lists
     .each(function (index, element) {
       var $this = $(this);
-      level = $(this).data().DrupalToolbar.level;
+      level = $(this).data().toolbar.level;
       if (level > visibleAfter) {
         $this.addClass('dormant');
       }
@@ -383,4 +317,7 @@ $.extend(Drupal.TraySlider.prototype, {
     }
   }
 });
+
+// Assign the ToolBar obect to the Drupal namespace.
+Drupal.ToolBar = ToolBar;
 }(jQuery));
