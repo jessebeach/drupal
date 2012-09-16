@@ -21,14 +21,20 @@
 ?>
 <div id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-bar clearfix">
-    <?php print render($toolbar['toolbar_navigation']); ?>
-    <?php if (!empty($toolbar['action_links'])): ?>
-      <h2 class="element-invisible"><?php print t('Toolbar page actions'); ?></h2>
-        <?php print render($toolbar['action_links']); ?>
-    <?php endif; ?>
-    <?php if (!empty($toolbar['toolbar_user'])) : ?>
-      <?php print render($toolbar['toolbar_user']); ?>
-    <?php endif; ?>
+    <div class="section first">
+      <?php print render($toolbar['toolbar_navigation']); ?>
+    </div>
+    <div class="section second">
+      <?php if (!empty($toolbar['action_links'])): ?>
+        <h2 class="element-invisible"><?php print t('Toolbar page actions'); ?></h2>
+          <?php print render($toolbar['action_links']); ?>
+      <?php endif; ?>
+    </div>
+    <div class="section third">
+      <?php if (!empty($toolbar['toolbar_user'])) : ?>
+        <?php print render($toolbar['toolbar_user']); ?>
+      <?php endif; ?>
+    </div>
   </div>
 
   <div class="toolbar-tray" name="toolbar-tray">

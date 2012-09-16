@@ -55,6 +55,10 @@ body.toolbar {
     position: absolute;
   }
 }
+#toolbar .toolbar-bar .section {
+  float: left;
+  width: 33.3333%;
+}
 #toolbar .toolbar-bar .menu li {
   display: block;
   float: left; /* LTR */
@@ -203,4 +207,9 @@ body.toolbar {
 #toolbar #edit-shortcuts {
   clear: left;
   display: block;
+}
+
+/* Dropbutton */
+#toolbar .dropbutton-multiple {
+  position: static;
 }

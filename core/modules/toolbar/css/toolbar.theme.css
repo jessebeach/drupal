@@ -23,6 +23,10 @@
   background-color: #383838;
   color: #dddddd;
 }
+#toolbar .toolbar-bar .section.second {
+  padding-bottom: 0.5em;
+  padding-top: 0.5em;
+}
 #toolbar .toolbar-bar a {
   color: #ffffff;
   text-shadow: #585858 0 1px 0;
@@ -289,4 +293,12 @@
 }
 #toolbar #edit-shortcuts {
   padding: 0.7857em 0.35em;
+}
+
+/* Dropbutton */
+
+#toolbar .dropbutton {
+  background-color: #4894DA;
+  font-size: inherit;
+  padding: 0.5em 1em;
 }
