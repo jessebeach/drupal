@@ -123,19 +123,6 @@ function toolbar_view() {
       ),
     ),
   );
-  // Retrieve the admin menu from the database.
-  $tree = toolbar_get_menu_tree();
-  // Add attributes to the links before rendering.
-  toolbar_menu_navigation_links($tree);
-  $build['toolbar_menu'] = menu_tree_output($tree);
-  // Add a search form element for the jump-to form element.
-  $build['toolbar_filter'] = array(
-    '#type' => 'search',
-    '#attributes' => array(
-      'class' => array('filter'),
-      'placeholder' => t('Search'),
-    ),
-  );
 
   // Add logout & user account links or login link.
   if ($user->uid) {
@@ -177,10 +164,10 @@ function toolbar_view() {
       'id' => 'toolbar-user',
       'class' => array('menu'),
     ),
-    '#heading' => array('text' => t('Administrative toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
+    '#heading' => array('text' => t('Toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
-  // Build the default toolbar action links.
+  // Build the default toolbar navigation links.
   $links = array(
     'toolbar_tray_toggle' => array(
       'title' => t('Menu'),
@@ -201,16 +188,8 @@ function toolbar_view() {
       ),
     ),
   );
-  // Toolbar local tabs.
-  $local_actions = menu_local_actions();
-  if (!empty($local_actions)) {
-    $build['action_links'] = array(
-      '#theme' => 'links',
-      '#links' => toolbar_convert_action_links_to_standard_links($local_actions),
-    );
-  }
 
-  // Toolbar action links.
+  // Toolbar navigation links.
   $build['toolbar_navigation'] = array(
     '#theme' => 'links',
     '#links' => $links,
@@ -218,7 +197,31 @@ function toolbar_view() {
       'id' => 'toolbar-actions',
       'class' => array('menu'),
     ),
-    '#heading' => array('text' => t('Administrative toolbar actions'), 'level' => 'h2', 'class' => 'element-invisible'),
+    '#heading' => array('text' => t('Toolbar navigation'), 'level' => 'h2', 'class' => 'element-invisible'),
+  );
+
+  // Toolbar local actions.
+  $local_actions = menu_local_actions();
+  if (!empty($local_actions)) {
+    $build['action_links'] = array(
+      '#theme' => 'dropbutton',
+      '#links' => toolbar_convert_action_links_to_standard_links($local_actions),
+    );
+  }
+
+  // Retrieve the admin menu from the database.
+  $tree = toolbar_get_menu_tree();
+  // Add attributes to the links before rendering.
+  toolbar_menu_navigation_links($tree);
+  $build['toolbar_menu'] = menu_tree_output($tree);
+
+  // Add a search form element for the jump-to form element.
+  $build['toolbar_filter'] = array(
+    '#type' => 'search',
+    '#attributes' => array(
+      'class' => array('filter'),
+      'placeholder' => t('Search'),
+    ),
   );
 
   // Shortcuts.
