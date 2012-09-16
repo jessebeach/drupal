@@ -21,18 +21,32 @@
 ?>
 <div id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
   <div class="toolbar-bar clearfix">
-    <?php print render($toolbar['toolbar_actions']); ?>
-    <?php print render($toolbar['toolbar_user']); ?>
+    <h2 class="element-invisible"><?php print t('Toolbar navigation'); ?></h2>
+    <?php print render($toolbar['toolbar_navigation']); ?>
+    <?php if (!empty($toolbar['action_links'])): ?>
+      <h2 class="element-invisible"><?php print t('Toolbar page actions'); ?></h2>
+      <ul class="action-links menu">
+        <?php print render($toolbar['action_links']); ?>
+      </ul>
+    <?php endif; ?>
+    <?php if (!empty($toolbar['toolbar_user'])) : ?>
+      <h2 class="element-invisible"><?php print t('Toolbar user account actions'); ?></h2>
+      <?php print render($toolbar['toolbar_user']); ?>
+    <?php endif; ?>
   </div>
 
   <div class="toolbar-tray" name="toolbar-tray">
     <div class="lining slider">
       <?php print render($toolbar['toolbar_filter']); ?>
-      <?php print render($toolbar['toolbar_shortcuts']); ?>
-      <nav class="toolbar-menu">
-        <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
-        <?php print render($toolbar['toolbar_menu']); ?>
-      </nav>
+      <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
+        <?php print render($toolbar['toolbar_shortcuts']); ?>
+      <?php endif; ?>
+      <?php if (!empty($toolbar['toolbar_menu'])) : ?>
+        <nav class="toolbar-menu">
+          <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
+          <?php print render($toolbar['toolbar_menu']); ?>
+        </nav>
+      <?php endif; ?>
     </div>
   </div>
 </div>
