@@ -299,6 +299,27 @@
 
 #toolbar .dropbutton {
   background-color: #4894DA;
+  border: 0;
   font-size: inherit;
-  padding: 0.5em 1em;
+}
+#toolbar .dropbutton-content a {
+  padding: 0.6667em 1em;
+  line-height: 1;
+}
+#toolbar .dropbutton .dropbutton-link {
+  border-left: 0; 
+}
+#toolbar .dropbutton .dropbutton-arrow {
+  border-bottom-width: 0;
+  border-left-width: 0.55em;
+  border-right-width: 0.55em;
+  border-top-width: 0.6em;
+  right: 7px;
+  top: 0.75em;
+}
+#toolbar .dropbutton.open .dropbutton-arrow {
+  border-bottom-width: 0.6em;
+  border-left-width: 0.55em;
+  border-right-width: 0.55em;
+  border-top-width: 0.05em;
 }
