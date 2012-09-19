@@ -297,17 +297,27 @@
 
 /* Dropbutton */
 
-#toolbar .dropbutton {
+#toolbar .section.second .dropbutton {
+  right: 100%;
+}
+#toolbar .section.second .dropbutton-widget {
+  right: -10em;
+  max-width: 10em;
+}
+#toolbar .section.second .dropbutton.open .dropbutton-widget {
+  max-width: none;
+}
+#toolbar .dropbutton-widget {
   background-color: #4894DA;
   border: 0;
   font-size: inherit;
 }
+#toolbar .dropbutton-multiple .dropbutton-widget {
+  padding-right: 2em;
+}
 #toolbar .dropbutton-content a {
   padding: 0.6667em 1em;
   line-height: 1;
-}
-#toolbar .dropbutton .dropbutton-link {
-  border-left: 0; 
 }
 #toolbar .dropbutton .dropbutton-arrow {
   border-bottom-width: 0;

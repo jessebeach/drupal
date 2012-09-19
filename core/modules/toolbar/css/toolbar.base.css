@@ -137,7 +137,7 @@ body.toolbar {
   margin: 0;
   padding: 0;
 }
-#toolbar li {
+#toolbar .fleximenu li {
   display: block;
 }
 #toolbar .box {
@@ -208,13 +208,4 @@ body.toolbar {
 #toolbar #edit-shortcuts {
   clear: left;
   display: block;
-}
-
-/* Dropbutton */
-#toolbar .dropbutton-multiple {
-  padding-right: 2em;
-  position: absolute;
-}
-#toolbar .dropbutton-link {
-  width: 2em;
 }
