@@ -1707,6 +1707,49 @@ function theme_links($variables) {
 }
 
 /**
+ * Builds a render array for theme_dropbutton().
+ */
+function template_preprocess_dropbutton(&$variables) {
+  $variables['attributes']['class'][] = 'dropbutton';
+  $variables['element'] = array(
+    '#theme' => 'links',
+    '#links' => $variables['links'],
+    '#attributes' => $variables['attributes'],
+    '#attached' => array(
+      'library' => array(
+        array('system', 'drupal.dropbutton'),
+      ),
+    ),
+  );
+  if (!empty($variables['links'])) {
+    $variables['element']['#prefix'] = '<div class="dropbutton-wrapper"><div class="dropbutton-widget">';
+    $variables['element']['#suffix'] = '</div></div>';
+  }
+  // Pass through title to the dropbutton options.
+  if (isset($variables['title'])) {
+    $variables['element']['#attached']['js'][] = array(
+      'type' => 'setting',
+      'data' => array('dropbutton' => array('title' => $variables['title'])),
+    );
+  }
+}
+
+/**
+ * Creates a dropbutton menu.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - title: (optional) The text placed in the clickable area to activate the
+ *     dropbutton. Defaults to 'Open dropbutton'.
+ *   - links: An array of links to provide in the dropbutton.
+ *   - attributes: (optional) An associative array of HTML attributes to apply
+ *     to the dropbutton.
+ */
+function theme_dropbutton($variables) {
+  return render($variables['element']);
+}
+
+/**
  * Returns HTML for an image.
  *
  * @param $variables
@@ -2903,6 +2946,9 @@ function drupal_common_theme() {
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
+    ),
+    'dropbutton' => array(
+      'variables' => array('title' => NULL, 'links' => array(), 'attributes' => array()),
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft

@@ -1331,6 +1331,26 @@ function system_library_info() {
     ),
   );
 
+  // Dropbutton.
+  $libraries['drupal.dropbutton'] = array(
+    'title' => 'Dropbutton',
+    'website' => 'http://drupal.org/node/1608878',
+    'version' => '1.0',
+    'js' => array(
+      'core/misc/dropbutton/dropbutton.js' => array(),
+    ),
+    'css' => array(
+      'core/misc/dropbutton/dropbutton.base.css' => array(),
+      'core/misc/dropbutton/dropbutton.theme.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
   // Vertical Tabs.
   $libraries['drupal.vertical-tabs'] = array(
     'title' => 'Vertical Tabs',
