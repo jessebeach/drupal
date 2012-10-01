@@ -31,7 +31,10 @@
 }
 #toolbar .toolbar-bar .toggle-tray {
   background-position: -13px -19px;
+  -moz-transition: background-color, 0.2s ease-in;
+  -o-transition: background-color, 0.2s ease-in;
   -webkit-transition: background-color, 0.2s ease-in;
+  transition: background-color, 0.2s ease-in;
 }
 #toolbar .toolbar-bar .toggle-tray.active {
   background-color: white;
@@ -65,6 +68,7 @@
   background-color: white;
   border-right: 1px solid #aaaaaa;
   -moz-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.4);
 }
