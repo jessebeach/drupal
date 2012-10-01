@@ -24,27 +24,24 @@
     <div class="section first">
       <?php print render($toolbar['toolbar_navigation']); ?>
     </div>
-    <div class="section second">
-      <?php if (!empty($toolbar['action_links'])): ?>
-        <h2 class="element-invisible"><?php print t('Toolbar page actions'); ?></h2>
-          <?php print render($toolbar['action_links']); ?>
-      <?php endif; ?>
-    </div>
-    <div class="section third">
-      <?php if (!empty($toolbar['toolbar_user'])) : ?>
+    <div class="section second"></div>
+    <?php if (!empty($toolbar['toolbar_user'])) : ?>
+      <div class="section third">
         <?php print render($toolbar['toolbar_user']); ?>
-      <?php endif; ?>
-    </div>
+      </div>
+    <?php endif; ?>
   </div>
 
-  <div class="toolbar-tray" name="toolbar-tray">
+  <div class="toolbar-tray">
     <div class="lining slider">
-      <?php print render($toolbar['toolbar_filter']); ?>
       <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
-        <?php print render($toolbar['toolbar_shortcuts']); ?>
+        <div class="toolbar-shortcuts clearfix">
+          <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
+          <?php print render($toolbar['toolbar_shortcuts']); ?>
+        </div>
       <?php endif; ?>
       <?php if (!empty($toolbar['toolbar_menu'])) : ?>
-        <nav class="toolbar-menu">
+        <nav class="toolbar-menu clearfix">
           <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
           <?php print render($toolbar['toolbar_menu']); ?>
         </nav>

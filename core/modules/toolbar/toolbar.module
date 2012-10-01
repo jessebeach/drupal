@@ -156,7 +156,7 @@ function toolbar_view() {
       ),
     );
   }
-
+  // Theme the toolbar user action links.
   $build['toolbar_user'] = array(
     '#theme' => 'links__toolbar_user',
     '#links' => $links,
@@ -200,66 +200,16 @@ function toolbar_view() {
     '#heading' => array('text' => t('Toolbar navigation'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
-  // Toolbar local actions.
-  $local_actions = menu_local_actions();
-  if (!empty($local_actions)) {
-    $build['action_links'] = array(
-      '#theme' => 'dropbutton',
-      '#links' => toolbar_convert_action_links_to_standard_links($local_actions),
-    );
-  }
-
   // Retrieve the admin menu from the database.
   $tree = toolbar_get_menu_tree();
   // Add attributes to the links before rendering.
   toolbar_menu_navigation_links($tree);
   $build['toolbar_menu'] = menu_tree_output($tree);
 
-  // Add a search form element for the jump-to form element.
-  $build['toolbar_filter'] = array(
-    '#type' => 'search',
-    '#attributes' => array(
-      'class' => array('filter'),
-      'placeholder' => t('Search'),
-    ),
-  );
-
   // Shortcuts.
-  $build['toolbar_shortcuts'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array(
-        'toolbar-shortcuts',
-        'clearfix',
-      ),
-    ),
-  );
+  $build['toolbar_shortcuts'] = array();
 
   return $build;
-}
-
-/**
- * Translate menu_local_action links to standard links for theme_links.
- *
- *
- * The function theme_menu_local_actions expects a the properties of the link to
- * be stored under a #link property. The function theme_links expects the
- * properties of the link to be direct children of the link array. So unset the
- * #theme property and move the properties under #link to the parent property of
- * #link.
- *
- * @see theme_menu_local_action
- * @see theme_links
- */
-function toolbar_convert_action_links_to_standard_links($links = array()) {
-  foreach ($links as $key => $link) {
-    unset($links[$key]['#theme']);
-    foreach ($link['#link'] as $prop => $value) {
-      $links[$key][$prop] = $value;
-    }
-    unset($links[$key]['#link']);
-  }
-  return $links;
 }
 
 /**
@@ -343,7 +293,6 @@ function toolbar_library_info() {
     'css' => array(
       drupal_get_path('module', 'toolbar') . '/css/toolbar.base.css',
       drupal_get_path('module', 'toolbar') . '/css/toolbar.theme.css',
-      drupal_get_path('module', 'toolbar') . '/css/toolbar.accordion.css',
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -351,7 +300,6 @@ function toolbar_library_info() {
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
-      array('system', 'jquery.ui.position'),
     ),
   );
 
