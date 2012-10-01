@@ -24,12 +24,12 @@
     <div class="section first">
       <?php print render($toolbar['toolbar_navigation']); ?>
     </div>
-    <div class="section second"></div>
     <?php if (!empty($toolbar['toolbar_user'])) : ?>
-      <div class="section third">
+      <div class="section second">
         <?php print render($toolbar['toolbar_user']); ?>
       </div>
     <?php endif; ?>
+    <div class="section actions"></div>
   </div>
 
   <div class="toolbar-tray">
