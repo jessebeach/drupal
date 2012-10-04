@@ -212,6 +212,9 @@ body.toolbar {
   width: 6em;
   z-index: 1;
 }
+#toolbar .leve-2 .handle {
+  background-size: 1.5em;
+}
 #toolbar .handle.open {
   -moz-transform: rotate(90deg);
   -o-transform: rotate(90deg);
