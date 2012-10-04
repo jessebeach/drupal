@@ -98,14 +98,14 @@ body.toolbar {
  */
 #toolbar .toolbar-tray.positioned {
   bottom: 0;
-  left: -320px;
-  left: -20rem;
+  left: -240px;
+  left: -15rem;
   max-width: 92%;
   overflow-x: hidden;
   overflow-y: auto;
   position: fixed;
-  width: 320px;
-  width: 20rem;
+  width: 240px;
+  width: 15rem;
   z-index: 600;
 }
 #toolbar .toolbar-tray.positioned > .slider {
@@ -140,9 +140,15 @@ body.toolbar {
  */
 @media screen and (min-width: 28.125em) {
   body.menu-tray-open {
-    padding-left: 320px;
-    padding-left: 20rem;
+    padding-left: 272px;
+    padding-left: 17rem;
   }
+  #toolbar .toolbar-tray.positioned {
+  left: -272px;
+  left: -17rem;
+  width: 272px;
+  width: 17rem;
+}
 }
 #toolbar .toolbar-tray .toolbar-menu li a {
   display: block;
@@ -196,7 +202,7 @@ body.toolbar {
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwb2x5Z29uIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjNzc3Nzc3IiBwb2ludHM9IjIyLjUsODguNSAzMi4wMTUsOTkuNSA3Ny41LDUwIDMyLjAxNSwwLjUgMjIuNSwxMS41IA0KCTU3LjM2OSw1MCAiLz4NCjwvc3ZnPg0K);
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: 2em;
+  background-size: 20px 20px;
   bottom: 0;
   display: block;
   height: 100%;
@@ -209,7 +215,7 @@ body.toolbar {
   -webkit-transition: -webkit-transform 0.1s ease-in;
   transform: rotate(0deg);
   transition: -webkit-transform 0.1s ease-in;
-  width: 6em;
+  width: 4em;
   z-index: 1;
 }
 #toolbar .level-2 .handle {
@@ -222,7 +228,7 @@ body.toolbar {
   transform: rotate(90deg);
 }
 #toolbar .handle + * {
-  margin-right: 6em;
+  margin-right: 4em;
 }
 #toolbar .handle:hover {
   cursor: pointer;
