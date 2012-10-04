@@ -212,7 +212,7 @@ body.toolbar {
   width: 6em;
   z-index: 1;
 }
-#toolbar .leve-2 .handle {
+#toolbar .level-2 .handle {
   background-size: 1.5em;
 }
 #toolbar .handle.open {
