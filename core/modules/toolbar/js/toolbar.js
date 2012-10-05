@@ -137,7 +137,7 @@ $.extend(TraySlider.prototype, {
   /**
    *
    */
-   toggleTrigger: function (event, state) {
+  toggleTrigger: function (event, state) {
     this.$trigger[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
   },
   /**
@@ -221,6 +221,8 @@ $.extend(TraySlider.prototype, {
     var $item = $toggle.closest('li');
     var $list = $item.children('ul');
     var isHidden = $list.hasClass('dormant');
+    // Close open siblings.
+    $item.siblings().filter('.open').find('.handle').trigger('click');
     // Toggle the item open state.
     $item
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
