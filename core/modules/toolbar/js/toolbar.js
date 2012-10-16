@@ -3,7 +3,7 @@
  *
  * Defines the behavior of the Drupal administration toolbar.
  */
-(function ($, undefined) {
+(function ($, _) {
 
 "use strict";
 
@@ -25,6 +25,14 @@ Drupal.behaviors.toolbar = {
       if ($tray.length && $trigger.length) {
         ToolBar.tray = new TraySlider($tray, $trigger);
       }
+      // Set up switching between the vertical and horizontal presentation
+      // of the toolbar.
+      if (!_.isEmpty(settings.toolbar.breakpoints) && settings.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
+        var mq = settings.toolbar.breakpoints['module.toolbar.wide'];
+        Drupal.MediaQuery(mq).subscribe(function () {
+          console.log('hi: ' + mq);
+        });
+      }
     }
   }
 };
@@ -34,7 +42,7 @@ Drupal.behaviors.toolbar = {
  * These references will be available in Drupal.ToolBar.bar and
  * Drupal.ToolBar.tray.
  */
-$.extend(ToolBar, {
+_.extend(ToolBar, {
   bar: null,
   tray: null
 });
@@ -44,9 +52,9 @@ $.extend(ToolBar, {
 function ToolBar ($toolbar) {
   this.$toolbar = $toolbar;
   // Recalculate the offset top on screen resize.
-  var setHeight = $.proxy(this, 'setHeight');
-  // Use debounce if it exists.
-  setHeight = ('debounce' in Drupal) ? Drupal.debounce(setHeight, 250) : setHeight;
+  var setHeight = _.bind(this.setHeight, this);
+  // Use throttle to prevent setHeight from being called too frequently.
+  setHeight = _.throttle(setHeight, 250);
   $(window)
     .on({
       'resize.toolbar': setHeight
@@ -321,5 +329,5 @@ $.extend(TraySlider.prototype, {
 });
 
 // Assign the ToolBar obect to the Drupal namespace.
-Drupal.ToolBar = ToolBar;
-}(jQuery));
+_.extend(Drupal, {'Toolbar': ToolBar});
+}(jQuery, _));

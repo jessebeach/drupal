@@ -1390,6 +1390,16 @@ function system_library_info() {
     ),
   );
 
+  // Media Query support.
+  $libraries['drupal.mediaquery'] = array(
+    'title' => 'Media Query support',
+    'website' => '',
+    'version' => '1.0',
+    'js' => array(
+      'core/misc/mediaquery.js' => array(),
+    ),
+  );
+
   // Farbtastic.
   $libraries['jquery.farbtastic'] = array(
     'title' => 'Farbtastic',
