@@ -124,6 +124,27 @@ function toolbar_view() {
     ),
   );
 
+  // Get the configured breakpoint for switch from vertical to horizontal
+  // toolbar presentation.
+  $breakpoints = entity_load('breakpoint_group', 'module.toolbar.toolbar');
+  if (!empty($breakpoints)) {
+    $build['#attached']['js'] = array(
+        array(
+        'data' => array(
+          'toolbar' => array(
+            'breakpoints' => array(),
+          ),
+        ),
+        'type' => 'setting',
+      )
+    );
+    // // Load the breakpoints for toolbar.
+    foreach ($breakpoints->breakpoints as $key => $breakpoint) {
+      $build['#attached']['js'][0]['data']['toolbar']['breakpoints'][$key] = $breakpoint->mediaQuery;
+    }
+  }
+
+
   // Add logout & user account links or login link.
   if ($user->uid) {
     $links = array(
@@ -296,8 +317,10 @@ function toolbar_library_info() {
     ),
     'dependencies' => array(
       array('system', 'jquery'),
+      array('system', 'underscore'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'drupal.mediaquery'),
       array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
     ),
