@@ -1391,12 +1391,24 @@ function system_library_info() {
   );
 
   // Media Query support.
+  $libraries['matchMedia'] = array(
+    'title' => 'matchMedia() polyfill',
+    'website' => 'https://github.com/paulirish/matchMedia.js',
+    'version' => '1.0',
+    'js' => array(
+      'core/misc/matchMedia/matchMedia.js' => array(),
+    ),
+  );
+
   $libraries['drupal.mediaquery'] = array(
     'title' => 'Media Query support',
     'website' => '',
     'version' => '1.0',
     'js' => array(
       'core/misc/mediaquery.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'matchMedia'),
     ),
   );
 
