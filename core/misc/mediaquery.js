@@ -1,37 +1,3 @@
-window.matchMedia = window.matchMedia || (function( doc, undefined ) {
-
-  "use strict";
-
-  var bool,
-      docElem = doc.documentElement,
-      refNode = docElem.firstElementChild || docElem.firstChild,
-      // fakeBody required for <FF4 when executed in <head>
-      fakeBody = doc.createElement( "body" ),
-      div = doc.createElement( "div" );
-
-  div.id = "mq-test-1";
-  div.style.cssText = "position:absolute;top:-100em";
-  fakeBody.style.background = "none";
-  fakeBody.appendChild(div);
-
-  return function(q){
-
-    div.innerHTML = "&shy;<style media=\"" + q + "\"> #mq-test-1 { width: 42px; }</style>";
-
-    docElem.insertBefore( fakeBody, refNode );
-    bool = div.offsetWidth === 42;
-    docElem.removeChild( fakeBody );
-
-    return {
-      matches: bool,
-      media: q
-    };
-
-  };
-
-}( document ));
-
-
 (function (Drupal, $, _) {
 
 "use strict";
@@ -39,15 +5,15 @@ window.matchMedia = window.matchMedia || (function( doc, undefined ) {
 var queries = {};
 var attached = false;
 
-Drupal.behaviors.mediaquery = {
+Drupal.behaviors.mediaQueryGroup = {
   attach: function (context, settings) {
     $(window).on({
-      'resize.mediaquery': _.debounce(_.bind(MediaQuery.refresh, MediaQuery), 400)
+      'resize.mediaquery': _.debounce(_.bind(MediaQueryGroup.refresh, MediaQueryGroup), 400)
     });
   }
 };
 
-function MediaQuery (mq) {
+function MediaQueryGroup (mq) {
   var callbacks;
   // If the supplied mq is a property of queries, just return queries[mq].
   var query = mq && queries[mq];
@@ -61,7 +27,7 @@ function MediaQuery (mq) {
       subscribe: function () {
         callbacks.add.apply(this, arguments);
         // If the media query applies when the callbacks are added, fire them.
-        if (Drupal.MediaQuery.testMediaQuery(this.query)) {
+        if (Drupal.MediaQueryGroup.testMediaQuery(this.query)) {
           for (var i = 0; i < arguments.length; i++) {
             if (typeof arguments[i] === 'function') {
               // The callback might be a bound function, so don't change the
@@ -80,25 +46,30 @@ function MediaQuery (mq) {
   return query;
 }
 /**
- * Utility functions for the MediaQuery object.
+ * Utility functions for the MediaQueryGroup object.
  */
-$.extend(MediaQuery, {
+$.extend(MediaQueryGroup, {
+  queries: {},
   listQueries: function () {
-    return queries;
+    return this.queries;
   },
   testMediaQuery: function (query) {
-    return matchMedia(query).matches;
+    return this.matchMedia(this.query).matches;
   },
   refresh: function (event) {
     var query;
-    for (query in queries) {
-      if (queries.hasOwnProperty(query) && Drupal.MediaQuery.testMediaQuery(query)) {
-        queries[query].publish();
+    for (query in this.queries) {
+      if (this.queries.hasOwnProperty(query) && Drupal.MediaQueryGroup.testMediaQuery(query)) {
+        this.queries[query].publish();
       }
     }
   }
 });
 
-$.extend(Drupal, {'MediaQuery': MediaQuery});
+$.extend(MediaQueryGroup.prototype, {
+
+});
+
+$.extend(Drupal, {'MediaQueryGroup': MediaQueryGroup});
 
 }(Drupal, jQuery, _, matchMedia));
