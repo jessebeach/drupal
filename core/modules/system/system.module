@@ -1398,7 +1398,6 @@ function system_library_info() {
       'core/misc/mediaquery.js' => array(),
     ),
     'dependencies' => array(
-      array('system', 'jquery'),
       array('system', 'underscore'),
       array('system', 'drupal'),
       array('system', 'matchMedia'),

@@ -1,12 +1,13 @@
-(function (Drupal, $, _) {
+(function (Drupal, _) {
 
 "use strict";
 
 Drupal.behaviors.mediaQueryGroup = {
   attach: function (context, settings) {
-    $(window).on({
-      'resize.mediaquery': _.debounce(_.bind(MediaQueryGroup.refresh, MediaQueryGroup), 400)
-    });
+    var addEventListener = window.addEventListener || window.attachEvent;
+    if (addEventListener) {
+      window.addEventListener('resize', _.debounce(_.bind(MediaQueryGroup.refresh, MediaQueryGroup), 400));
+    }
   }
 };
 
@@ -20,27 +21,34 @@ function MediaQueryGroup (namespace) {
 /**
  * Utility functions for the MediaQueryGroup object.
  */
-$.extend(MediaQueryGroup, {
+_.extend(MediaQueryGroup, {
   fallback: 'default',
   groups: {},
   queries: [],
-  list: function () {
+  listQueries: function () {
     return this.queries;
+  },
+  listGroups: function () {
+    return this.groups;
   },
   test: function (query) {
     return matchMedia(query).matches;
   },
   refresh: function (event) {
     var refreshed = [];
-    var query, group;
-    for (var i = 0; i <this.queries.length; i++) {
+    var e = event;
+    var query, group, i, callbacks, c;
+    for (i = 0; i <this.queries.length; i++) {
       query = this.queries[i];
       if (this.test(query)) {
         for (group in this.groups) {
           if (this.groups.hasOwnProperty(group) && (query in this.groups[group].queries)) {
             refreshed.push(group);
             if (this.groups[group].lastFired !== query) {
-              this.groups[group].queries[query].fire();
+              callbacks = this.groups[group].queries[query];
+              for (c = 0; c < callbacks.length; c++) {
+                callbacks[c].call(window, e);
+              }
               this.groups[group].lastFired = query;
             }
           }
@@ -51,49 +59,92 @@ $.extend(MediaQueryGroup, {
     var defaulters = _.omit(this.groups, refreshed);
     for (group in defaulters) {
       if (defaulters.hasOwnProperty(group) && (this.fallback in defaulters[group].queries) && defaulters[group].lastFired !== this.fallback) {
-        defaulters[group].queries[this.fallback].fire();
+        callbacks = defaulters[group].queries[this.fallback];
+        for (c = 0; c < callbacks.length; c++) {
+          callbacks[c].call(window, e);
+        }
         this.groups[group].lastFired = this.fallback;
       }
     }
   },
   queryAdd: function (mq) {
-    this.queries.push(mq);
+    if (mq !== this.fallback) {
+      this.queries.push(mq);
+    }
   },
+  /**
+   * Cycle through all this.groups and see if this was the last instance of
+   * the media query. If so, remove it from this.queries.
+   */
   queryRemove: function (mq) {
-    /* Cycle through all this.groups and see if this was the last instance of
-    the mq. If so, remove it from this.queries. */
+    if (mq !== this.fallback) {
+      var query, group, i, index;
+      for (group in this.groups) {
+        if (this.groups.hasOwnProperty(group) && (mq in this.groups[group].queries)) {
+          return;
+        }
+      }
+      // If no groups have the mq in their list of queries, remove it from the
+      // master list.
+      index = this.queries.indexOf(mq);
+      this.queries.splice(index, 1);
+    }
   }
 });
 
-$.extend(MediaQueryGroup.prototype, {
+_.extend(MediaQueryGroup.prototype, {
   namespace: '',
   queries: {},
   lastFired: '',
   add: function (mq, callback) {
-    var callbacks = mq && this.queries[mq];
-    if (!callbacks) {
-      callbacks = this.queries[mq] = $.Callbacks('unique');
+    if (!(mq && this.queries[mq])) {
+      this.queries[mq] = [];
       // Add the mq to the global list of queries.
-      if (mq !== Drupal.MediaQueryGroup.fallback) {
-        Drupal.MediaQueryGroup.queryAdd(mq);
-      }
+      Drupal.MediaQueryGroup.queryAdd(mq);
     }
-    callbacks.add(callback);
+    this.queries[mq].push(callback);
     // If the media query applies when the callback is added, invoke it.
-    // @TODO the fallback should not be invoked if a valid MQ is registered
-    // with this instance and it applies.
-    if (Drupal.MediaQueryGroup.test(mq) || mq === Drupal.MediaQueryGroup.fallback) {
+    if (Drupal.MediaQueryGroup.test(mq) || (mq === Drupal.MediaQueryGroup.fallback && this.lastFired.length === 0)) {
       // The callback might be a bound function, so don't change the
       // context. Just call it.
       callback();
       this.lastFired = mq;
     }
   },
-  remove: function (callback) {
-    this.callbacks.remove(callback);
+  remove: function (property) {
+    var mq, callback, i, index;
+    // The property is a media query.
+    if (typeof property === 'string') {
+      if (property in this.queries) {
+        delete this.queries[property];
+        // Attempt to remove the media query from the master list.
+        Drupal.MediaQueryGroup.queryRemove(property);
+        return true;
+      }
+    }
+    // The property is a callback.
+    if (typeof property === 'function') {
+      callback = property;
+      for (mq in this.queries) {
+        if (this.queries.hasOwnProperty(mq)) {
+          index = this.queries[mq].indexOf(callback);
+          if (index > -1) {
+            this.queries[mq].splice(index, 1);
+            if (this.queries[mq].length === 0) {
+              delete this.queries[mq];
+            }
+            // Attempt to remove the media query from the master list.
+            Drupal.MediaQueryGroup.queryRemove(mq);
+            return true;
+          }
+        }
+      }
+    }
+    // Return false if nothing was removed.
+    return false;
   }
 });
 
-$.extend(Drupal, {'MediaQueryGroup': MediaQueryGroup});
+_.extend(Drupal, {'MediaQueryGroup': MediaQueryGroup});
 
-}(Drupal, jQuery, _, matchMedia));
+}(Drupal, _));
