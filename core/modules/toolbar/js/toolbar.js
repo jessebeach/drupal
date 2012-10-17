@@ -28,24 +28,18 @@ Drupal.behaviors.toolbar = {
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar.
       if (!_.isEmpty(settings.toolbar.breakpoints) && settings.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
-        var mq = settings.toolbar.breakpoints['module.toolbar.wide'];
-        Drupal.MediaQuery(mq).subscribe(function () {
-          console.log('hi: ' + mq);
+        var mediaQueryGroup = new Drupal.MediaQueryGroup('toolbar');
+        mediaQueryGroup.add('default', function () {
+          console.log('default');
         });
+        mediaQueryGroup.add(settings.toolbar.breakpoints['module.toolbar.wide'], function () {
+          console.log(settings.toolbar.breakpoints['module.toolbar.wide']);
+        });
+        ToolBar.mediaQueryGroup = mediaQueryGroup;
       }
     }
   }
 };
-/**
- * Store references to the ToolBar and TraySlider objects in the ToolBar object.
- *
- * These references will be available in Drupal.ToolBar.bar and
- * Drupal.ToolBar.tray.
- */
-_.extend(ToolBar, {
-  bar: null,
-  tray: null
-});
 /**
  * A toolbar is an administration action button container.
  */
@@ -66,6 +60,17 @@ function ToolBar ($toolbar) {
     })
     .trigger('setup');
 };
+/**
+ * Store references to the ToolBar and TraySlider objects in the ToolBar object.
+ *
+ * These references will be available in Drupal.ToolBar.bar and
+ * Drupal.ToolBar.tray.
+ */
+$.extend(ToolBar, {
+  bar: null,
+  tray: null,
+  mediaQueryGroup: null
+});
 
 /**
  * Extend the prototype of the TraySlider class.
@@ -329,5 +334,5 @@ $.extend(TraySlider.prototype, {
 });
 
 // Assign the ToolBar obect to the Drupal namespace.
-_.extend(Drupal, {'Toolbar': ToolBar});
+_.extend(Drupal, {'ToolBar': ToolBar});
 }(jQuery, _));
