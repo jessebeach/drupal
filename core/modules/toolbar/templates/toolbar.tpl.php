@@ -32,7 +32,7 @@
     <div class="section actions"></div>
   </div>
 
-  <div class="toolbar-tray">
+  <div class="tray">
     <div class="lining slider">
       <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
         <div class="toolbar-shortcuts clearfix">
