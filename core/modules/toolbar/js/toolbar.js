@@ -136,7 +136,7 @@ function VerticalTray ($tray, $trigger) {
     });
 };
 /**
- * Extend the prototype of the VerticalTray class.
+ * Extend the prototype of the VerticalTray.
  */
 $.extend(VerticalTray.prototype, {
   /**
@@ -333,6 +333,18 @@ $.extend(VerticalTray.prototype, {
       this.setLevelVisibility($lists, visibleAfter);
     }
   }
+});
+/**
+ *
+ */
+function HorizontalTray ($tray, $trigger) {
+
+}
+/**
+ * Extend the prototype of the HorizontalTray.
+ */
+$.extend(HorizontalTray.prototype, {
+
 });
 
 // Assign the ToolBar obect to the Drupal namespace.
