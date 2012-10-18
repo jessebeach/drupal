@@ -14,7 +14,7 @@ Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
     var $toolbar = $(context).find('.toolbar-main').once('toolbar');
     if ($toolbar.length) {
-      var $bar = $toolbar.find('.toolbar-bar');
+      var $bar = $toolbar.find('.bar');
       var $tray = $toolbar.find('.toolbar-tray');
       var $trigger = $toolbar.find('.toggle-tray');
       // Instanstiate the bar.

@@ -20,7 +20,7 @@
  */
 ?>
 <div id="toolbar" role="navigation" class="<?php print $attributes['class']; ?> clearfix" <?php print $attributes; ?>>
-  <div class="toolbar-bar clearfix">
+  <div class="bar clearfix">
     <div class="section first">
       <?php print render($toolbar['toolbar_navigation']); ?>
     </div>
