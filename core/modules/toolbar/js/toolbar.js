@@ -191,7 +191,7 @@ $.extend(VerticalTray.prototype, {
   renderAccordion: function (event) {
     event.stopPropagation();
     var context = this;
-    this.$tray.find('.toolbar-menu > .menu').each(function (index, element) {
+    this.$tray.find('.menu-site > .menu').each(function (index, element) {
       var $root = $(this).addClass('root');
         // Wrap the list in a div to provide a positioning context.
       var $wrapper = $root.wrap($('<div>')

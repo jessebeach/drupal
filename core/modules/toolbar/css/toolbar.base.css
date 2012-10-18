@@ -150,7 +150,7 @@ body.toolbar {
   width: 17rem;
 }
 }
-.toolbar-main .tray .toolbar-menu li a {
+.toolbar-main .tray .menu-site li a {
   display: block;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
