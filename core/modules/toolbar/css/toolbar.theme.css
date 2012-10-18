@@ -65,7 +65,7 @@
 .toolbar-main .tray .lining > * + * {
   margin-top: 1em;
 }
-.toolbar-main .tray .toolbar-menu {
+.toolbar-main .tray .menu-site {
   border-bottom-color: #dddddd;
   border-bottom-style: solid;
   border-bottom-width: 1px;
@@ -80,7 +80,7 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
-.toolbar-main .toolbar-menu li a {
+.toolbar-main .menu-site li a {
   padding: 1em 0;
   text-indent: 3px;
 }
