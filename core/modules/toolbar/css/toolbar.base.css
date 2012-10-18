@@ -96,7 +96,7 @@ body.toolbar {
 /**
  * Toolbar tray - vertical.
  */
-.toolbar-main .toolbar-tray.positioned {
+.toolbar-main .tray.positioned {
   bottom: 0;
   left: -240px;
   left: -15rem;
@@ -108,7 +108,7 @@ body.toolbar {
   width: 15rem;
   z-index: 600;
 }
-.toolbar-main .toolbar-tray.positioned > .slider {
+.toolbar-main .tray.positioned > .slider {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
@@ -118,8 +118,8 @@ body.toolbar {
   transition: left, 0.2s ease-out;
   width: 100%;
 }
-.toolbar-main .toolbar-tray.positioned.active,
-.toolbar-main .toolbar-tray.positioned.active > .slider {
+.toolbar-main .tray.positioned.active,
+.toolbar-main .tray.positioned.active > .slider {
   left: 0; /* LTR */
 }
 /**
@@ -130,7 +130,7 @@ body.toolbar {
   body.menu-tray-open {
     overflow: hidden;
   }
-  .toolbar-main .toolbar-tray.positioned {
+  .toolbar-main .tray.positioned {
     position: absolute;
   }
 }
@@ -143,18 +143,18 @@ body.toolbar {
     padding-left: 272px;
     padding-left: 17rem;
   }
-  .toolbar-main .toolbar-tray.positioned {
+  .toolbar-main .tray.positioned {
   left: -272px;
   left: -17rem;
   width: 272px;
   width: 17rem;
 }
 }
-.toolbar-main .toolbar-tray .toolbar-menu li a {
+.toolbar-main .tray .toolbar-menu li a {
   display: block;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
-.toolbar-main .toolbar-tray #shortcut-toolbar + a {
+.toolbar-main .tray #shortcut-toolbar + a {
   margin-top: 0.3333em;
 }
 /**
