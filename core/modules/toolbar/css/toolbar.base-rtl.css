@@ -1,26 +1,26 @@
 
-#toolbar,
-#toolbar * {
+.toolbar-main,
+.toolbar-main * {
   text-align: right;
 }
-#toolbar ul li {
+.toolbar-main ul li {
   float: right;
 }
-#toolbar ul li a {
+.toolbar-main ul li a {
   display: inline-block;
   float: none;
   zoom: 1;
 }
-#toolbar-user {
+.toolbar-main-user {
   float: left;
 }
-#toolbar #toolbar-user li {
+.toolbar-main .toolbar-main-user li {
   float: none;
   display: inline;
 }
-#toolbar-menu {
+.toolbar-main-menu {
   float: none;
 }
-#toolbar-home {
+.toolbar-main-home {
   float: right;
 }

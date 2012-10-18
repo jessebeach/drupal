@@ -12,7 +12,7 @@
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
-    var $toolbar = $(context).find('#toolbar').once('toolbar');
+    var $toolbar = $(context).find('.toolbar-main').once('toolbar');
     if ($toolbar.length) {
       var $bar = $toolbar.find('.toolbar-bar');
       var $tray = $toolbar.find('.toolbar-tray');

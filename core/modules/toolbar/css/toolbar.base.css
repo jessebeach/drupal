@@ -12,8 +12,8 @@ body.toolbar {
   box-sizing: border-box;
   width: 100%;
 }
-#toolbar,
-#toolbar * {
+.toolbar-main,
+.toolbar-main * {
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -41,7 +41,7 @@ body.toolbar {
   user-select: none;
   vertical-align: baseline;
 }
-#toolbar {
+.toolbar-main {
   font-size: 100%;
   font-size: 1rem;
   line-height: 1;
@@ -50,7 +50,7 @@ body.toolbar {
 /**
  * Administration menu.
  */
-#toolbar .toolbar-bar {
+.toolbar-main .toolbar-bar {
   left: 0;
   position: fixed;
   right: 0;
@@ -58,45 +58,45 @@ body.toolbar {
   z-index: 600;
 }
 @media screen and (max-width: 28.124em) {
-  #toolbar .toolbar-bar {
+  .toolbar-main .toolbar-bar {
     position: absolute;
   }
 }
 @media screen and (min-width: 16.5em) {
-  #toolbar-actions {
+  .toolbar-main-actions {
   float: left; /* LTR */
   }
-  #toolbar-user {
+  .toolbar-main-user {
     float: right; /* LTR */
   }
-  #toolbar .toolbar-bar .section {
+  .toolbar-main .toolbar-bar .section {
     min-height: 2.875em;
   }
-  #toolbar .toolbar-bar .section.first,
-  #toolbar .toolbar-bar .section.second {
+  .toolbar-main .toolbar-bar .section.first,
+  .toolbar-main .toolbar-bar .section.second {
     min-width: 6.6667em;
   }
-  #toolbar .toolbar-bar .section.first {
+  .toolbar-main .toolbar-bar .section.first {
     float: left; /* LTR */
   }
-  #toolbar .toolbar-bar .section.second {
+  .toolbar-main .toolbar-bar .section.second {
     float: right; /* LTR */
   }
-  #toolbar .toolbar-bar .section.actions {
+  .toolbar-main .toolbar-bar .section.actions {
     overflow: hidden;
   }
-  #toolbar .toolbar-bar .menu li {
+  .toolbar-main .toolbar-bar .menu li {
     display: block;
     float: left; /* LTR */
   }
-  #toolbar .toolbar-bar .menu a {
+  .toolbar-main .toolbar-bar .menu a {
     display: inline-block;
   }
 }
 /**
- * Toolbar tray.
+ * Toolbar tray - vertical.
  */
-#toolbar .toolbar-tray.positioned {
+.toolbar-main .toolbar-tray.positioned {
   bottom: 0;
   left: -240px;
   left: -15rem;
@@ -108,7 +108,7 @@ body.toolbar {
   width: 15rem;
   z-index: 600;
 }
-#toolbar .toolbar-tray.positioned > .slider {
+.toolbar-main .toolbar-tray.positioned > .slider {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
@@ -118,8 +118,8 @@ body.toolbar {
   transition: left, 0.2s ease-out;
   width: 100%;
 }
-#toolbar .toolbar-tray.positioned.active,
-#toolbar .toolbar-tray.positioned.active > .slider {
+.toolbar-main .toolbar-tray.positioned.active,
+.toolbar-main .toolbar-tray.positioned.active > .slider {
   left: 0; /* LTR */
 }
 /**
@@ -130,7 +130,7 @@ body.toolbar {
   body.menu-tray-open {
     overflow: hidden;
   }
-  #toolbar .toolbar-tray.positioned {
+  .toolbar-main .toolbar-tray.positioned {
     position: absolute;
   }
 }
@@ -143,61 +143,61 @@ body.toolbar {
     padding-left: 272px;
     padding-left: 17rem;
   }
-  #toolbar .toolbar-tray.positioned {
+  .toolbar-main .toolbar-tray.positioned {
   left: -272px;
   left: -17rem;
   width: 272px;
   width: 17rem;
 }
 }
-#toolbar .toolbar-tray .toolbar-menu li a {
+.toolbar-main .toolbar-tray .toolbar-menu li a {
   display: block;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
-#toolbar .toolbar-tray #shortcut-toolbar + a {
+.toolbar-main .toolbar-tray #shortcut-toolbar + a {
   margin-top: 0.3333em;
 }
 /**
  * Fleximenu accordion.
  */
 
-#toolbar .fleximenu {
+.toolbar-main .fleximenu {
   position: relative;
   overflow: hidden;
 }
-#toolbar ul {
+.toolbar-main ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#toolbar .fleximenu li {
+.toolbar-main .fleximenu li {
   display: block;
 }
-#toolbar .box {
+.toolbar-main .box {
   position: relative;
 }
-#toolbar .dormant {
+.toolbar-main .dormant {
 	display: none;
 }
-#toolbar .trail > ul { /* Show the sub-menus */
+.toolbar-main .trail > ul { /* Show the sub-menus */
   display: block;
 }
-#toolbar .active > ul {
+.toolbar-main .active > ul {
   z-index: 51; /* Pull the active trail li's above the other li's */
 }
-#toolbar .fleximenu .box {
+.toolbar-main .fleximenu .box {
   display: block;
   line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
   width: auto;
 }
-#toolbar .fleximenu a {
+.toolbar-main .fleximenu a {
   display: block;
   line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#toolbar .handle {
+.toolbar-main .handle {
   background-attachment: scroll;
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMTAwcHgiIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwb2x5Z29uIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjNzc3Nzc3IiBwb2ludHM9IjIyLjUsODguNSAzMi4wMTUsOTkuNSA3Ny41LDUwIDMyLjAxNSwwLjUgMjIuNSwxMS41IA0KCTU3LjM2OSw1MCAiLz4NCjwvc3ZnPg0K);
   background-position: center center;
@@ -218,23 +218,23 @@ body.toolbar {
   width: 4em;
   z-index: 1;
 }
-#toolbar .level-2 .handle {
+.toolbar-main .level-2 .handle {
   background-size: 1.5em;
 }
-#toolbar .handle.open {
+.toolbar-main .handle.open {
   -moz-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-#toolbar .handle + * {
+.toolbar-main .handle + * {
   margin-right: 4em;
 }
-#toolbar .handle:hover {
+.toolbar-main .handle:hover {
   cursor: pointer;
 }
 /* Shortcuts */
-#toolbar #edit-shortcuts {
+.toolbar-main #edit-shortcuts {
   clear: left;
   display: block;
 }
