@@ -19,18 +19,18 @@
 /**
  * Toolbar bar.
  */
-.toolbar-main .toolbar-bar {
+.toolbar-main .bar {
   background-color: #383838;
   color: #dddddd;
 }
-.toolbar-main .toolbar-bar a {
+.toolbar-main .bar a {
   color: #ffffff;
 }
-.toolbar-main .toolbar-bar .toggle-tray.active {
+.toolbar-main .bar .toggle-tray.active {
   background-color: white;
   color: black;
 }
-.toolbar-main .toolbar-bar .tab {
+.toolbar-main .bar .tab {
   background-attachment: scroll;
   background-color: transparent;
   background-repeat: no-repeat;
@@ -39,7 +39,7 @@
   padding: 0.3333em 0.1667em;
 }
 @media screen and (min-width: 16.5em) {
-  .toolbar-main .toolbar-bar .section.actions {
+  .toolbar-main .bar .section.actions {
     padding-bottom: 0.5em;
     padding-top: 0.5em;
   }
@@ -205,13 +205,13 @@
   width: 100%;
 }
 @media screen and (min-width: 16.5em) and (max-width: 34em) {
-  .toolbar-main .toolbar-bar .tab {
+  .toolbar-main .bar .tab {
     padding: 1.4667em 0.1667em 1.1667em;
     text-indent: -9999px;
   }
 }
 .toolbar-main.icons .toolbar-tray .level-1 > li > .box > a,
-.toolbar-main.icons .toolbar-bar .tab {
+.toolbar-main.icons .bar .tab {
   background-attachment: scroll;
   background-position: 0.4545em center;
   background-repeat: no-repeat;
@@ -252,7 +252,7 @@
  * Hide icons from UAs that don't support media queries. They
  * are not sophisticated enough for this enhancement.
  */
-  .toolbar-main.icons .toolbar-bar .tab {
+  .toolbar-main.icons .bar .tab {
     background-attachment: scroll;
     background-position: 0.7545em 0.9em;
     background-repeat: no-repeat;
@@ -285,7 +285,7 @@
 }
 
 @media screen and (min-width: 34em) {
-  .toolbar-main .toolbar-bar .tab {
+  .toolbar-main .bar .tab {
     padding: 1.4667em 2em 1.1667em 3.25em;
     width: auto;
   }
