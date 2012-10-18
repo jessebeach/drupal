@@ -41,7 +41,7 @@
         </div>
       <?php endif; ?>
       <?php if (!empty($toolbar['toolbar_menu'])) : ?>
-        <nav class="toolbar-menu clearfix">
+        <nav class="menu-site clearfix">
           <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
           <?php print render($toolbar['toolbar_menu']); ?>
         </nav>
