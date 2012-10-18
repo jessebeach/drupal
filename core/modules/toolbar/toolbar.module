@@ -320,7 +320,7 @@ function toolbar_library_info() {
       array('system', 'underscore'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
-      array('system', 'drupal.mediaquery'),
+      array('system', 'drupal.mediaquerygroup'),
       array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
     ),
