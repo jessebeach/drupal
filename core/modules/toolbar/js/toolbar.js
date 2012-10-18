@@ -23,7 +23,7 @@ Drupal.behaviors.toolbar = {
       }
       // Instantiate the tray.
       if ($tray.length && $trigger.length) {
-        ToolBar.tray = new TraySlider($tray, $trigger);
+        ToolBar.trays.vertical = new VerticalTray($tray, $trigger);
       }
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar.
@@ -61,19 +61,21 @@ function ToolBar ($toolbar) {
     .trigger('setup');
 };
 /**
- * Store references to the ToolBar and TraySlider objects in the ToolBar object.
+ * Store references to the ToolBar and VerticalTray objects in the ToolBar object.
  *
  * These references will be available in Drupal.ToolBar.bar and
- * Drupal.ToolBar.tray.
+ * Drupal.ToolBar.verticalTray.
  */
 $.extend(ToolBar, {
   bar: null,
-  tray: null,
+  trays: {
+    vertical: null
+  },
   mediaQueryGroup: null
 });
 
 /**
- * Extend the prototype of the TraySlider class.
+ * Extend the prototype of the VerticalTray class.
  */
 $.extend(ToolBar.prototype, {
   /**
@@ -95,7 +97,7 @@ $.extend(ToolBar.prototype, {
 /**
  *
  */
-function TraySlider ($tray, $trigger) {
+function VerticalTray ($tray, $trigger) {
   this.$tray = $tray;
   this.$trigger = $trigger;
   // Initiate the object.
@@ -134,9 +136,9 @@ function TraySlider ($tray, $trigger) {
     });
 };
 /**
- * Extend the prototype of the TraySlider class.
+ * Extend the prototype of the VerticalTray class.
  */
-$.extend(TraySlider.prototype, {
+$.extend(VerticalTray.prototype, {
   /**
    *
    */
