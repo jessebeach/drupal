@@ -50,7 +50,7 @@ body.toolbar {
 /**
  * Administration menu.
  */
-.toolbar-main .toolbar-bar {
+.toolbar-main .bar {
   left: 0;
   position: fixed;
   right: 0;
@@ -58,7 +58,7 @@ body.toolbar {
   z-index: 600;
 }
 @media screen and (max-width: 28.124em) {
-  .toolbar-main .toolbar-bar {
+  .toolbar-main .bar {
     position: absolute;
   }
 }
@@ -69,27 +69,27 @@ body.toolbar {
   .toolbar-main-user {
     float: right; /* LTR */
   }
-  .toolbar-main .toolbar-bar .section {
+  .toolbar-main .bar .section {
     min-height: 2.875em;
   }
-  .toolbar-main .toolbar-bar .section.first,
-  .toolbar-main .toolbar-bar .section.second {
+  .toolbar-main .bar .section.first,
+  .toolbar-main .bar .section.second {
     min-width: 6.6667em;
   }
-  .toolbar-main .toolbar-bar .section.first {
+  .toolbar-main .bar .section.first {
     float: left; /* LTR */
   }
-  .toolbar-main .toolbar-bar .section.second {
+  .toolbar-main .bar .section.second {
     float: right; /* LTR */
   }
-  .toolbar-main .toolbar-bar .section.actions {
+  .toolbar-main .bar .section.actions {
     overflow: hidden;
   }
-  .toolbar-main .toolbar-bar .menu li {
+  .toolbar-main .bar .menu li {
     display: block;
     float: left; /* LTR */
   }
-  .toolbar-main .toolbar-bar .menu a {
+  .toolbar-main .bar .menu a {
     display: inline-block;
   }
 }
