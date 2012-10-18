@@ -293,20 +293,20 @@
 /* @end */
 
 /* Shortcuts */
-.toolbar-main .toolbar-shortcuts {
+.toolbar-main .menu-shortcuts {
   padding-left: 0.40em;
   padding-right: 0.40em;
 }
-.toolbar-main .toolbar-shortcuts .menu li {
+.toolbar-main .menu-shortcuts .menu li {
   display: block;
   float: left; /* LTR */
   padding: 0 0.2em;
   margin-bottom: 0.5em;
 }
-.toolbar-main .toolbar-shortcuts .menu a {
+.toolbar-main .menu-shortcuts .menu a {
   display: inline-block;
 }
-.toolbar-main .toolbar-shortcuts .menu a {
+.toolbar-main .menu-shortcuts .menu a {
   background-color: #DDD;
   border-radius: 0.3em;
   font-size: 0.9em;

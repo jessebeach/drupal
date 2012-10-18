@@ -35,7 +35,7 @@
   <div class="tray">
     <div class="lining slider">
       <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
-        <div class="toolbar-shortcuts clearfix">
+        <div class="menu-shortcuts clearfix">
           <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
           <?php print render($toolbar['toolbar_shortcuts']); ?>
         </div>
