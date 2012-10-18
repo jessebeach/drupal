@@ -24,17 +24,14 @@ Drupal.behaviors.toolbar = {
       // Instantiate the tray.
       if ($tray.length && $trigger.length) {
         ToolBar.trays.vertical = new VerticalTray($tray, $trigger);
+        ToolBar.trays.horizontal = new HorizontalTray($tray, $trigger);
       }
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar.
       if (!_.isEmpty(settings.toolbar.breakpoints) && settings.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
         var mediaQueryGroup = new Drupal.MediaQueryGroup('toolbar');
-        mediaQueryGroup.add('default', function () {
-          console.log('default');
-        });
-        mediaQueryGroup.add(settings.toolbar.breakpoints['module.toolbar.wide'], function () {
-          console.log(settings.toolbar.breakpoints['module.toolbar.wide']);
-        });
+        mediaQueryGroup.add(settings.toolbar.breakpoints['module.toolbar.wide'], ToolBar.trays.horizontal.render);
+        mediaQueryGroup.add('default', ToolBar.trays.vertical.render);
         ToolBar.mediaQueryGroup = mediaQueryGroup;
       }
     }
@@ -69,7 +66,8 @@ function ToolBar ($toolbar) {
 $.extend(ToolBar, {
   bar: null,
   trays: {
-    vertical: null
+    vertical: null,
+    horizontal: null
   },
   mediaQueryGroup: null
 });
@@ -95,7 +93,7 @@ $.extend(ToolBar.prototype, {
   }
 });
 /**
- *
+ * Renders the display of a tray as a vertical, sliding container.
  */
 function VerticalTray ($tray, $trigger) {
   this.$tray = $tray;
@@ -139,6 +137,9 @@ function VerticalTray ($tray, $trigger) {
  * Extend the prototype of the VerticalTray.
  */
 $.extend(VerticalTray.prototype, {
+  render: function () {
+    console.log('render vertically');
+  },
   /**
    *
    */
@@ -335,7 +336,7 @@ $.extend(VerticalTray.prototype, {
   }
 });
 /**
- *
+ * Renders the display of a tray as a horizontal container.
  */
 function HorizontalTray ($tray, $trigger) {
 
@@ -344,7 +345,9 @@ function HorizontalTray ($tray, $trigger) {
  * Extend the prototype of the HorizontalTray.
  */
 $.extend(HorizontalTray.prototype, {
-
+  render: function () {
+    console.log('render horizontally');
+  }
 });
 
 // Assign the ToolBar obect to the Drupal namespace.
