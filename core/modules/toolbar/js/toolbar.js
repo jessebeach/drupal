@@ -95,6 +95,7 @@ $.extend(ToolBar, {
     else if (!mql.matches && this.orientation == 'horizontal') {
       this.orientation = 'vertical';
     }
+    // Render the tray
     this.renderTray();
   }
 });
@@ -131,44 +132,43 @@ function VerticalTray ($tray, $trigger) {
     'activeClass': 'active',
     'trayOpenBodyClass': 'menu-tray-open'
   };
-  // Add a click handler to the toggle.
-  this.$trigger
-    .on({
-      'setup.toolbar': $.proxy(this, 'toggleTrigger'),
-      'click.toolbar': $.proxy(this, 'handleTriggerClick'),
-      'toggled.toolbar': $.proxy(this, 'toggleTrigger')
-    })
-    .trigger('setup', this.state);
-  // The tray has a couple setup methods to run.
-  var setup = $.Callbacks();
-  setup.add($.proxy(this, 'renderAccordion'));
-  setup.add($.proxy(this, 'displace'));
-  this.$tray
-    // Register event handlers.
-    .on({
-      'setup.toolbar': setup.fire,
-      'toggled.toolbar': $.proxy(this, 'toggleTray')
-    })
-    // The tray will be positioned at the edge of the window.
-    .addClass('vertical')
-    // Triger setup.
-    .trigger('setup', this.state);
-  // Register for offsettopchange events.
-  $(document)
-    .on({
-      // Offset value vas changed by a third party script.
-      'offsettopchange.toolbar': $.proxy(this, 'displace')
-    });
 };
 /**
  * Extend the prototype of the VerticalTray.
  */
-$.extend(VerticalTray.prototype, {
+_.extend(VerticalTray.prototype, {
+  /**
+   *
+   */
   render: function () {
-    console.log('render vertically');
-  },
-  mediaQueryChange: function (mql, event) {
-    console.log(mql);
+    // Add a click handler to the toggle.
+    this.$trigger
+      .on({
+        'setup.toolbar': $.proxy(this, 'toggleTrigger'),
+        'click.toolbar': $.proxy(this, 'handleTriggerClick'),
+        'toggled.toolbar': $.proxy(this, 'toggleTrigger')
+      })
+      .trigger('setup', this.state);
+    // The tray has a couple setup methods to run.
+    var setup = $.Callbacks();
+    setup.add($.proxy(this, 'renderAccordion'));
+    setup.add($.proxy(this, 'displace'));
+    this.$tray
+      // Register event handlers.
+      .on({
+        'setup.toolbar': setup.fire,
+        'toggled.toolbar': $.proxy(this, 'toggleTray')
+      })
+      // The tray will be positioned at the edge of the window.
+      .addClass('vertical')
+      // Triger setup.
+      .trigger('setup', this.state);
+    // Register for offsettopchange events.
+    $(document)
+      .on({
+        // Offset value vas changed by a third party script.
+        'offsettopchange.toolbar': $.proxy(this, 'displace')
+      });
   },
   /**
    *
@@ -225,12 +225,14 @@ $.extend(VerticalTray.prototype, {
     this.$tray.find('.menu-site > .menu').each(function (index, element) {
       var $root = $(this).addClass('root');
         // Wrap the list in a div to provide a positioning context.
-      var $wrapper = $root.wrap($('<div>')
-        .css({
-            height: '100%',
-            position: 'relative'
-          })
-          .addClass('fleximenu')
+      var $wrapper = $root
+        .wrap(
+          $('<div>')
+            .css({
+              height: '100%',
+              position: 'relative'
+            })
+            .addClass('fleximenu')
         )
         .parent()
         // Bind event handlers.
@@ -255,7 +257,7 @@ $.extend(VerticalTray.prototype, {
   accordionSetup: function (event) {
     event.stopPropagation();
     // Mark up the lists and items.
-    $(this)
+    $(event.target)
     .trigger('listChange');
 
   },
@@ -263,7 +265,7 @@ $.extend(VerticalTray.prototype, {
   activateItem: function (event) {},
   accordionToggle: function (event) {
     // The toggle.
-    var $toggle = $(this);
+    var $toggle = $(event.target);
     var $item = $toggle.closest('li');
     var $list = $item.children('ul');
     var isHidden = $list.hasClass('dormant');
@@ -283,7 +285,7 @@ $.extend(VerticalTray.prototype, {
   },
   initItems: function (event) {
     // The accordion wrapper.
-    var $wrapper = $(this);
+    var $wrapper = $(event.target);
     var rootClass = 'root';
     var boxClass = 'box';
     var handleClass = 'handle';
@@ -375,11 +377,11 @@ function HorizontalTray ($tray, $trigger) {
  * Extend the prototype of the HorizontalTray.
  */
 $.extend(HorizontalTray.prototype, {
+  /**
+   *
+   */
   render: function (mql, event) {
     console.log('render horizontally');
-  },
-  mediaQueryChange: function (mql) {
-    console.log(mql);
   }
 });
 
