@@ -12,6 +12,7 @@
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
+    var options = _.extend(this.options, settings);
     var $toolbar = $(context).find('.toolbar-main').once('toolbar');
     if ($toolbar.length) {
       var $bar = $toolbar.find('.bar');
@@ -24,16 +25,29 @@ Drupal.behaviors.toolbar = {
       // Instantiate the tray.
       if ($tray.length && $trigger.length) {
         ToolBar.trays.vertical = new VerticalTray($tray, $trigger);
+        // Bind all of the object methods to the object instance.
+        _.bindAll(ToolBar.trays.vertical);
         ToolBar.trays.horizontal = new HorizontalTray($tray, $trigger);
+        // Bind all of the object methods to the object instance.
+        _.bindAll(ToolBar.trays.horizontal);
       }
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar.
-      if (!_.isEmpty(settings.toolbar.breakpoints) && settings.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
-        var mediaQueryGroup = new Drupal.MediaQueryGroup('toolbar');
-        mediaQueryGroup.add(settings.toolbar.breakpoints['module.toolbar.wide'], ToolBar.trays.horizontal.render);
-        mediaQueryGroup.add('default', ToolBar.trays.vertical.render);
-        ToolBar.mediaQueryGroup = mediaQueryGroup;
+      if (options.toolbar.breakpoints && options.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
+        var mql = matchMedia(settings.toolbar.breakpoints['module.toolbar.wide']);
+        mql.addListener(_.bind(ToolBar.mediaQueryChangeHandler, ToolBar));
+        ToolBar.mediaQueries.push(mql);
+        if (mql.matches) {
+          ToolBar.orientation = 'horizontal';
+        }
       }
+      // Render the Toolbar tray.
+      ToolBar.renderTray();
+    }
+  },
+  options: {
+    toolbar: {
+      breakpoints: null
     }
   }
 };
@@ -69,7 +83,20 @@ $.extend(ToolBar, {
     vertical: null,
     horizontal: null
   },
-  mediaQueryGroup: null
+  mediaQueries: [],
+  orientation: 'vertical',
+  renderTray: function () {
+    this.trays[this.orientation].render();
+  },
+  mediaQueryChangeHandler: function (mql, event) {
+    if (mql.matches && this.orientation === 'vertical') {
+      this.orientation = 'horizontal';
+    }
+    else if (!mql.matches && this.orientation == 'horizontal') {
+      this.orientation = 'vertical';
+    }
+    this.renderTray();
+  }
 });
 
 /**
@@ -82,7 +109,7 @@ $.extend(ToolBar.prototype, {
    * Page components can register with the offsettopchange event to know when
    * the height of the toolbar changes.
    */
-  setHeight: function() {
+  setHeight: function () {
     this.height = this.$toolbar.outerHeight();
     this.$toolbar.attr('data-offset-top', this.height);
     // Alter the padding on the top of the body element.
@@ -123,7 +150,7 @@ function VerticalTray ($tray, $trigger) {
       'toggled.toolbar': $.proxy(this, 'toggleTray')
     })
     // The tray will be positioned at the edge of the window.
-    .addClass('positioned')
+    .addClass('vertical')
     // Triger setup.
     .trigger('setup', this.state);
   // Register for offsettopchange events.
@@ -139,6 +166,9 @@ function VerticalTray ($tray, $trigger) {
 $.extend(VerticalTray.prototype, {
   render: function () {
     console.log('render vertically');
+  },
+  mediaQueryChange: function (mql, event) {
+    console.log(mql);
   },
   /**
    *
@@ -345,8 +375,11 @@ function HorizontalTray ($tray, $trigger) {
  * Extend the prototype of the HorizontalTray.
  */
 $.extend(HorizontalTray.prototype, {
-  render: function () {
+  render: function (mql, event) {
     console.log('render horizontally');
+  },
+  mediaQueryChange: function (mql) {
+    console.log(mql);
   }
 });
 
