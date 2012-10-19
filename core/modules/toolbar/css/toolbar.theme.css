@@ -70,6 +70,9 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
+.toolbar-main .tray li {
+  padding: 0;
+}
 .toolbar-main .tray li .box {
   border-top-color: transparent;
   border-top-style: solid;

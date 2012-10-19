@@ -96,7 +96,7 @@ body.toolbar {
 /**
  * Toolbar tray - vertical.
  */
-.toolbar-main .tray.positioned {
+.toolbar-main .tray.vertical {
   bottom: 0;
   left: -240px;
   left: -15rem;
@@ -108,7 +108,7 @@ body.toolbar {
   width: 15rem;
   z-index: 600;
 }
-.toolbar-main .tray.positioned > .slider {
+.toolbar-main .tray.vertical > .slider {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
@@ -118,8 +118,8 @@ body.toolbar {
   transition: left, 0.2s ease-out;
   width: 100%;
 }
-.toolbar-main .tray.positioned.active,
-.toolbar-main .tray.positioned.active > .slider {
+.toolbar-main .tray.vertical.active,
+.toolbar-main .tray.vertical.active > .slider {
   left: 0; /* LTR */
 }
 /**
@@ -130,7 +130,7 @@ body.toolbar {
   body.menu-tray-open {
     overflow: hidden;
   }
-  .toolbar-main .tray.positioned {
+  .toolbar-main .tray.vertical {
     position: absolute;
   }
 }
@@ -143,7 +143,7 @@ body.toolbar {
     padding-left: 272px;
     padding-left: 17rem;
   }
-  .toolbar-main .tray.positioned {
+  .toolbar-main .tray.vertical {
   left: -272px;
   left: -17rem;
   width: 272px;
