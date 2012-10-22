@@ -183,6 +183,10 @@ body.toolbar {
   margin: 0;
   padding: 0;
 }
+.toolbar-main .interactive-menu {
+  height: 100%;
+  position: relative;
+}
 .toolbar-main .menu-site {
   position: relative;
   overflow: hidden;
