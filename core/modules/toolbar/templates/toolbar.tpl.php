@@ -32,14 +32,15 @@
     <div class="section actions"></div>
   </div>
 
+  <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
+    <div class="menu-shortcuts clearfix">
+      <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
+      <?php print render($toolbar['toolbar_shortcuts']); ?>
+    </div>
+  <?php endif; ?>
+
   <div class="tray">
     <div class="lining slider">
-      <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
-        <div class="menu-shortcuts clearfix">
-          <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
-          <?php print render($toolbar['toolbar_shortcuts']); ?>
-        </div>
-      <?php endif; ?>
       <?php if (!empty($toolbar['toolbar_menu'])) : ?>
         <nav class="menu-site clearfix">
           <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>

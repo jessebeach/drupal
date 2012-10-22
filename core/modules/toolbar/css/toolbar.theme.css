@@ -58,13 +58,6 @@
 .toolbar-main .tray a {
   color: #333333;
 }
-.toolbar-main .tray .lining {
-  padding-bottom: 1em;
-  padding-top: 1em;
-}
-.toolbar-main .tray .lining > * + * {
-  margin-top: 1em;
-}
 .toolbar-main .tray .menu-site {
   border-bottom-color: #dddddd;
   border-bottom-style: solid;
@@ -99,9 +92,6 @@
 .toolbar-main .tray .level-1 a {
   padding: 1.25em 0;
   font-weight: bold;
-}
-.toolbar-main .tray .level-1 .menu {
-  margin-left: 5px;
 }
 .toolbar-main .tray .level-2 {
   background-color: #f5f5f5;
@@ -207,6 +197,25 @@
 .toolbar-main .tray .filter {
   width: 100%;
 }
+/**
+ * ToolBar tray - vertical.
+ */
+.toolbar-main .tray.vertical .lining {
+  padding-bottom: 1em;
+  padding-top: 1em;
+}
+.toolbar-main .tray.vertical .lining > * + * {
+  margin-top: 1em;
+}
+.toolbar-main .vertical .level-1 .menu {
+  margin-left: 5px;
+}
+/**
+ * ToolBar tray - horizontal.
+ */
+/**
+ * Icons.
+ */
 @media screen and (min-width: 16.5em) and (max-width: 34em) {
   .toolbar-main .bar .tab {
     padding: 1.4667em 0.1667em 1.1667em;
