@@ -15,34 +15,19 @@ Drupal.behaviors.toolbar = {
     var options = _.extend(this.options, settings);
     var $toolbar = $(context).find('.toolbar-main').once('toolbar');
     if ($toolbar.length) {
-      var $bar = $toolbar.find('.bar');
-      var $tray = $toolbar.find('.tray');
-      var $trigger = $toolbar.find('.toggle-tray');
-      // Instanstiate the bar.
-      if ($bar.length) {
-        ToolBar.bar = new ToolBar($bar);
-      }
-      // Instantiate the tray.
-      if ($tray.length && $trigger.length) {
-        ToolBar.trays.vertical = new VerticalTray($tray, $trigger);
-        // Bind all of the object methods to the object instance.
-        _.bindAll(ToolBar.trays.vertical);
-        ToolBar.trays.horizontal = new HorizontalTray($tray, $trigger);
-        // Bind all of the object methods to the object instance.
-        _.bindAll(ToolBar.trays.horizontal);
-      }
+      var toolbar = new ToolBar($toolbar, VerticalTray, HorizontalTray);
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar.
       if (options.toolbar.breakpoints && options.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
         var mql = matchMedia(settings.toolbar.breakpoints['module.toolbar.wide']);
-        mql.addListener(_.bind(ToolBar.mediaQueryChangeHandler, ToolBar));
-        ToolBar.mediaQueries.push(mql);
+        mql.addListener(toolbar.mediaQueryChangeHandler);
+        toolbar.mediaQueries.push(mql);
         if (mql.matches) {
-          ToolBar.orientation = 'horizontal';
+          toolbar.orientation = 'horizontal';
         }
       }
       // Render the Toolbar tray.
-      ToolBar.renderTray();
+      toolbar.renderTray();
     }
   },
   options: {
@@ -54,52 +39,52 @@ Drupal.behaviors.toolbar = {
 /**
  * A toolbar is an administration action button container.
  */
-function ToolBar ($toolbar) {
+function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
   this.$toolbar = $toolbar;
+  this.$bar = $toolbar.find('.bar');
+  var $tray = $toolbar.find('.tray');
+  this.trays = {
+    vertical: new VerticalTray($tray),
+    horizontal: new HorizontalTray($tray)
+  };
+  this.$tray = this.getTray();
+  this.$trigger = $toolbar.find('.toggle-tray');
+  this.mediaQueries = [];
+  this.orientation = 'vertical';
+  this.state = 'closed';
+  this.ui = {
+    'activeClass': 'active',
+    'trayOpenBodyClass': 'menu-tray-open'
+  };
+  // Bind all ToolBar methods to the instance.
+  _.bindAll(this);
   // Recalculate the offset top on screen resize.
-  var setHeight = _.bind(this.setHeight, this);
   // Use throttle to prevent setHeight from being called too frequently.
-  setHeight = _.throttle(setHeight, 250);
+  var setHeight = _.debounce(this.setHeight, 250);
   $(window)
     .on({
       'resize.toolbar': setHeight
     });
+  // Register for offsettopchange events.
+  $(document)
+    .on({
+      // Offset value vas changed by a third party script.
+      'offsettopchange.toolbar': this.displace
+    });
   // Toolbar event handlers.
   this.$toolbar
     .on({
-      'setup.toolbar': setHeight
+      'setup.toolbar': setHeight,
+    })
+    .trigger('setup');
+  // Tray trigger.
+  this.$trigger
+    .on({
+      'setup.toolbar': this.toggleTrigger,
+      'click.toolbar': this.handleTriggerClick,
     })
     .trigger('setup');
 };
-/**
- * Store references to the ToolBar and VerticalTray objects in the ToolBar object.
- *
- * These references will be available in Drupal.ToolBar.bar and
- * Drupal.ToolBar.verticalTray.
- */
-$.extend(ToolBar, {
-  bar: null,
-  trays: {
-    vertical: null,
-    horizontal: null
-  },
-  mediaQueries: [],
-  orientation: 'vertical',
-  renderTray: function () {
-    this.trays[this.orientation].render();
-  },
-  mediaQueryChangeHandler: function (mql, event) {
-    if (mql.matches && this.orientation === 'vertical') {
-      this.orientation = 'horizontal';
-    }
-    else if (!mql.matches && this.orientation == 'horizontal') {
-      this.orientation = 'vertical';
-    }
-    // Render the tray
-    this.renderTray();
-  }
-});
-
 /**
  * Extend the prototype of the VerticalTray class.
  */
@@ -111,64 +96,38 @@ $.extend(ToolBar.prototype, {
    * the height of the toolbar changes.
    */
   setHeight: function () {
-    this.height = this.$toolbar.outerHeight();
-    this.$toolbar.attr('data-offset-top', this.height);
+    this.height = this.$bar.outerHeight();
+    this.$bar.attr('data-offset-top', this.height);
     // Alter the padding on the top of the body element.
     // @todo, this should be moved to drupal.js and register for
     // the offsettopchange event.
     $('body').css('paddingTop', this.height);
     $(document).trigger('offsettopchange');
-  }
-});
-/**
- * Renders the display of a tray as a vertical, sliding container.
- */
-function VerticalTray ($tray, $trigger) {
-  this.$tray = $tray;
-  this.$trigger = $trigger;
-  // Initiate the object.
-  this.state = 'closed';
-  this.ui = {
-    'activeClass': 'active',
-    'trayOpenBodyClass': 'menu-tray-open'
-  };
-};
-/**
- * Extend the prototype of the VerticalTray.
- */
-_.extend(VerticalTray.prototype, {
+  },
   /**
    *
    */
-  render: function () {
-    // Add a click handler to the toggle.
-    this.$trigger
-      .on({
-        'setup.toolbar': $.proxy(this, 'toggleTrigger'),
-        'click.toolbar': $.proxy(this, 'handleTriggerClick'),
-        'toggled.toolbar': $.proxy(this, 'toggleTrigger')
-      })
-      .trigger('setup', this.state);
-    // The tray has a couple setup methods to run.
-    var setup = $.Callbacks();
-    setup.add($.proxy(this, 'renderAccordion'));
-    setup.add($.proxy(this, 'displace'));
-    this.$tray
-      // Register event handlers.
-      .on({
-        'setup.toolbar': setup.fire,
-        'toggled.toolbar': $.proxy(this, 'toggleTray')
-      })
-      // The tray will be positioned at the edge of the window.
-      .addClass('vertical')
-      // Triger setup.
-      .trigger('setup', this.state);
-    // Register for offsettopchange events.
-    $(document)
-      .on({
-        // Offset value vas changed by a third party script.
-        'offsettopchange.toolbar': $.proxy(this, 'displace')
-      });
+  renderTray: function () {
+    this.trays[this.orientation].render();
+  },
+  /**
+   *
+   */
+  getTray: function () {
+    return this.trays[this.orientation];
+  },
+  /**
+   *
+   */
+  mediaQueryChangeHandler: function (mql, event) {
+    if (mql.matches && this.orientation === 'vertical') {
+      this.orientation = 'horizontal';
+    }
+    else if (!mql.matches && this.orientation == 'horizontal') {
+      this.orientation = 'vertical';
+    }
+    // Render the tray
+    this.renderTray();
   },
   /**
    *
@@ -177,28 +136,28 @@ _.extend(VerticalTray.prototype, {
     event.preventDefault();
     event.stopImmediatePropagation();
     this.state = (this.state === 'closed') ? 'open' : 'closed';
-    this.$tray.trigger('toggled', this.state);
-    this.$trigger.trigger('toggled', this.state);
+    this.toggleTray();
+    this.toggleTrigger();
   },
   /**
    *
    */
-  toggleTrigger: function (event, state) {
-    this.$trigger[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+  toggleTrigger: function (event) {
+    this.$trigger[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
   },
   /**
    *
    */
-  toggleTray: function (event, state) {
-    this.$tray[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+  toggleTray: function (event) {
+    this.getTray().$el[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
     // Add a class to the body so it can be styled to react to the tray.
-    $('body')[((state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
+    $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
   },
   /**
    *
    */
   displace: function (event) {
-    this.$tray.css({
+    this.getTray().$el.css({
       'top': this.computeOffsetTop() + 'px'
     });
   },
@@ -215,6 +174,35 @@ _.extend(VerticalTray.prototype, {
     }
     this.offsetTop = sum;
     return sum;
+  }
+});
+/**
+ * Renders the display of a tray as a vertical, sliding container.
+ */
+function VerticalTray ($el) {
+  this.$el = $el;
+};
+/**
+ * Extend the prototype of the VerticalTray.
+ */
+_.extend(VerticalTray.prototype, {
+  /**
+   *
+   */
+  render: function () {
+    // The tray has a couple setup methods to run.
+    var setup = $.Callbacks();
+    setup.add($.proxy(this, 'renderAccordion'));
+    this.$el
+      // Register event handlers.
+      .on({
+        'setup.toolbar': setup.fire,
+        'toggled.toolbar': $.proxy(this, 'toggleTray')
+      })
+      // The tray will be positioned at the edge of the window.
+      .addClass('vertical')
+      // Triger setup.
+      .trigger('setup');
   },
   /**
    * Accordion behavior.
@@ -222,7 +210,7 @@ _.extend(VerticalTray.prototype, {
   renderAccordion: function (event) {
     event.stopPropagation();
     var context = this;
-    this.$tray.find('.menu-site > .menu').each(function (index, element) {
+    this.$el.find('.menu-site > .menu').each(function (index, element) {
       var $root = $(this).addClass('root');
         // Wrap the list in a div to provide a positioning context.
       var $wrapper = $root
@@ -261,8 +249,12 @@ _.extend(VerticalTray.prototype, {
     .trigger('listChange');
 
   },
-  cleanItem: function (event) {},
-  activateItem: function (event) {},
+  cleanItem: function (event) {
+    /* @todo */
+  },
+  activateItem: function (event) {
+    /* @todo */
+  },
   accordionToggle: function (event) {
     // The toggle.
     var $toggle = $(event.target);
@@ -281,7 +273,6 @@ _.extend(VerticalTray.prototype, {
     // Twist the toggle.
     $toggle
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
-
   },
   initItems: function (event) {
     // The accordion wrapper.
@@ -370,8 +361,8 @@ _.extend(VerticalTray.prototype, {
 /**
  * Renders the display of a tray as a horizontal container.
  */
-function HorizontalTray ($tray, $trigger) {
-
+function HorizontalTray ($el) {
+  this.$el = $el;
 }
 /**
  * Extend the prototype of the HorizontalTray.
@@ -384,7 +375,4 @@ $.extend(HorizontalTray.prototype, {
     console.log('render horizontally');
   }
 });
-
-// Assign the ToolBar obect to the Drupal namespace.
-_.extend(Drupal, {'ToolBar': ToolBar});
 }(jQuery, _));
