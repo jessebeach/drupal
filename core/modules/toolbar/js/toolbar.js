@@ -59,6 +59,8 @@ function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
     'activeClass': 'active',
     'trayOpenBodyClass': 'menu-tray-open'
   };
+  // Show icons if JavaScript is enabled.
+  this.$toolbar.addClass('icons');
   // Bind all ToolBar methods to the instance.
   _.bindAll(this);
   // Recalculate the offset top on screen resize.
