@@ -169,7 +169,7 @@ body.toolbar {
   z-index: 600;
 }
 .toolbar-main .tray.horizontal.active {
-  height: 12em;
+  height: 22em;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
 .toolbar-main .menu-shortcuts .menu + a {
@@ -189,7 +189,6 @@ body.toolbar {
 }
 .toolbar-main .menu-site {
   position: relative;
-  overflow: hidden;
 }
 .toolbar-main .box {
   display: block;
@@ -253,10 +252,33 @@ body.toolbar {
   cursor: pointer;
 }
 /**
+ * ToolBar tray - vertical.
+ */
+ .toolbar-main .vertical .menu-site {
+  overflow: hidden;
+}
+/**
  * Horizonal tray main menu.
  */
 .toolbar-main .horizontal .menu-site li {
   float: left;
+}
+.toolbar-main .horizontal .menu-site .level-1 ul {
+  position: absolute;
+  top: 3.5em;
+  width: 12.5%;
+}
+.toolbar-main .horizontal .menu-site .level-2 {
+  left: 0;
+}
+.toolbar-main .horizontal .menu-site .level-2 li {
+  display: block;
+  float: none;
+}
+.toolbar-main .horizontal .menu-site .level-2 ul {
+  left: 100%;
+  width: 100%;
+  top: 0;
 }
 
 /* Shortcuts */
