@@ -88,6 +88,7 @@ function toolbar_preprocess_html(&$vars) {
  */
 function toolbar_preprocess_toolbar(&$variables) {
   $variables['attributes']['class'][] = "toolbar-main";
+  $variables['attributes']['class'][] = "icons";
   $variables['attributes']['class'][] = "overlay-displace-top";
 }
 
@@ -216,8 +217,7 @@ function toolbar_view() {
     '#theme' => 'links',
     '#links' => $links,
     '#attributes' => array(
-      'id' => 'toolbar-actions',
-      'class' => array('menu'),
+      'class' => array('menu',  'navigation'),
     ),
     '#heading' => array('text' => t('Toolbar navigation'), 'level' => 'h2', 'class' => 'element-invisible'),
   );

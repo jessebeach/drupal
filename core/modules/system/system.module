@@ -1380,6 +1380,15 @@ function system_library_info() {
     ),
   );
 
+  $libraries['matchMedia'] = array(
+    'title' => 'window.matchMedia polyfill',
+    'website' => 'http://drupal.org/node/1815602',
+    'version' => '1.0',
+    'js' => array(
+      'core/misc/matchMedia.js' => array(),
+    ),
+  );
+
   // Farbtastic.
   $libraries['jquery.farbtastic'] = array(
     'title' => 'Farbtastic',
