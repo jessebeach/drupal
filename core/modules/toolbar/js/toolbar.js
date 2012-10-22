@@ -44,8 +44,8 @@ function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
   this.$bar = $toolbar.find('.bar');
   var $tray = $toolbar.find('.tray');
   this.trays = {
-    vertical: new VerticalTray($tray),
-    horizontal: new HorizontalTray($tray)
+    vertical: new VerticalTray($tray, '.menu-site > .menu'),
+    horizontal: new HorizontalTray($tray, '.menu-site > .menu')
   };
   // Bind the methods of the trays.
   _.bindAll(this.trays.vertical);
@@ -168,7 +168,7 @@ $.extend(ToolBar.prototype, {
    *
    */
   toggleTray: function (event) {
-    this.getTray().$el[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+    this.getTray().$tray[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
     // Add a class to the body so it can be styled to react to the tray.
     $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
     $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
@@ -177,7 +177,7 @@ $.extend(ToolBar.prototype, {
    *
    */
   displace: function (event) {
-    this.getTray().$el.css({
+    this.getTray().$tray.css({
       'top': this.computeOffsetTop() + 'px'
     });
   },
@@ -197,86 +197,17 @@ $.extend(ToolBar.prototype, {
   }
 });
 /**
- * Renders the display of a tray as a vertical, sliding container.
+ * Common interactive menu setup methods.
  */
-function VerticalTray ($el) {
-  this.$el = $el;
-  this.tag = 'vertical';
-};
-/**
- * Extend the prototype of the VerticalTray.
- */
-_.extend(VerticalTray.prototype, {
-  /**
-   *
-   */
-  render: function () {
-    // The tray has a couple setup methods to run.
-    this.$el
-      // Register event handlers.
-      .on({
-        'setup.toolbar': this.renderAccordion,
-      })
-      // The tray will be positioned at the edge of the window.
-      .addClass(this.tag)
-      // Triger setup.
-      .trigger('setup');
-  },
-  destroy: function () {
-    this.$el.removeClass(this.tag);
-  },
-  /**
-   * Accordion behavior.
-   */
-  renderAccordion: function (event) {
-    event.stopPropagation();
-    var context = this;
-    this.$el.find('.menu-site > .menu').each(function (index, element) {
-      var $root = $(this).addClass('root');
-      // Wrap the list in a div to provide a positioning context.
-      var $wrapper = $root
-        .wrap(
-          $('<div>')
-            .css({
-              height: '100%',
-              position: 'relative'
-            })
-            .addClass('fleximenu')
-        )
-        .parent()
-        // Bind event handlers.
-        .on({
-          'setup.toolbar': context.accordionSetup
-        });
-      // Create a set of list-manipulation callbacks.
-      // Called when items are added or removed.
-      var listUpdate = $.Callbacks();
-      // Set visibility
-      listUpdate.add(context.initItems);
-      listUpdate.add(_.bind(context.markListLevels, null, $root));
-      listUpdate.add(_.bind(context.setLevelVisibility, null, $root, 1));
-      $wrapper
-        .on('listChange.toolbar', listUpdate.fire)
-        .on('clean.toolbar.accordionMode', 'li', context.cleanItem)
-        .on('activate.toolbar.accordionMode', 'li', context.activateItem)
-        .on('click.toolbar.accordionMode', '.handle', context.accordionToggle)
-        .trigger('setup');
-    });
-  },
-  accordionSetup: function (event) {
+var interactiveMenu =  function () {
+
+  var processLists = function (event) {
     event.stopPropagation();
     // Mark up the lists and items.
     $(event.target)
     .trigger('listChange');
-
-  },
-  cleanItem: function (event) {
-    /* @todo */
-  },
-  activateItem: function (event) {
-    /* @todo */
-  },
-  accordionToggle: function (event) {
+  };
+  var toggleList = function (event) {
     // The toggle.
     var $toggle = $(event.target);
     var $item = $toggle.closest('li');
@@ -294,8 +225,8 @@ _.extend(VerticalTray.prototype, {
     // Twist the toggle.
     $toggle
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
-  },
-  initItems: function (event) {
+  };
+  var initItems = function (event) {
     // The accordion wrapper.
     var $wrapper = $(event.target);
     var rootClass = 'root';
@@ -303,8 +234,8 @@ _.extend(VerticalTray.prototype, {
     var handleClass = 'handle';
     // Get lists and items.
     var $root = $wrapper.children('.' + rootClass);
-    var $ul = $wrapper.find('ul').once('fleximenu');
-    var $li = $wrapper.find('li').once('fleximenu');
+    var $ul = $wrapper.find('ul').once('interactive-menu');
+    var $li = $wrapper.find('li').once('interactive-menu');
     // Basic setup
     $ul
       .each(function (index, element) {
@@ -344,11 +275,11 @@ _.extend(VerticalTray.prototype, {
             );
         }
       });
-  },
+  };
   /**
    * Adds a level class to each list based on its depth in the menu.
    */
-  markListLevels: function ($lists, level) {
+  var markListLevels = function ($lists, level) {
     level = (typeof level === 'object') ? 1 : level;
     $lists
     .addClass('level-' + level)
@@ -357,10 +288,10 @@ _.extend(VerticalTray.prototype, {
     });
     $lists = $lists.children('li').children('ul');
     if ($lists.length > 0) {
-      this.markListLevels($lists, (level + 1));
+      markListLevels($lists, (level + 1));
     }
-  },
-  setLevelVisibility: function ($lists, visibleAfter) {
+  };
+  var setLevelVisibility = function ($lists, visibleAfter) {
     var level;
     $lists
     .each(function (index, element) {
@@ -375,76 +306,95 @@ _.extend(VerticalTray.prototype, {
     });
     $lists = $lists.children('li').children('ul');
     if ($lists.length > 0) {
-      this.setLevelVisibility($lists, visibleAfter);
+      setLevelVisibility($lists, visibleAfter);
     }
+  };
+
+  return {
+    /**
+     * Decorate a menu with markup and classes for attaching behaviors.
+     */
+    decorate: function (menuPath) {
+      var context = this;
+      // Find any menus that have already been decorated.
+      var $wrapper = this.$tray.find('.interactive-menu');
+      // Decorate any menus that have not been.
+      this.$tray.find(menuPath)
+        .once('toolbar')
+        .each(function (index, element) {
+          var $root = $(this).addClass('root');
+          // Create a set of list-manipulation callbacks.
+          // Called when items are added or removed.
+          var listUpdate = $.Callbacks();
+          listUpdate.add(_.bind(initItems, context));
+          listUpdate.add(_.bind(markListLevels, context, $root));
+          listUpdate.add(_.bind(setLevelVisibility, context, $root, 1));
+          // Wrap the list in a div to provide a positioning context.
+          $().add($wrapper).add(
+            $root
+            .wrap('<div class="interactive-menu"></div>')
+            .parent()
+            // Bind event handlers.
+            .on('setup.toolbar', _.bind(processLists, context))
+            .on('listChange.toolbar', listUpdate.fire)
+            .on('click.toolbar', '.handle', _.bind(toggleList, context))
+            /* @todo
+            .on('clean.toolbar.accordionMode', 'li', cleanItem)
+            .on('activate.toolbar.accordionMode', 'li', activateItem)
+            */
+            .trigger('setup')
+          );
+        });
+      return $wrapper;
+    }
+  };
+};
+/**
+ * Renders the display of a tray as a vertical, sliding container.
+ */
+function VerticalTray ($el, menuPath) {
+  this.$tray = $el;
+  this.tag = 'vertical';
+  this.$menu = $();
+  this.menuPath = menuPath;
+}
+/**
+ * Extend the prototype of the VerticalTray.
+ */
+_.extend(VerticalTray.prototype, interactiveMenu(), {
+  /**
+   *
+   */
+  render: function () {
+    this.$menu = this.decorate(this.menuPath);
+    this.$tray.addClass(this.tag);
+  },
+  destroy: function () {
+    this.$tray.removeClass(this.tag);
   }
 });
 /**
  * Renders the display of a tray as a horizontal container.
  */
-function HorizontalTray ($el) {
-  this.$el = $el;
+function HorizontalTray ($el, menuPath) {
+  this.$tray = $el;
   this.tag = 'horizontal';
+  this.$menu = $();
+  this.menuPath = menuPath;
 }
 /**
  * Extend the prototype of the HorizontalTray.
  */
-$.extend(HorizontalTray.prototype, {
+$.extend(HorizontalTray.prototype, interactiveMenu(), {
   /**
    *
    */
   render: function () {
-    // The tray has a couple setup methods to run.
-    this.$el
-      // Register event handlers.
-      .on({
-        'setup.toolbar': this.renderDropmenu,
-      })
-      // The tray will be positioned at the edge of the window.
-      .addClass(this.tag)
-      // Triger setup.
-      .trigger('setup');
+    this.$menu = this.decorate(this.menuPath);
+    this.$tray.addClass(this.tag);
   },
   destroy: function () {
-    this.$el.removeClass(this.tag);
-  },
-  renderDropmenu: function (event) {
-    var context = this;event.stopPropagation();
-    var context = this;
-    this.$el.find('.menu-site > .menu').each(function (index, element) {
-      var $root = $(this).addClass('root');
-      // Wrap the list in a div to provide a positioning context.
-      var $wrapper = $root
-        .wrap(
-          $('<div>')
-            .css({
-              height: '100%',
-              position: 'relative'
-            })
-            .addClass('dropmenu')
-        )
-        .parent()
-        // Bind event handlers.
-        .on({
-          'setup.toolbar': context.accordionSetup
-        });
-      // Create a set of list-manipulation callbacks.
-      // Called when items are added or removed.
-      var listUpdate = $.Callbacks();
-      // Set visibility
-      /* listUpdate.add(context.initItems);
-      listUpdate.add(_.bind(context.markListLevels, null, $root));
-      listUpdate.add(_.bind(context.setLevelVisibility, null, $root, 1));
-      $wrapper
-        .on('listChange.toolbar', listUpdate.fire)
-        .on('clean.toolbar.accordionMode', 'li', context.cleanItem)
-        .on('activate.toolbar.accordionMode', 'li', context.activateItem)
-        .on('click.toolbar.accordionMode', '.handle', context.accordionToggle)
-        .trigger('setup'); */
-    });
-  },
-  dropmenuSetup: function (event) {
-
+    this.$tray.removeClass(this.tag);
   }
 });
 }(jQuery, _));
