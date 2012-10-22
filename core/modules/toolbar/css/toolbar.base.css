@@ -127,7 +127,7 @@ body.toolbar {
  * using padding instead of left.
  */
 @media screen and (max-width: 28.124em) {
-  body.menu-tray-open {
+  body.toolbar-tray-open.toolbar-vertical {
     overflow: hidden;
   }
   .toolbar-main .tray.vertical {
@@ -139,28 +139,45 @@ body.toolbar {
  * using padding instead of left.
  */
 @media screen and (min-width: 28.125em) {
-  body.menu-tray-open {
+  body.toolbar-tray-open.toolbar-vertical {
     padding-left: 272px;
     padding-left: 17rem;
   }
   .toolbar-main .tray.vertical {
-  left: -272px;
-  left: -17rem;
-  width: 272px;
-  width: 17rem;
-}
+    left: -272px;
+    left: -17rem;
+    width: 272px;
+    width: 17rem;
+  }
 }
 .toolbar-main .tray .menu-site li a {
   display: block;
 }
+/**
+ * Toolbar tray - horizontal.
+ */
+.toolbar-main .tray.horizontal {
+  left: 0; /* LTR */
+  height: 0;
+  overflow: hidden;
+  position: fixed;
+  -moz-transition: height, 0.2s ease-out;
+  -o-transition: height, 0.2s ease-out;
+  -webkit-transition: height, 0.2s ease-out;
+  transition: height, 0.2s ease-out;
+  width: 100%;
+  z-index: 600;
+}
+.toolbar-main .tray.horizontal.active {
+  height: 4em;
+}
 /* This style seems to belong neither in toolbar nor in shortcut. */
-.toolbar-main .tray #shortcut-toolbar + a {
+.toolbar-main .menu-shortcuts .menu + a {
   margin-top: 0.3333em;
 }
 /**
  * Fleximenu accordion.
  */
-
 .toolbar-main .fleximenu {
   position: relative;
   overflow: hidden;
