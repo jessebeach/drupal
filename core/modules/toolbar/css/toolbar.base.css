@@ -169,32 +169,32 @@ body.toolbar {
   z-index: 600;
 }
 .toolbar-main .tray.horizontal.active {
-  height: 4em;
+  height: 12em;
 }
 /* This style seems to belong neither in toolbar nor in shortcut. */
 .toolbar-main .menu-shortcuts .menu + a {
   margin-top: 0.3333em;
 }
 /**
- * Fleximenu accordion.
+ * Menus.
  */
-.toolbar-main .fleximenu {
-  position: relative;
-  overflow: hidden;
-}
-.toolbar-main ul {
+.toolbar-main .menu {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.toolbar-main .fleximenu li {
-  display: block;
+.toolbar-main .menu-site {
+  position: relative;
+  overflow: hidden;
 }
 .toolbar-main .box {
+  display: block;
+  line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
   position: relative;
+  width: auto;
 }
 .toolbar-main .dormant {
-	display: none;
+  display: none;
 }
 .toolbar-main .trail > ul { /* Show the sub-menus */
   display: block;
@@ -202,12 +202,10 @@ body.toolbar {
 .toolbar-main .active > ul {
   z-index: 51; /* Pull the active trail li's above the other li's */
 }
-.toolbar-main .fleximenu .box {
+.toolbar-main .tray .menu-site li {
   display: block;
-  line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
-  width: auto;
 }
-.toolbar-main .fleximenu a {
+.toolbar-main .menu-site a {
   display: block;
   line-height: 1;
   overflow: hidden;
@@ -250,6 +248,13 @@ body.toolbar {
 .toolbar-main .handle:hover {
   cursor: pointer;
 }
+/**
+ * Horizonal tray main menu.
+ */
+.toolbar-main .horizontal .menu-site li {
+  float: left;
+}
+
 /* Shortcuts */
 .toolbar-main #edit-shortcuts {
   clear: left;
