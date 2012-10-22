@@ -47,6 +47,9 @@ function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
     vertical: new VerticalTray($tray),
     horizontal: new HorizontalTray($tray)
   };
+  // Bind the methods of the trays.
+  _.bindAll(this.trays.vertical);
+  _.bindAll(this.trays.horizontal);
   this.$tray = this.getTray();
   this.$trigger = $toolbar.find('.toggle-tray');
   this.mediaQueries = [];
@@ -191,13 +194,10 @@ _.extend(VerticalTray.prototype, {
    */
   render: function () {
     // The tray has a couple setup methods to run.
-    var setup = $.Callbacks();
-    setup.add($.proxy(this, 'renderAccordion'));
     this.$el
       // Register event handlers.
       .on({
-        'setup.toolbar': setup.fire,
-        'toggled.toolbar': $.proxy(this, 'toggleTray')
+        'setup.toolbar': this.renderAccordion,
       })
       // The tray will be positioned at the edge of the window.
       .addClass('vertical')
@@ -232,8 +232,8 @@ _.extend(VerticalTray.prototype, {
       var listUpdate = $.Callbacks();
       // Set visibility
       listUpdate.add(context.initItems);
-      listUpdate.add($.proxy(context, 'markListLevels', $root));
-      listUpdate.add($.proxy(context, 'setLevelVisibility', $root, 1));
+      listUpdate.add(_.bind(context.markListLevels, null, $root));
+      listUpdate.add(_.bind(context.setLevelVisibility, null, $root, 1));
       $wrapper
         .on('listChange.toolbar', listUpdate.fire)
         .on('clean.toolbar.accordionMode', 'li', context.cleanItem)
@@ -327,7 +327,7 @@ _.extend(VerticalTray.prototype, {
   /**
    * Adds a level class to each list based on its depth in the menu.
    */
-  markListLevels: function ($lists, level, event) {
+  markListLevels: function ($lists, level) {
     level = (typeof level === 'object') ? 1 : level;
     $lists
     .addClass('level-' + level)
