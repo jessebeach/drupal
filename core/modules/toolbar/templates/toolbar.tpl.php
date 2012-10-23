@@ -33,8 +33,8 @@
   </div>
 
   <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
-    <div class="menu-shortcuts clearfix">
-      <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
+    <div class="shortcuts clearfix">
+      <h2><?php print t('Shortcuts'); ?></h2>
       <?php print render($toolbar['toolbar_shortcuts']); ?>
     </div>
   <?php endif; ?>
