@@ -169,6 +169,9 @@ body.toolbar {
   z-index: 600;
 }
 .toolbar-main .horizontal.active {
+  height: 3.3333em;
+}
+.toolbar-main .horizontal.expand {
   height: 15.6667em;
 }
 .toolbar-main .horizontal .level-2 a {
@@ -271,6 +274,7 @@ body.toolbar {
   float: left;
 }
 .toolbar-main .horizontal .menu-site .level-1 ul {
+  height: 11.6667em;
   position: absolute;
   top: 4em;
   width: 12.5%;
