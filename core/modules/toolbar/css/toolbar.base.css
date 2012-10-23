@@ -291,7 +291,7 @@ body.toolbar {
   width: 12.5%;
 }
 .toolbar-main .horizontal .level-1 > li {
-max-width: 12.5%;
+max-width: 14%;
 }
 .toolbar-main .horizontal .menu-site .level-2 {
   left: 0;

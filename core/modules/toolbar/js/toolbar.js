@@ -229,7 +229,7 @@ var interactiveMenu =  function () {
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
     // Toggle the item list visibility.
     $list
-      ['slide' + ((isHidden) ? 'Down' : 'Up')]()
+      ['slide' + ((isHidden) ? 'Down' : 'Up')](50)
       [((isHidden) ? 'remove' : 'add') + 'Class']('dormant');
     // Twist the toggle.
     $toggle
