@@ -62,13 +62,14 @@ body.toolbar {
 }
 .toolbar-main .shortcuts {
   height: 3em;
-  -moz-transition: height, 0.2s ease-out;
-  -o-transition: height, 0.2s ease-out;
-  -webkit-transition: height, 0.2s ease-out;
-  transition: height, 0.2s ease-out;
+  -moz-transition: height, 0.05s ease-out;
+  -o-transition: height, 0.05s ease-out;
+  -webkit-transition: height, 0.05s ease-out;
+  transition: height, 0.05s ease-out;
 }
 .toolbar-main .shortcuts.hidden {
   height: 0;
+  overflow: hidden;
   padding: 0;
 }
 @media screen and (max-width: 28.124em) {
@@ -126,10 +127,10 @@ body.toolbar {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
-  -moz-transition: left, 0.2s ease-out;
-  -o-transition: left, 0.2s ease-out;
-  -webkit-transition: left, 0.2s ease-out;
-  transition: left, 0.2s ease-out;
+  -moz-transition: left, 0.05s ease-out;
+  -o-transition: left, 0.05s ease-out;
+  -webkit-transition: left, 0.05s ease-out;
+  transition: left, 0.05s ease-out;
   width: 100%;
 }
 .toolbar-main .tray.vertical.active,
@@ -175,10 +176,10 @@ body.toolbar {
   height: 0;
   overflow: hidden;
   position: fixed;
-  -moz-transition: height, 0.2s ease-out;
-  -o-transition: height, 0.2s ease-out;
-  -webkit-transition: height, 0.2s ease-out;
-  transition: height, 0.2s ease-out;
+  -moz-transition: height, 0.05s ease-out;
+  -o-transition: height, 0.05s ease-out;
+  -webkit-transition: height, 0.05s ease-out;
+  transition: height, 0.05s ease-out;
   width: 100%;
   z-index: 600;
 }
