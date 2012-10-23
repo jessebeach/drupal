@@ -57,6 +57,7 @@ function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
   this.state = 'closed';
   this.ui = {
     'activeClass': 'active',
+    'expandClass': 'expand',
     'trayOpenBodyClass': 'toolbar-tray-open',
     'trayOpenBodyClassVertical': 'toolbar-vertical',
     'trayOpenBodyClassHorizontal': 'toolbar-horizontal'
@@ -169,6 +170,9 @@ $.extend(ToolBar.prototype, {
    */
   toggleTray: function (event) {
     this.getTray().$tray[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+    if (this.state !== 'open') {
+      this.getTray().$tray.removeClass(this.ui.expandClass);
+    }
     // Add a class to the body so it can be styled to react to the tray.
     $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
     $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
@@ -225,6 +229,8 @@ var interactiveMenu =  function () {
     // Twist the toggle.
     $toggle
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
+    // Fire an event to signify that a list has been toggled.
+    $item.trigger('itemToggled', [$item.parent().data('toolbar').level, !isHidden]);
   };
   var initItems = function (event) {
     // The accordion wrapper.
@@ -320,7 +326,8 @@ var interactiveMenu =  function () {
       var $wrapper = this.$tray.find('.interactive-menu');
       // Decorate any menus that have not been.
       this.$tray.find(menuPath)
-        .once('toolbar')
+        .once('decorate-menu')
+        .addClass('clearfix')
         .each(function (index, element) {
           var $root = $(this).addClass('root');
           // Create a set of list-manipulation callbacks.
@@ -330,7 +337,7 @@ var interactiveMenu =  function () {
           listUpdate.add(_.bind(markListLevels, context, $root));
           listUpdate.add(_.bind(setLevelVisibility, context, $root, 1));
           // Wrap the list in a div to provide a positioning context.
-          $().add($wrapper).add(
+          $wrapper = $().add($wrapper).add(
             $root
             .wrap('<div class="interactive-menu"></div>')
             .parent()
@@ -392,9 +399,22 @@ $.extend(HorizontalTray.prototype, interactiveMenu(), {
   render: function () {
     this.$menu = this.decorate(this.menuPath);
     this.$tray.addClass(this.tag);
+    // Bind to menu events.
+    this.$tray
+    .find('.interactive-menu')
+    .once('horizontal-tray')
+    .on({
+      'itemToggled': this.revealSubitems
+    }, 'li');
   },
   destroy: function () {
     this.$tray.removeClass(this.tag);
+  },
+  revealSubitems: function (event, level, isHidden) {
+    event.stopPropagation();
+    if (level === 1) {
+      this.$tray[((!isHidden) ? 'add' : 'remove') + 'Class']('expand');
+    }
   }
 });
 }(jQuery, _));
