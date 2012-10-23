@@ -51,6 +51,7 @@ function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
   _.bindAll(this.trays.vertical);
   _.bindAll(this.trays.horizontal);
   this.$tray = this.getTray();
+  this.$shortcuts = $toolbar.find('.shortcuts');
   this.$trigger = $toolbar.find('.toggle-tray');
   this.mediaQueries = [];
   this.orientation = 'vertical';
@@ -58,6 +59,7 @@ function ToolBar ($toolbar, VerticalTray, HorizontalTray) {
   this.ui = {
     'activeClass': 'active',
     'expandClass': 'expand',
+    'shortcutsClass': 'hidden',
     'trayOpenBodyClass': 'toolbar-tray-open',
     'trayOpenBodyClassVertical': 'toolbar-vertical',
     'trayOpenBodyClassHorizontal': 'toolbar-horizontal'
@@ -170,6 +172,7 @@ $.extend(ToolBar.prototype, {
    */
   toggleTray: function (event) {
     this.getTray().$tray[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+    this.$shortcuts[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.shortcutsClass);
     if (this.state !== 'open') {
       this.getTray().$tray.removeClass(this.ui.expandClass);
     }
@@ -181,9 +184,11 @@ $.extend(ToolBar.prototype, {
    *
    */
   displace: function (event) {
-    this.getTray().$tray.css({
-      'top': this.computeOffsetTop() + 'px'
-    });
+    this.getTray().$tray
+      .add(this.$shortcuts)
+      .css({
+        'top': this.computeOffsetTop() + 'px'
+      });
   },
   /**
    * Sum all [data-offset-top] values and cache it.

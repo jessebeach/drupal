@@ -50,12 +50,26 @@ body.toolbar {
 /**
  * Administration menu.
  */
-.toolbar-main .bar {
+.toolbar-main .bar,
+.toolbar-main .shortcuts {
   left: 0;
   position: fixed;
   right: 0;
-  top: 0;
   z-index: 600;
+}
+.toolbar-main .bar {
+  top: 0;
+}
+.toolbar-main .shortcuts {
+  height: 3em;
+  -moz-transition: height, 0.2s ease-out;
+  -o-transition: height, 0.2s ease-out;
+  -webkit-transition: height, 0.2s ease-out;
+  transition: height, 0.2s ease-out;
+}
+.toolbar-main .shortcuts.hidden {
+  height: 0;
+  padding: 0;
 }
 @media screen and (max-width: 28.124em) {
   .toolbar-main .bar {
@@ -177,10 +191,6 @@ body.toolbar {
 .toolbar-main .horizontal .level-2 a {
   padding: 0.6667em 1em;
 }
-/* This style seems to belong neither in toolbar nor in shortcut. */
-.toolbar-main .menu-shortcuts .menu + a {
-  margin-top: 0.3333em;
-}
 /**
  * Menus.
  */
@@ -297,7 +307,10 @@ max-width: 12.5%;
 }
 
 /* Shortcuts */
-.toolbar-main #edit-shortcuts {
-  clear: left;
-  display: block;
+.toolbar-main .shortcuts h2 {
+  display: inline-block;
+  float: left;
+}
+.toolbar-main .shortcuts .menu {
+  float: left;
 }

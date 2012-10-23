@@ -336,28 +336,40 @@
 /* @end */
 
 /* Shortcuts */
-.toolbar-main .menu-shortcuts {
-  padding-left: 0.40em;
-  padding-right: 0.40em;
+.toolbar-main .shortcuts {
+  background-color: #555;
+  padding: 0.5em 0.6667em;
 }
-.toolbar-main .menu-shortcuts .menu li {
+.toolbar-main .shortcuts h2 {
+  font-size: 1em;
+  font-weight: normal;
+  line-height: 2;
+}
+.toolbar-main .shortcuts .menu {
+  margin-left: 0.5em;
+}
+.toolbar-main .shortcuts .menu li {
   display: block;
   float: left; /* LTR */
   padding: 0 0.2em;
   margin-bottom: 0.5em;
 }
-.toolbar-main .menu-shortcuts .menu a {
-  display: inline-block;
+.toolbar-main .shortcuts,
+.toolbar-main .shortcuts a {
+  color: #E0E0E0;
 }
-.toolbar-main .menu-shortcuts .menu a {
-  background-color: #DDD;
+.toolbar-main .shortcuts .menu a {
+  background-color: #777;
   border-radius: 0.3em;
+  display: inline-block;
   font-size: 0.9em;
   line-height: 1;
   padding: 0.6em 0.8em;
 }
-.toolbar-main #edit-shortcuts {
-  padding: 0.7857em 0.2em;
+.toolbar-main .shortcuts .menu + a {
+  font-size: 1em;
+  line-height: 2;
+  margin-left: 0.75em;
 }
 
 /* Dropbutton */
