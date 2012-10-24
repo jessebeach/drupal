@@ -191,15 +191,6 @@ function toolbar_view() {
 
   // Build the default toolbar navigation links.
   $links = array(
-    'toolbar_tray_toggle' => array(
-      'title' => t('Menu'),
-      'href' => '',
-      'html' => FALSE,
-      'attributes' => array(
-        'class' => array('tab', 'toggle', 'toggle-tray'),
-        'role' => 'button',
-      ),
-    ),
     'home' => array(
       'title' => t('Home'),
       'href' => '<front>',
@@ -207,6 +198,15 @@ function toolbar_view() {
       'attributes' => array(
         'title' => t('Home'),
         'class' => array('tab', 'home-link'),
+      ),
+    ),
+    'toolbar_tray_toggle' => array(
+      'title' => t('Menu'),
+      'href' => '',
+      'html' => FALSE,
+      'attributes' => array(
+        'class' => array('tab', 'toggle', 'toggle-tray'),
+        'role' => 'button',
       ),
     ),
   );
