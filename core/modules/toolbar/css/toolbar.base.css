@@ -35,9 +35,6 @@ body.toolbar {
   -o-touch-callout: none;
   -webkit-touch-callout: none;
   touch-callout: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  -webkit-user-select: none;
   user-select: none;
   vertical-align: baseline;
 }
@@ -50,8 +47,7 @@ body.toolbar {
 /**
  * Administration menu.
  */
-.toolbar-main .bar,
-.toolbar-main .shortcuts {
+.toolbar-main .bar {
   left: 0;
   position: fixed;
   right: 0;
@@ -78,35 +74,16 @@ body.toolbar {
   }
 }
 @media screen and (min-width: 16.5em) {
-  .toolbar-main-actions {
-  float: left; /* LTR */
-  }
-  .toolbar-main-user {
-    float: right; /* LTR */
-  }
-  .toolbar-main .bar .section {
-    min-height: 2.875em;
-  }
-  .toolbar-main .bar .section.first,
-  .toolbar-main .bar .section.second {
-    min-width: 6.6667em;
-  }
-  .toolbar-main .bar .section.first {
-    float: left; /* LTR */
-  }
-  .toolbar-main .bar .section.second {
-    float: right; /* LTR */
-  }
-  .toolbar-main .bar .section.actions {
-    overflow: hidden;
-  }
-  .toolbar-main .bar .menu li {
+  .toolbar-main .bar li {
     display: block;
     float: left; /* LTR */
   }
-  .toolbar-main .bar .menu a {
+  .toolbar-main .bar a {
     display: inline-block;
   }
+}
+.toolbar-main .tray {
+  top: 3.6em;
 }
 /**
  * Toolbar tray - vertical.

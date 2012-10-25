@@ -19,6 +19,7 @@ Drupal.behaviors.toolbar = {
     $toolbar.on('trayRegistered', decorateInteractiveMenu);
     if ($toolbar.length) {
       var toolbar = new ToolBar($toolbar);
+      var tray, $trays, tab, $tab, $tabs, name, i;
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar trays based on a breakpoint.
       if (options.toolbar.breakpoints && options.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
@@ -31,12 +32,35 @@ Drupal.behaviors.toolbar = {
       }
       // Register trays.
       Drupal.toolbar.trays = [];
-      var $trays = $toolbar.find('.tray');
-      for (var i = 0; i < $trays.length; i++) {
-        var tray = new Tray($trays[i]);
+      $trays = $toolbar.find('.tray');
+      for (i = 0; i < $trays.length; i++) {
+        tray = new Tray($($trays[i]));
         Drupal.toolbar.trays.push(tray);
         toolbar.registerTray(tray);
       }
+      // Associate the bar tabs with the trays.
+      Drupal.toolbar.tabs = [];
+      $tabs = $toolbar.find('.bar .tab');
+      for (i = 0; i < $tabs.length; i++) {
+        $tab = $($tabs[i]);
+        tab = new Tab($tab);
+        Drupal.toolbar.tabs.push(tab);
+        name = tab.$el.data().toolbarToggleTray || '';
+        if (name.length) {
+          tray = toolbar.getTray(name) || undefined;
+          if (tray) {
+            $tab.data('toolbar', {
+              'tab': tab
+            });
+            tab.registerTray(tray);
+            toolbar.registerTab(tab);
+          }
+        }
+      }
+      // Register click events on the tabs.
+      $toolbar.on(
+        'click', '.bar .tab', toolbar.toggleTray
+      );
     }
   },
   options: {
@@ -52,6 +76,7 @@ function ToolBar ($toolbar) {
   this.$toolbar = $toolbar;
   this.$bar = $toolbar.find('.bar');
   this.trays = [];
+  this.tabs = [];
   this.mediaQueries = [];
   this.ui = {
     'activeClass': 'active',
@@ -120,6 +145,25 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
+  toggleTray: function (event) {
+    event.preventDefault();
+    var $tab = $(event.target);
+    var tab = $tab.data('toolbar').tab;
+    tab.toggle();
+  },
+  /**
+   *
+   */
+  getTray: function (name) {
+    for (var i = 0; i < this.trays.length; i++) {
+      if (this.trays[i].name === name) {
+        return this.trays[i];
+      }
+    }
+  },
+  /**
+   *
+   */
   getTrays: function () {
     return $();
   },
@@ -128,6 +172,13 @@ $.extend(ToolBar.prototype, {
    */
   destroyTray: function () {
     this.trays[this.orientation].destroy();
+  },
+  /**
+   *
+   */
+  registerTab: function (tab) {
+    this.tabs.push(tab);
+    this.$toolbar.trigger('tabRegistered', tab);
   },
   /**
    *
@@ -167,19 +218,6 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  toggleTray: function (event) {
-    this.getTray().$el[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
-    this.$shortcuts[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.shortcutsClass);
-    if (this.state !== 'open') {
-      this.getTray().$el.removeClass(this.ui.expandClass);
-    }
-    // Add a class to the body so it can be styled to react to the tray.
-    $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
-    $('body')[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.trayOpenBodyClass);
-  },
-  /**
-   *
-   */
   displace: function (event) {
     this.getTrays()
       .add(this.$shortcuts)
@@ -206,10 +244,10 @@ $.extend(ToolBar.prototype, {
 /**
  * Toolbar tray.
  */
-function Tray (tray) {
-  this.$el = $(tray);
-  this.name = this.$el.data()['toolbarTrayName'] || 'no name';
-  this.state = 'closed';
+function Tray ($tray) {
+  this.$el = $tray;
+  this.name = this.$el.data()['toolbarTrayName'] || this.$el.attr('id') ||'no name';
+  this.active = false;
   this.orientation = 'horizontal';
 }
 
@@ -220,10 +258,35 @@ _.extend(Tray.prototype, {
   /**
    *
    */
-  render: function () {
-  },
-  destroy: function () {
+  toggle: function (open) {
+    this.$el.toggleClass('active', open);
   }
+});
+
+function Tab ($tab) {
+  this.$el = $tab;
+  this.active = false;
+  this.tray;
+}
+
+/**
+ * Extend the prototype of the Tray.
+ */
+_.extend(Tab.prototype, {
+  /**
+   *
+   */
+  toggle: function (open) {
+    this.active = open || !this.active;
+    this.$el.toggleClass('active', this.active);
+    this.tray.toggle(this.active);
+  },
+  /**
+   *
+   */
+  registerTray: function (tray) {
+    this.tray = tray;
+  },
 });
 /**
  * Interactive menu setup methods.
