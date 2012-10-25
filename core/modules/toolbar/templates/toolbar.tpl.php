@@ -25,7 +25,7 @@
 
   <!-- Trays -->
   <?php if (!empty($toolbar['toolbar_administration'])) : ?>
-    <nav class="tray administration">
+    <nav id="toolbar-tray-administration" class="tray administration" data-toolbar-tray-name="administration">
       <div class="lining slider clearfix">
         <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
         <?php print render($toolbar['toolbar_administration']); ?>
@@ -33,7 +33,7 @@
     </nav>
   <?php endif; ?>
   <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
-    <nav class="tray shortcuts">
+    <nav id="toolbar-tray-shortcuts" class="tray shortcuts" data-toolbar-tray-name="shortcuts">
       <div class="lining slider clearfix">
         <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
         <?php print render($toolbar['toolbar_shortcuts']); ?>
@@ -41,7 +41,7 @@
     </nav>
   <?php endif; ?>
   <?php if (!empty($toolbar['toolbar_user'])) : ?>
-    <nav class="tray user">
+    <nav id="toolbar-tray-user" class="tray user" data-toolbar-tray-name="user">
       <div class="lining slider clearfix">
         <?php print render($toolbar['toolbar_user']); ?>
       </div>

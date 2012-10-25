@@ -172,7 +172,7 @@ function toolbar_view() {
     'href' => '',
     'html' => FALSE,
     'attributes' => array(
-      'class' => array('tab', 'toggle', 'toggle-tray'),
+      'class' => array('tab'),
       'role' => 'button',
     ),
   );
@@ -241,6 +241,10 @@ function toolbar_view() {
 
   // Assign the tabs to the build.
   $build['toolbar_tabs']['#links'] = $toolbar_tabs;
+  // Provide a data attribute to each bar link that associates it with its tray.
+  foreach ($build['toolbar_tabs']['#links'] as $key => $link) {
+    $build['toolbar_tabs']['#links'][$key]['attributes']['data-toggle-tray'] = $key;
+  }
 
   return $build;
 }
