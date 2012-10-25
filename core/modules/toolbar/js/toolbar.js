@@ -47,14 +47,12 @@ Drupal.behaviors.toolbar = {
         Drupal.toolbar.tabs.push(tab);
         name = tab.$el.data().toolbarToggleTray || '';
         if (name.length) {
-          tray = toolbar.getTray(name) || undefined;
-          if (tray) {
-            $tab.data('toolbar', {
-              'tab': tab
-            });
-            tab.registerTray(tray);
-            toolbar.registerTab(tab);
-          }
+          tray = toolbar.getTray(name);
+          $tab.data('toolbar', {
+            'tab': tab
+          });
+          tab.registerTray(tray);
+          toolbar.registerTab(tab);
         }
       }
       // Register click events on the tabs.
@@ -149,6 +147,12 @@ $.extend(ToolBar.prototype, {
     event.preventDefault();
     var $tab = $(event.target);
     var tab = $tab.data('toolbar').tab;
+    var disableTabs = _.without(this.tabs, tab);
+    for (var i = disableTabs.length - 1; i >= 0; i--) {
+      if (disableTabs[i]) {
+        disableTabs[i].toggle(false);
+      }
+    };
     tab.toggle();
   },
   /**
@@ -160,6 +164,7 @@ $.extend(ToolBar.prototype, {
         return this.trays[i];
       }
     }
+    return;
   },
   /**
    *
@@ -277,9 +282,11 @@ _.extend(Tab.prototype, {
    *
    */
   toggle: function (open) {
-    this.active = open || !this.active;
+    this.active = (open !== undefined) ? open : !this.active;
     this.$el.toggleClass('active', this.active);
-    this.tray.toggle(this.active);
+    if (this.tray) {
+      this.tray.toggle(this.active);
+    }
   },
   /**
    *
