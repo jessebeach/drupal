@@ -20,33 +20,31 @@
  */
 ?>
 <div id="toolbar" role="navigation" class="<?php print $attributes['class']; ?>" <?php print $attributes; ?>>
-  <div class="bar clearfix">
-    <div class="section first">
-      <?php print render($toolbar['toolbar_navigation']); ?>
-    </div>
-    <?php if (!empty($toolbar['toolbar_user'])) : ?>
-      <div class="section second">
+  <!-- Tab bar -->
+  <?php print render($toolbar['toolbar_tabs']); ?>
+
+  <!-- Trays -->
+  <?php if (!empty($toolbar['toolbar_administration'])) : ?>
+    <nav class="tray administration">
+      <div class="lining slider clearfix">
+        <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
+        <?php print render($toolbar['toolbar_administration']); ?>
+      </div>
+    </nav>
+  <?php endif; ?>
+  <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
+    <nav class="tray shortcuts">
+      <div class="lining slider clearfix">
+        <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
+        <?php print render($toolbar['toolbar_shortcuts']); ?>
+      </div>
+    </nav>
+  <?php endif; ?>
+  <?php if (!empty($toolbar['toolbar_user'])) : ?>
+    <nav class="tray user">
+      <div class="lining slider clearfix">
         <?php print render($toolbar['toolbar_user']); ?>
       </div>
-    <?php endif; ?>
-    <div class="section actions"></div>
-  </div>
-
-  <?php if (!empty($toolbar['toolbar_shortcuts'])) : ?>
-    <div class="shortcuts clearfix">
-      <h2><?php print t('Shortcuts'); ?></h2>
-      <?php print render($toolbar['toolbar_shortcuts']); ?>
-    </div>
+    </nav>
   <?php endif; ?>
-
-  <div class="tray">
-    <div class="lining slider">
-      <?php if (!empty($toolbar['toolbar_menu'])) : ?>
-        <nav class="menu-site clearfix">
-          <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
-          <?php print render($toolbar['toolbar_menu']); ?>
-        </nav>
-      <?php endif; ?>
-    </div>
-  </div>
 </div>
