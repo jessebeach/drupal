@@ -145,7 +145,54 @@ function toolbar_view() {
     }
   }
 
+  // Bar tabs.
+  $build['toolbar_tabs'] = array(
+    '#theme' => 'links',
+    '#attributes' => array(
+      'class' => array('bar', 'clearfix'),
+    ),
+    '#heading' => array('text' => t('Drupal toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
+  );
+  $toolbar_tabs = array();
 
+  // Home bar tab.
+  $toolbar_tabs['home'] = array(
+    'title' => t('Home'),
+    'href' => '<front>',
+    'html' => FALSE,
+    'attributes' => array(
+      'title' => t('Home'),
+      'class' => array('tab', 'home-link'),
+    ),
+  );
+
+  // Build the default toolbar navigation links.
+  $toolbar_tabs['administration'] = array(
+    'title' => t('Menu'),
+    'href' => '',
+    'html' => FALSE,
+    'attributes' => array(
+      'class' => array('tab', 'toggle', 'toggle-tray'),
+      'role' => 'button',
+    ),
+  );
+
+  // Retrieve the admin menu from the database.
+  $tree = toolbar_get_menu_tree();
+  // Add attributes to the links before rendering.
+  toolbar_menu_navigation_links($tree);
+  $build['toolbar_administration'] = menu_tree_output($tree);
+
+  // User bar tab.
+  // @todo User module should implement toolbar's tab hook instead of being
+  // injected here directly.
+  $toolbar_tabs['user'] = array(
+    'title' => t('Account'),
+    'href' => '',
+    'attributes' => array(
+      'class' => array('tab'),
+    ),
+  );
   // Add logout & user account links or login link.
   if ($user->uid) {
     $links = array(
@@ -189,46 +236,11 @@ function toolbar_view() {
     '#heading' => array('text' => t('Toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 
-  // Build the default toolbar navigation links.
-  $links = array(
-    'home' => array(
-      'title' => t('Home'),
-      'href' => '<front>',
-      'html' => FALSE,
-      'attributes' => array(
-        'title' => t('Home'),
-        'class' => array('tab', 'home-link'),
-      ),
-    ),
-    'toolbar_tray_toggle' => array(
-      'title' => t('Menu'),
-      'href' => '',
-      'html' => FALSE,
-      'attributes' => array(
-        'class' => array('tab', 'toggle', 'toggle-tray'),
-        'role' => 'button',
-      ),
-    ),
-  );
-
-  // Toolbar navigation links.
-  $build['toolbar_navigation'] = array(
-    '#theme' => 'links',
-    '#links' => $links,
-    '#attributes' => array(
-      'class' => array('menu',  'navigation'),
-    ),
-    '#heading' => array('text' => t('Toolbar navigation'), 'level' => 'h2', 'class' => 'element-invisible'),
-  );
-
-  // Retrieve the admin menu from the database.
-  $tree = toolbar_get_menu_tree();
-  // Add attributes to the links before rendering.
-  toolbar_menu_navigation_links($tree);
-  $build['toolbar_menu'] = menu_tree_output($tree);
-
   // Shortcuts.
   $build['toolbar_shortcuts'] = array();
+
+  // Assign the tabs to the build.
+  $build['toolbar_tabs']['#links'] = $toolbar_tabs;
 
   return $build;
 }
