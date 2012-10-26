@@ -41,6 +41,9 @@ function toolbar_theme($existing, $type, $theme, $path) {
     'render element' => 'toolbar',
     'template' => 'toolbar',
   );
+  $items['toolbar_tray'] = array(
+    'render element' => 'element',
+  );
   return $items;
 }
 
@@ -145,60 +148,19 @@ function toolbar_view() {
     }
   }
 
-  // Bar tabs.
-  $build['toolbar_tabs'] = array(
-    '#theme' => 'links',
-    '#attributes' => array(
-      'class' => array('bar', 'clearfix'),
-    ),
-    '#heading' => array('text' => t('Drupal toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
-  );
-  $toolbar_tabs = array();
-
-  // Home bar tab.
-  $toolbar_tabs['home'] = array(
-    'title' => t('Home'),
-    'href' => '<front>',
-    'html' => FALSE,
-    'attributes' => array(
-      'title' => t('Home'),
-      'class' => array('tab', 'home-link'),
-    ),
-  );
-
   // Build the default toolbar navigation links.
-  $toolbar_tabs['administration'] = array(
-    'title' => t('Menu'),
-    'href' => '',
-    'html' => FALSE,
-    'attributes' => array(
-      'class' => array('tab'),
-      'role' => 'button',
-    ),
-  );
-
-  // Retrieve the admin menu from the database.
+  // Retrieve the administration menu from the database.
   $tree = toolbar_get_menu_tree();
   // Add attributes to the links before rendering.
   toolbar_menu_navigation_links($tree);
-  $build['toolbar_administration'] = array(
+  $menu['toolbar_administration'] = array(
     '#type' => 'container',
     '#attributes' => array(
       'class' => array('interactive-menu'),
     ),
   );
-  $build['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
+  $menu['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
 
-  // User bar tab.
-  // @todo User module should implement toolbar's tab hook instead of being
-  // injected here directly.
-  $toolbar_tabs['user'] = array(
-    'title' => t('Account'),
-    'href' => '',
-    'attributes' => array(
-      'class' => array('tab'),
-    ),
-  );
   // Add logout & user account links or login link.
   if ($user->uid) {
     $links = array(
@@ -231,26 +193,82 @@ function toolbar_view() {
       ),
     );
   }
-  // Theme the toolbar user action links.
-  $build['toolbar_user'] = array(
-    '#theme' => 'links__toolbar_user',
-    '#links' => $links,
-    '#attributes' => array(
-      'id' => 'toolbar-user',
-      'class' => array('menu'),
+
+  $toolbar_groups = array(
+    'home' => array(
+      'tab' => array(
+        'title' => t('Home'),
+        'href' => '<front>',
+        'html' => FALSE,
+        'attributes' => array(
+          'title' => t('Home'),
+          'class' => array('tab', 'home-link'),
+        ),
+      ),
     ),
-    '#heading' => array('text' => t('Toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
+    'administration' => array(
+      'tab' => array(
+        'title' => t('Menu'),
+        'href' => '',
+        'html' => FALSE,
+        'attributes' => array(
+          'class' => array('tab'),
+          'role' => 'button',
+        ),
+      ),
+      'tray' => $menu,
+    ),
+    'user' => array(
+      'tab' => array(
+        'title' => t('Account'),
+        'href' => '',
+        'attributes' => array(
+          'class' => array('tab'),
+        ),
+      ),
+      'tray' => array(
+        '#theme' => 'links__toolbar_user',
+        '#links' => $links,
+        '#attributes' => array(
+          'id' => 'toolbar-user',
+          'class' => array('menu'),
+        ),
+        '#heading' => array('text' => t('Toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
+      ),
+    ),
   );
 
-  // Shortcuts.
-  $build['toolbar_shortcuts'] = array();
+  // Get groups from other modules.
+  array_merge($toolbar_groups, toolbar_register_tab());
+
+  // Bar tabs.
+  $toolbar_tabs = array();
+  $toolbar_trays = array();
+  foreach ($toolbar_groups as $category => $components) {
+    if (!empty($components['tab'])) {
+      // Provide a data attribute to each bar link that associates it with its tray.
+      $components['tab']['attributes']['data-toolbar-tray'] = $category;
+      $toolbar_tabs[$category] = $components['tab'];
+    }
+    if (!empty($components['tray'])) {
+      $toolbar_trays[$category] = $components['tray'];
+    }
+  }
 
   // Assign the tabs to the build.
-  $build['toolbar_tabs']['#links'] = $toolbar_tabs;
-  // Provide a data attribute to each bar link that associates it with its tray.
-  foreach ($build['toolbar_tabs']['#links'] as $key => $link) {
-    $build['toolbar_tabs']['#links'][$key]['attributes']['data-toolbar-tray'] = $key;
-  }
+  $build['toolbar_tabs'] = array(
+    '#theme' => 'links',
+    '#links' => $toolbar_tabs,
+    '#attributes' => array(
+      'class' => array('bar', 'clearfix'),
+    ),
+    '#heading' => array('text' => t('Drupal toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
+  );
+  //// Assign the tabs to the build.
+  $build['toolbar_trays'] = array(
+    '#theme' => 'toolbar_tray',
+    '#trays' => $toolbar_trays,
+  );
 
   return $build;
 }
@@ -293,6 +311,28 @@ function toolbar_menu_navigation_links(&$tree) {
     // and behaviors to the items.
     $tree[$key]['link']['localized_options']['attributes']['id'] = 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']);
   }
+}
+
+/**
+ *
+ */
+function toolbar_register_tab() {
+  return module_invoke_all('toolbar_register_tab');
+}
+
+/**
+ *
+ */
+function theme_toolbar_tray($trays) {
+  $output = '';
+
+  foreach ($trays['element']['#trays'] as $key => $tray) {
+    $output .= '<nav id="toolbar-tray-' . $key . '" class="tray ' .  $key . '" data-toolbar-tray="' . $key . '"><div class="lining slider clearfix">';
+    $output .= render($tray);
+    $output .= '<div class="toggle-orientation"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div></div></nav>';
+  }
+
+  return $output;
 }
 
 /**
