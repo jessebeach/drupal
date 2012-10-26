@@ -142,7 +142,7 @@ body.toolbar {
     width: 17rem;
   }
 }
-.toolbar-main .tray .menu-site li a {
+.toolbar-main .tray .interactive-menu li a {
   display: block;
 }
 /**
@@ -181,7 +181,7 @@ body.toolbar {
   height: 100%;
   position: relative;
 }
-.toolbar-main .menu-site {
+.toolbar-main .interactive-menu {
   position: relative;
 }
 .toolbar-main .box {
@@ -199,10 +199,10 @@ body.toolbar {
 .toolbar-main .active > ul {
   z-index: 51; /* Pull the active trail li's above the other li's */
 }
-.toolbar-main .tray .menu-site li {
+.toolbar-main .tray .interactive-menu li {
   display: block;
 }
-.toolbar-main .menu-site a {
+.toolbar-main .interactive-menu a {
   display: block;
   line-height: 1;
   overflow: hidden;
@@ -252,16 +252,16 @@ body.toolbar {
 /**
  * ToolBar tray - vertical.
  */
- .toolbar-main .vertical .menu-site {
+ .toolbar-main .vertical .interactive-menu {
   overflow: hidden;
 }
 /**
  * Horizonal tray main menu.
  */
-.toolbar-main .horizontal .menu-site li {
+.toolbar-main .horizontal .interactive-menu li {
   float: left;
 }
-.toolbar-main .horizontal .menu-site .level-1 ul {
+.toolbar-main .horizontal .interactive-menu .level-1 ul {
   height: 23.6667em;
   position: absolute;
   top: 4em;
@@ -270,14 +270,14 @@ body.toolbar {
 .toolbar-main .horizontal .level-1 > li {
 max-width: 14%;
 }
-.toolbar-main .horizontal .menu-site .level-2 {
+.toolbar-main .horizontal .interactive-menu .level-2 {
   left: 0;
 }
-.toolbar-main .horizontal .menu-site .level-2 li {
+.toolbar-main .horizontal .interactive-menu .level-2 li {
   display: block;
   float: none;
 }
-.toolbar-main .horizontal .menu-site .level-2 ul {
+.toolbar-main .horizontal .interactive-menu .level-2 ul {
   bottom: 0;
   left: 100%;
   top: 0;

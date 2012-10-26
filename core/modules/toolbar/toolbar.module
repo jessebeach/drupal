@@ -181,7 +181,13 @@ function toolbar_view() {
   $tree = toolbar_get_menu_tree();
   // Add attributes to the links before rendering.
   toolbar_menu_navigation_links($tree);
-  $build['toolbar_administration'] = menu_tree_output($tree);
+  $build['toolbar_administration'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('interactive-menu'),
+    ),
+  );
+  $build['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
 
   // User bar tab.
   // @todo User module should implement toolbar's tab hook instead of being
