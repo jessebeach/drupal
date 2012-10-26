@@ -56,18 +56,6 @@ body.toolbar {
 .toolbar-main .bar {
   top: 0;
 }
-.toolbar-main .shortcuts {
-  height: 3em;
-  -moz-transition: height, 0.05s ease-out;
-  -o-transition: height, 0.05s ease-out;
-  -webkit-transition: height, 0.05s ease-out;
-  transition: height, 0.05s ease-out;
-}
-.toolbar-main .shortcuts.hidden {
-  height: 0;
-  overflow: hidden;
-  padding: 0;
-}
 @media screen and (max-width: 28.124em) {
   .toolbar-main .bar {
     position: absolute;
@@ -282,13 +270,4 @@ max-width: 14%;
   left: 100%;
   top: 0;
   width: 100%;
-}
-
-/* Shortcuts */
-.toolbar-main .shortcuts h2 {
-  display: inline-block;
-  float: left;
-}
-.toolbar-main .shortcuts .menu {
-  float: left;
 }

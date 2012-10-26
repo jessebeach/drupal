@@ -187,9 +187,6 @@ function toolbar_view() {
       'login' => array(
         'title' => t('Log in'),
         'href' => 'user',
-        'attributes' => array(
-          'class' => array('tab'),
-        ),
       ),
     );
   }
@@ -200,10 +197,6 @@ function toolbar_view() {
         'title' => t('Home'),
         'href' => '<front>',
         'html' => FALSE,
-        'attributes' => array(
-          'title' => t('Home'),
-          'class' => array('tab', 'home-link'),
-        ),
       ),
     ),
     'administration' => array(
@@ -211,10 +204,6 @@ function toolbar_view() {
         'title' => t('Menu'),
         'href' => '',
         'html' => FALSE,
-        'attributes' => array(
-          'class' => array('tab'),
-          'role' => 'button',
-        ),
       ),
       'tray' => $menu,
     ),
@@ -222,16 +211,12 @@ function toolbar_view() {
       'tab' => array(
         'title' => t('Account'),
         'href' => '',
-        'attributes' => array(
-          'class' => array('tab'),
-        ),
       ),
       'tray' => array(
         '#theme' => 'links__toolbar_user',
         '#links' => $links,
         '#attributes' => array(
           'id' => 'toolbar-user',
-          'class' => array('menu'),
         ),
         '#heading' => array('text' => t('Toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
       ),
@@ -239,7 +224,7 @@ function toolbar_view() {
   );
 
   // Get groups from other modules.
-  array_merge($toolbar_groups, toolbar_register_tab());
+  $toolbar_groups = array_merge($toolbar_groups, module_invoke_all('toolbar_register_tabs'));
 
   // Bar tabs.
   $toolbar_tabs = array();
@@ -248,6 +233,11 @@ function toolbar_view() {
     if (!empty($components['tab'])) {
       // Provide a data attribute to each bar link that associates it with its tray.
       $components['tab']['attributes']['data-toolbar-tray'] = $category;
+      if (!isset($components['tab']['attributes']['class'])) {
+        $components['tab']['attributes']['class'] = array();
+      }
+      $components['tab']['attributes']['class'][] = 'tab';
+      $components['tab']['attributes']['role'] = 'button';
       $toolbar_tabs[$category] = $components['tab'];
     }
     if (!empty($components['tray'])) {
@@ -311,13 +301,6 @@ function toolbar_menu_navigation_links(&$tree) {
     // and behaviors to the items.
     $tree[$key]['link']['localized_options']['attributes']['id'] = 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']);
   }
-}
-
-/**
- *
- */
-function toolbar_register_tab() {
-  return module_invoke_all('toolbar_register_tab');
 }
 
 /**
