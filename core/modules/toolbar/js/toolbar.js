@@ -19,23 +19,17 @@ Drupal.behaviors.toolbar = {
     $toolbar.on('trayRegistered', decorateInteractiveMenu);
     if ($toolbar.length) {
       var toolbar = new ToolBar($toolbar);
-      var tray, $trays, tab, $tab, $tabs, name, i;
-      // Set up switching between the vertical and horizontal presentation
-      // of the toolbar trays based on a breakpoint.
-      if (options.toolbar.breakpoints && options.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
-        var mql = matchMedia(settings.toolbar.breakpoints['module.toolbar.wide']);
-        mql.addListener(toolbar.mediaQueryChangeHandler);
-        toolbar.mediaQueries.push(mql);
-        if (mql.matches) {
-          toolbar.orientation = 'horizontal';
-        }
-      }
+      var tray, $tray, $trays, tab, $tab, $tabs, name, i;
       // Register trays.
       Drupal.toolbar.trays = [];
       $trays = $toolbar.find('.tray');
       for (i = 0; i < $trays.length; i++) {
-        tray = new Tray($($trays[i]));
+        $tray = $($trays[i]);
+        tray = new Tray($tray);
         Drupal.toolbar.trays.push(tray);
+        $tray.data('toolbar', {
+          'tray': tray
+        });
         toolbar.registerTray(tray);
       }
       // Associate the bar tabs with the trays.
@@ -45,7 +39,7 @@ Drupal.behaviors.toolbar = {
         $tab = $($tabs[i]);
         tab = new Tab($tab);
         Drupal.toolbar.tabs.push(tab);
-        name = tab.$el.data().toolbarToggleTray || '';
+        name = tab.$el.data().toolbarTray || '';
         if (name.length) {
           tray = toolbar.getTray(name);
           $tab.data('toolbar', {
@@ -55,10 +49,16 @@ Drupal.behaviors.toolbar = {
           toolbar.registerTab(tab);
         }
       }
-      // Register click events on the tabs.
-      $toolbar.on(
-        'click', '.bar .tab', toolbar.toggleTray
-      );
+      // Set up switching between the vertical and horizontal presentation
+      // of the toolbar trays based on a breakpoint.
+      if (options.toolbar.breakpoints && options.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
+        var mql = matchMedia(settings.toolbar.breakpoints['module.toolbar.wide']);
+        mql.addListener(toolbar.mediaQueryChangeHandler);
+        toolbar.mediaQueries.push(mql);
+        if (mql.matches) {
+          toolbar.mediaQueryChangeHandler(mql);
+        }
+      }
     }
   },
   options: {
@@ -78,11 +78,7 @@ function ToolBar ($toolbar) {
   this.mediaQueries = [];
   this.ui = {
     'activeClass': 'active',
-    'expandClass': 'expand',
-    'shortcutsClass': 'hidden',
     'trayOpenBodyClass': 'toolbar-tray-open',
-    'trayOpenBodyClassVertical': 'toolbar-vertical',
-    'trayOpenBodyClassHorizontal': 'toolbar-horizontal'
   };
   // Show icons if JavaScript is enabled.
   this.$toolbar.addClass('icons');
@@ -103,9 +99,9 @@ function ToolBar ($toolbar) {
     });
   // Toolbar event handlers.
   this.$toolbar
-    .on({
-      'setup.toolbar': setHeight,
-    })
+    .on('setup.toolbar', setHeight)
+    .on('click', '.bar .tab', this.toggleTray)
+    .on('click', '.tray .toggle-orientation', this.orientationChangeHandler)
     .trigger('setup');
 };
 /**
@@ -137,12 +133,6 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  renderTray: function () {
-    this.trays[this.orientation].render();
-  },
-  /**
-   *
-   */
   toggleTray: function (event) {
     event.preventDefault();
     var $tab = $(event.target);
@@ -169,15 +159,6 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  getTrays: function () {
-    return $();
-  },
-  /**
-   *
-   */
-  destroyTray: function () {
-    this.trays[this.orientation].destroy();
-  },
   /**
    *
    */
@@ -188,51 +169,36 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  mediaQueryChangeHandler: function (mql, event) {
-    if (mql.matches && this.orientation === 'vertical') {
-      // Destroy the current tray.
-      this.destroyTray();
-      this.orientation = 'horizontal';
-      $('body').addClass(this.ui.trayOpenBodyClassHorizontal).removeClass(this.ui.trayOpenBodyClassVertical);
-    }
-    else if (!mql.matches && this.orientation == 'horizontal') {
-      // Destroy the current tray.
-      this.destroyTray();
-      this.orientation = 'vertical';
-      $('body').addClass(this.ui.trayOpenBodyClassVertical).removeClass(this.ui.trayOpenBodyClassHorizontal);
-    }
-    // Render the tray
-    this.renderTray();
+  orientationChangeHandler: function (event) {
+    this.changeOrientation();
   },
   /**
    *
    */
-  handleTriggerClick: function (event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    this.state = (this.state === 'closed') ? 'open' : 'closed';
-    this.toggleTray();
-    this.toggleTrigger();
+  mediaQueryChangeHandler: function (mql) {
+    var orientation = (mql.matches) ? 'horizontal' : 'vertical';
+    this.changeOrientation(this.trays, orientation);
   },
   /**
    *
    */
-  toggleTrigger: function (event) {
-    this.$trigger[((this.state === 'open') ? 'add' : 'remove') + 'Class'](this.ui.activeClass);
+  changeOrientation: function (trays, orientation, isOverride) {
+    for (var i = trays.length - 1; i >= 0; i--) {
+      trays[i].changeOrientation(orientation);
+    };
   },
   /**
    *
    */
   displace: function (event) {
-    this.getTrays()
+    /*this.getTrays()
       .add(this.$shortcuts)
       .css({
         'top': this.computeOffsetTop() + 'px'
-      });
+      });*/
   },
   /**
    * Sum all [data-offset-top] values and cache it.
-   * @todo move this out of tableheader.js into a move generic place like drupal.js.
    */
   computeOffsetTop: function () {
     var $offsets = $('[data-offset-top]');
@@ -251,9 +217,11 @@ $.extend(ToolBar.prototype, {
  */
 function Tray ($tray) {
   this.$el = $tray;
-  this.name = this.$el.data()['toolbarTrayName'] || this.$el.attr('id') ||'no name';
+  this.name = this.$el.data()['toolbarTray'] || this.$el.attr('id') ||'no name';
   this.active = false;
-  this.orientation = 'horizontal';
+  this.orientation = 'vertical';
+  this.isOrientationLocked = false;
+  this.setup.apply(this, arguments);
 }
 
 /**
@@ -263,8 +231,33 @@ _.extend(Tray.prototype, {
   /**
    *
    */
+  setup: function () {
+    this.$el.addClass(this.orientation);
+  },
+  /**
+   *
+   */
   toggle: function (open) {
     this.$el.toggleClass('active', open);
+  },
+  /**
+   *
+   */
+  changeOrientation: function (orientation, isOverride) {
+    if (isOverride && orientation === 'vertical') {
+      this.isOrientationLocked = true;
+    }
+    if (isOverride && orientation === 'horizontal') {
+      this.isOrientationLocked = false;
+    }
+    if (!this.isOrientationLocked && orientation === 'horizontal' && this.orientation === 'vertical') {
+      this.orientation = orientation;
+      this.$el.removeClass('vertical').addClass('horizontal');
+    }
+    if (orientation === 'vertical' && this.orientation === 'horizontal') {
+      this.orientation = orientation;
+      this.$el.removeClass('horizontal').addClass('vertical');
+    }
   }
 });
 

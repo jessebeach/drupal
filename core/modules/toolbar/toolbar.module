@@ -249,7 +249,7 @@ function toolbar_view() {
   $build['toolbar_tabs']['#links'] = $toolbar_tabs;
   // Provide a data attribute to each bar link that associates it with its tray.
   foreach ($build['toolbar_tabs']['#links'] as $key => $link) {
-    $build['toolbar_tabs']['#links'][$key]['attributes']['data-toolbar-toggle-tray'] = $key;
+    $build['toolbar_tabs']['#links'][$key]['attributes']['data-toolbar-tray'] = $key;
   }
 
   return $build;
