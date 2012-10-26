@@ -301,7 +301,7 @@ _.extend(Tab.prototype, {
 function decorateInteractiveMenu (event, tray) {
   if (tray.name === 'administration') {
     tray.decorate = interactiveMenuDecorator();
-    tray.decorate('.menu');
+    tray.decorate('.interactive-menu > .menu');
   }
 }
 
@@ -345,8 +345,8 @@ var interactiveMenuDecorator = function () {
     var handleClass = 'handle';
     // Get lists and items.
     var $root = $wrapper.children('.' + rootClass);
-    var $ul = $wrapper.find('ul').once('interactive-menu');
-    var $li = $wrapper.find('li').once('interactive-menu');
+    var $ul = $wrapper.find('ul');
+    var $li = $wrapper.find('li');
     // Basic setup
     $ul
       .each(function (index, element) {
