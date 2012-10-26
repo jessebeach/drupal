@@ -28,8 +28,10 @@
     <nav id="toolbar-tray-administration" class="tray administration" data-toolbar-tray="administration">
       <div class="lining slider clearfix">
         <h2 class="element-invisible"><?php print t('Administration menu'); ?></h2>
-        <div class="interactive-menu">
-          <?php print render($toolbar['toolbar_administration']); ?>
+        <?php print render($toolbar['toolbar_administration']); ?>
+        <div class="toggle-orientation">
+          <button value="horizontal">Horizontal</button>
+          <button value="vertical">Vertical</button>
         </div>
       </div>
     </nav>
@@ -39,6 +41,10 @@
       <div class="lining slider clearfix">
         <h2 class="element-invisible"><?php print t('Shortcuts'); ?></h2>
         <?php print render($toolbar['toolbar_shortcuts']); ?>
+        <div class="toggle-orientation">
+          <button value="horizontal">Horizontal</button>
+          <button value="vertical">Vertical</button>
+        </div>
       </div>
     </nav>
   <?php endif; ?>
@@ -46,6 +52,10 @@
     <nav id="toolbar-tray-user" class="tray user" data-toolbar-tray="user">
       <div class="lining slider clearfix">
         <?php print render($toolbar['toolbar_user']); ?>
+        <div class="toggle-orientation">
+          <button value="horizontal">Horizontal</button>
+          <button value="vertical">Vertical</button>
+        </div>
       </div>
     </nav>
   <?php endif; ?>

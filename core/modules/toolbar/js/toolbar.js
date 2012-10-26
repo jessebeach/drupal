@@ -101,7 +101,7 @@ function ToolBar ($toolbar) {
   this.$toolbar
     .on('setup.toolbar', setHeight)
     .on('click', '.bar .tab', this.toggleTray)
-    .on('click', '.tray .toggle-orientation', this.orientationChangeHandler)
+    .on('click', '.tray .toggle-orientation button', this.orientationChangeHandler)
     .trigger('setup');
 };
 /**
@@ -170,7 +170,10 @@ $.extend(ToolBar.prototype, {
    *
    */
   orientationChangeHandler: function (event) {
-    this.changeOrientation();
+    var $button = $(event.target);
+    var orientation = event.target.value;
+    var tray = $button.closest('.tray').data('toolbar').tray;
+    this.changeOrientation(tray, orientation, true);
   },
   /**
    *
@@ -183,6 +186,7 @@ $.extend(ToolBar.prototype, {
    *
    */
   changeOrientation: function (trays, orientation, isOverride) {
+    trays = (!_.isArray(trays)) ? [trays] : trays;
     for (var i = trays.length - 1; i >= 0; i--) {
       trays[i].changeOrientation(orientation);
     };
@@ -432,7 +436,7 @@ var interactiveMenuDecorator = function () {
         // Wrap the list in a div to provide a positioning context.
         $wrapper = $().add($wrapper).add(
           $root
-          .wrap('<div class="interactive-menu"></div>')
+          .wrap('<div class="interactive-menu-wrapper"></div>')
           .parent()
           // Bind event handlers.
           .on('setup.toolbar', _.bind(processLists, context))

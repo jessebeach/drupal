@@ -401,41 +401,24 @@
   margin-left: 0.75em;
 }
 
-/* Dropbutton */
+/* Orientation toggle */
 
-.toolbar-main .section.second .dropbutton {
-  right: 100%;
+.toolbar-main .toggle-orientation {
+  float: right;
+  padding: 0 1em;
 }
-.toolbar-main .section.second .dropbutton-widget {
-  right: -10em;
-  max-width: 10em;
+.toolbar-main .toggle-orientation button {
+  background-color: transparent;
+  border: 3px solid #b0b0b0;
+  cursor: pointer;
+  display: inline-block;
+  height: 1.33333em;
+  text-indent: -999em;
+  width: 1.6667em;
 }
-.toolbar-main .section.second .dropbutton.open .dropbutton-widget {
-  max-width: none;
+.toolbar-main .toggle-orientation [value="vertical"] {
+  border-left-width: 10px
 }
-.toolbar-main .dropbutton-widget {
-  background-color: #4894DA;
-  border: 0;
-  font-size: inherit;
-}
-.toolbar-main .dropbutton-multiple .dropbutton-widget {
-  padding-right: 2em;
-}
-.toolbar-main .dropbutton-content a {
-  padding: 0.6667em 1em;
-  line-height: 1;
-}
-.toolbar-main .dropbutton .dropbutton-arrow {
-  border-bottom-width: 0;
-  border-left-width: 0.55em;
-  border-right-width: 0.55em;
-  border-top-width: 0.6em;
-  right: 7px;
-  top: 0.75em;
-}
-.toolbar-main .dropbutton.open .dropbutton-arrow {
-  border-bottom-width: 0.6em;
-  border-left-width: 0.55em;
-  border-right-width: 0.55em;
-  border-top-width: 0.05em;
+.toolbar-main .toggle-orientation [value="horizontal"] {
+  border-top-width: 7px
 }
