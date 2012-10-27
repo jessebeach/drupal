@@ -117,7 +117,6 @@ function toolbar_system_info_alter(&$info, $file, $type) {
  *   Array of links and settings relating to the admin menu.
  */
 function toolbar_view() {
-  global $user;
 
   $build = array(
     '#theme' => 'toolbar',
@@ -161,36 +160,6 @@ function toolbar_view() {
   );
   $menu['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
 
-  // Add logout & user account links or login link.
-  if ($user->uid) {
-    $links = array(
-      'account' => array(
-        'title' => t('Hello <strong>@username</strong>', array('@username' => user_format_name($user))),
-        'href' => 'user',
-        'html' => TRUE,
-        'attributes' => array(
-          'title' => t('User account'),
-          'class' => array('tab'),
-        ),
-      ),
-      'logout' => array(
-        'title' => t('Log out'),
-        'href' => 'user/logout',
-        'attributes' => array(
-          'class' => array('tab'),
-        ),
-      ),
-    );
-  }
-  else {
-     $links = array(
-      'login' => array(
-        'title' => t('Log in'),
-        'href' => 'user',
-      ),
-    );
-  }
-
   $toolbar_groups = array(
     'home' => array(
       'tab' => array(
@@ -206,20 +175,6 @@ function toolbar_view() {
         'html' => FALSE,
       ),
       'tray' => $menu,
-    ),
-    'user' => array(
-      'tab' => array(
-        'title' => t('Account'),
-        'href' => '',
-      ),
-      'tray' => array(
-        '#theme' => 'links__toolbar_user',
-        '#links' => $links,
-        '#attributes' => array(
-          'id' => 'toolbar-user',
-        ),
-        '#heading' => array('text' => t('Toolbar user actions'), 'level' => 'h2', 'class' => 'element-invisible'),
-      ),
     ),
   );
 

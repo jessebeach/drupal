@@ -713,7 +713,7 @@ function shortcut_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_toolbar_register_tab().
+ * Implements hook_toolbar_register_tabs().
  */
 function shortcut_toolbar_register_tabs() {
   $tab['shortcuts'] = array(
@@ -734,7 +734,7 @@ function shortcut_toolbar_register_tabs() {
 }
 
 /**
- * Pre-render function for adding shortcuts to the toolbar drawer.
+ * Pre-render function for adding shortcuts to the toolbar.
  */
 function shortcut_toolbar_pre_render($toolbar) {
   $links = shortcut_renderable_links();
