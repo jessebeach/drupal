@@ -8,6 +8,7 @@
 "use strict";
 
 Drupal.toolbar = Drupal.toolbar || {};
+var transitionEnd = "transitionEnd.toolbar webkitTransitionEnd.toolbar transitionend.toolbar msTransitionEnd.toolbar oTransitionEnd.toolbar";
 
 /**
  * Attach toggling behavior and notify the overlay of the toolbar.
@@ -73,6 +74,8 @@ Drupal.behaviors.toolbar = {
 function ToolBar ($toolbar) {
   this.$toolbar = $toolbar;
   this.$bar = $toolbar.find('.bar');
+  this.height = 0;
+  this.barHeight = 0;
   this.trays = [];
   this.tabs = [];
   this.mediaQueries = [];
@@ -91,18 +94,13 @@ function ToolBar ($toolbar) {
     .on({
       'resize.toolbar': setHeight
     });
-  // Register for offsettopchange events.
-  $(document)
-    .on({
-      // Offset value vas changed by a third party script.
-      'offsettopchange.toolbar': this.displace
-    });
   // Toolbar event handlers.
   this.$toolbar
-    .on('setup.toolbar', setHeight)
-    .on('click', '.bar .tab', this.toggleTray)
-    .on('click', '.tray .toggle-orientation button', this.orientationChangeHandler)
-    .trigger('setup');
+    .on('setup.toolbar', this.setHeight)
+    .on('click.toolbar', '.bar .tab', this.toggleTray)
+    .on('click.toolbar', '.tray .toggle-orientation button', this.orientationChangeHandler)
+    .on(transitionEnd, '.tray.active', this.setHeight)
+    .trigger('setup.toolbar');
 };
 /**
  * Extend the prototype of the ToolBar class.
@@ -114,14 +112,36 @@ $.extend(ToolBar.prototype, {
    * Page components can register with the offsettopchange event to know when
    * the height of the toolbar changes.
    */
-  setHeight: function () {
-    this.height = this.$bar.outerHeight();
-    this.$bar.attr('data-offset-top', this.height);
-    // Alter the padding on the top of the body element.
-    // @todo, this should be moved to drupal.js and register for
-    // the offsettopchange event.
-    $('body').css('paddingTop', this.height);
-    $(document).trigger('offsettopchange');
+  setHeight: function (event) {
+    var height = 0;
+    var tray, $tray, $trays, trayH;
+    this.barHeight = this.$bar.outerHeight();
+    var bhpx = this.barHeight + 'px';
+    height += this.barHeight;
+    // Set the top of the all the trays to the height of the bar.
+    $trays = this.$toolbar.find('.tray');
+    for (var i = $trays.length - 1; i >= 0; i--) {
+      tray = $trays[i];
+      if (!tray.style.top.length || (tray.style.top !== bhpx)) {
+        tray.style.top = bhpx;
+      }
+    };
+    // Get the height of the active horizontal tray and include it in the total
+    // height of the toolbar.
+    $tray = $trays.filter('.active.horizontal');
+    if ($tray.length > 0) {
+      var trayH = $tray.outerHeight();
+      height += trayH;
+      $tray.attr('data-offset-top', trayH);
+    }
+    // Indicate the height of the toolbar in the attribute data-offset-top.
+    if (this.height !== height) {
+      this.height = height;
+      this.$toolbar.attr('data-offset-top', height);
+      // Alter the padding on the top of the body element.
+      $('body').css('padding-top', height);
+      $(document).trigger('offsettopchange', height);
+    }
   },
   /**
    *
@@ -145,6 +165,7 @@ $.extend(ToolBar.prototype, {
         }
       };
       tab.toggle();
+      this.setHeight();
     }
   },
   /**
@@ -161,9 +182,6 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  /**
-   *
-   */
   registerTab: function (tab) {
     this.tabs.push(tab);
     this.$toolbar.trigger('tabRegistered', tab);
@@ -176,6 +194,7 @@ $.extend(ToolBar.prototype, {
     var orientation = event.target.value;
     var tray = $button.closest('.tray').data('toolbar').tray;
     this.changeOrientation(tray, orientation, true);
+    this.setHeight();
   },
   /**
    *
@@ -183,6 +202,7 @@ $.extend(ToolBar.prototype, {
   mediaQueryChangeHandler: function (mql) {
     var orientation = (mql.matches) ? 'horizontal' : 'vertical';
     this.changeOrientation(this.trays, orientation);
+    this.setHeight();
   },
   /**
    *
@@ -192,29 +212,6 @@ $.extend(ToolBar.prototype, {
     for (var i = trays.length - 1; i >= 0; i--) {
       trays[i].changeOrientation(orientation);
     };
-  },
-  /**
-   *
-   */
-  displace: function (event) {
-    /*this.getTrays()
-      .add(this.$shortcuts)
-      .css({
-        'top': this.computeOffsetTop() + 'px'
-      });*/
-  },
-  /**
-   * Sum all [data-offset-top] values and cache it.
-   */
-  computeOffsetTop: function () {
-    var $offsets = $('[data-offset-top]');
-    var value, sum = 0;
-    for (var i = 0, il = $offsets.length; i < il; i++) {
-      value = parseInt($offsets[i].getAttribute('data-offset-top'), 10);
-      sum += !isNaN(value) ? value : 0;
-    }
-    this.offsetTop = sum;
-    return sum;
   }
 });
 
@@ -260,12 +257,17 @@ _.extend(Tray.prototype, {
       this.isOrientationLocked = false;
     }
     if (!this.isOrientationLocked && orientation === 'horizontal' && this.orientation === 'vertical') {
+      var self = this;
       this.orientation = orientation;
-      this.$el.removeClass('vertical').addClass('horizontal');
+      this.$el
+        .removeClass('vertical')
+        .addClass('horizontal');
     }
     if (orientation === 'vertical' && this.orientation === 'horizontal') {
       this.orientation = orientation;
-      this.$el.removeClass('horizontal').addClass('vertical');
+      this.$el
+        .removeClass('horizontal')
+        .addClass('vertical');
     }
   }
 });
