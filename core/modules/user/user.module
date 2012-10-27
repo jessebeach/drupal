@@ -3070,6 +3070,71 @@ function user_file_download_access($field, EntityInterface $entity, File $file) 
 }
 
 /**
+ * Implements hook_toolbar_register_tabs().
+ */
+function user_toolbar_register_tabs() {
+  global $user;
+
+  $tab['user'] = array(
+    'tab' => array(
+      'title' => user_format_name($user),
+      'href' => '',
+      'html' => FALSE,
+    ),
+    'tray' => array(
+      '#pre_render' => array('user_toolbar_pre_render'),
+    ),
+  );
+
+  return $tab;
+}
+
+/**
+ * Pre-render function for adding user account actions to the toolbar.
+ */
+function user_toolbar_pre_render($toolbar) {
+  global $user;
+
+  // Add logout & user account links or login link.
+  if ($user->uid) {
+    $links = array(
+      'logout' => array(
+        'title' => t('Log out'),
+        'href' => 'user/logout',
+        'attributes' => array(
+          'class' => array('tab'),
+        ),
+      ),
+      'account' => array(
+        'title' => t('View profile'),
+        'href' => 'user',
+        'html' => TRUE,
+        'attributes' => array(
+          'title' => t('User account'),
+          'class' => array('tab'),
+        ),
+      ),
+    );
+  }
+  else {
+     $links = array(
+      'login' => array(
+        'title' => t('Log in'),
+        'href' => 'user',
+      ),
+    );
+  }
+
+  $user_links = array(
+    '#theme' => 'links__toolbar_user',
+    '#links' => $links,
+    '#heading' => array('text' => t('User account actions'), 'level' => 'h2', 'class' => 'element-invisible'),
+  );
+  
+  return $user_links;
+}
+
+/**
  * Implements hook_library_info().
  */
 function user_library_info() {
