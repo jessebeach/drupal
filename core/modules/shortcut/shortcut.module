@@ -755,13 +755,18 @@ function shortcut_toolbar_pre_render($toolbar) {
     );
   }
 
-  $drawer = array(
-    'shortcuts' => $links,
+  $links_wrapper = array(
+    'shortcuts' => array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('toolbar-list'),
+      ),
+      'links' => $links,
+    ),
     'configure' => $configure_link,
   );
 
-  $toolbar['toolbar_shortcuts'][] = $drawer;
-  return $toolbar;
+  return $links_wrapper;
 }
 
 /**

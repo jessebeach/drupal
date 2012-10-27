@@ -61,6 +61,9 @@ body.toolbar {
     display: block;
     float: left; /* LTR */
   }
+  .js .toolbar-main .bar li + li {
+    margin-left: 0.6667em; /* LTR */
+  }
   .js .toolbar-main .bar a {
     display: inline-block;
   }
@@ -198,8 +201,11 @@ body.toolbar {
 /**
  * Horizonal tray main menu.
  */
-.toolbar-main .horizontal .interactive-menu li {
+.toolbar-main .horizontal .toolbar-list li {
   float: left;
+}
+.toolbar-main .horizontal .toolbar-list li + li {
+  margin-left: 0.6667em; /* LTR */
 }
 .toolbar-main .horizontal .interactive-menu .handle,
 .toolbar-main .horizontal .interactive-menu .level-2 {
