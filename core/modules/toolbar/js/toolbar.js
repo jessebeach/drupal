@@ -132,7 +132,6 @@ $.extend(ToolBar.prototype, {
     if ($tray.length > 0) {
       var trayH = $tray.outerHeight();
       height += trayH;
-      $tray.attr('data-offset-top', trayH);
     }
     // Indicate the height of the toolbar in the attribute data-offset-top.
     if (this.height !== height) {
