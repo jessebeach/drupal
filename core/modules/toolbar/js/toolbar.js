@@ -78,6 +78,7 @@ function ToolBar ($toolbar) {
   this.barHeight = 0;
   this.trays = [];
   this.tabs = [];
+  this.activeTab = null;
   this.mediaQueries = [];
   this.ui = {
     'activeClass': 'active',
@@ -164,6 +165,8 @@ $.extend(ToolBar.prototype, {
         }
       };
       tab.toggle();
+      this.activeTab = (tab.active) ? tab : null;
+      this.setBodyState();
       this.setHeight();
       this.$toolbar.trigger('traytoggled', tab.tray);
     }
@@ -194,6 +197,7 @@ $.extend(ToolBar.prototype, {
     var orientation = event.target.value;
     var tray = $button.closest('.tray').data('toolbar').tray;
     this.changeOrientation(tray, orientation, true);
+    this.setBodyState();
     this.setHeight();
     this.$toolbar.trigger('toolbarorientationchanged', orientation);
   },
@@ -203,6 +207,7 @@ $.extend(ToolBar.prototype, {
   mediaQueryChangeHandler: function (mql) {
     var orientation = (mql.matches) ? 'horizontal' : 'vertical';
     this.changeOrientation(this.trays, orientation);
+    this.setBodyState();
     this.setHeight();
     this.$toolbar.trigger('toolbarorientationchanged', orientation);
   },
@@ -212,8 +217,24 @@ $.extend(ToolBar.prototype, {
   changeOrientation: function (trays, orientation, isOverride) {
     trays = (!_.isArray(trays)) ? [trays] : trays;
     for (var i = trays.length - 1; i >= 0; i--) {
-      trays[i].changeOrientation(orientation);
+      trays[i].changeOrientation(orientation, isOverride);
     };
+  },
+  /**
+   *
+   */
+  setBodyState: function () {
+    var $body = $('body')
+      .removeClass('toolbar-vertical toolbar-horizontal');
+    if (this.activeTab) {
+      $body
+        .addClass('toolbar-tray-open')
+        .addClass('toolbar-' + this.activeTab.tray.getOrientation());
+    }
+    else {
+      $body
+        .removeClass('toolbar-tray-open');
+    }
   }
 });
 
@@ -271,12 +292,19 @@ _.extend(Tray.prototype, {
         .removeClass('horizontal')
         .addClass('vertical');
     }
-  }
+  },
+  /**
+   *
+   */
+  getOrientation: function () {
+    return (this.isOrientationLocked) ? 'vertical' : this.orientation;
+  },
 });
 
 function Tab ($tab) {
   this.$el = $tab;
   this.active = false;
+  this.name = this.$el.data()['toolbarTray'] || this.$el.attr('id') ||'no name';
   this.tray;
 }
 
