@@ -18,7 +18,6 @@ body.toolbar {
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  list-style: none;
   margin: 0;
   outline: 0;
   padding: 0;
@@ -39,7 +38,14 @@ body.toolbar {
   font-size: 1rem;
   line-height: 1;
 }
-
+.toolbar-main ul,
+.toolbar-main ul li,
+.toolbar-main .menu li {
+  list-style: none;
+}
+.toolbar-main .menu li {
+  padding-top: 0;
+}
 /**
  * Administration menu.
  */
@@ -50,7 +56,6 @@ body.toolbar {
   top: 0;
   z-index: 600;
 }
-
 @media screen and (max-width: 28.124em) {
   .toolbar-main .bar {
     position: absolute;
@@ -71,6 +76,9 @@ body.toolbar {
 .toolbar-main .tray {
   background-color: white;
 }
+.toolar-main .tray .lining {
+  position: relative;
+}
 /**
  * Toolbar tray - vertical.
  */
@@ -90,10 +98,6 @@ body.toolbar {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
-  -moz-transition: left, 0.05s ease-out;
-  -o-transition: left, 0.05s ease-out;
-  -webkit-transition: left, 0.05s ease-out;
-  transition: left, 0.05s ease-out;
   width: 100%;
 }
 .toolbar-main .tray.vertical.active,
@@ -193,14 +197,11 @@ body.toolbar {
   cursor: pointer;
 }
 /**
- * ToolBar tray - vertical.
+ * Toolbar tray main menu.
  */
- .toolbar-main .vertical .interactive-menu {
+.toolbar-main .vertical .interactive-menu {
   overflow: hidden;
 }
-/**
- * Horizonal tray main menu.
- */
 .toolbar-main .horizontal .toolbar-list li {
   float: left;
 }
@@ -210,4 +211,15 @@ body.toolbar {
 .toolbar-main .horizontal .interactive-menu .handle,
 .toolbar-main .horizontal .interactive-menu .level-2 {
   display: none;
+}
+/**
+ * Toolbar tray toggle.
+ */
+.toolbar-main .horizontal .toggle-orientation {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.toolbar-main .vertical .toggle-orientation {
+  float: right;
 }
