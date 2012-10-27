@@ -134,16 +134,18 @@ $.extend(ToolBar.prototype, {
    *
    */
   toggleTray: function (event) {
-    event.preventDefault();
     var $tab = $(event.target);
     var tab = $tab.data('toolbar').tab;
-    var disableTabs = _.without(this.tabs, tab);
-    for (var i = disableTabs.length - 1; i >= 0; i--) {
-      if (disableTabs[i]) {
-        disableTabs[i].toggle(false);
-      }
-    };
-    tab.toggle();
+    if (tab.tray) {
+      event.preventDefault();
+      var disableTabs = _.without(this.tabs, tab);
+      for (var i = disableTabs.length - 1; i >= 0; i--) {
+        if (disableTabs[i]) {
+          disableTabs[i].toggle(false);
+        }
+      };
+      tab.toggle();
+    }
   },
   /**
    *
