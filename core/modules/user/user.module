@@ -3128,6 +3128,9 @@ function user_toolbar_pre_render($toolbar) {
   $user_links = array(
     '#theme' => 'links__toolbar_user',
     '#links' => $links,
+    '#attributes' => array(
+      'class' => array('toolbar-list'),
+    ),
     '#heading' => array('text' => t('User account actions'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
 

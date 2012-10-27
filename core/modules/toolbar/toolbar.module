@@ -155,7 +155,7 @@ function toolbar_view() {
   $menu['toolbar_administration'] = array(
     '#type' => 'container',
     '#attributes' => array(
-      'class' => array('interactive-menu'),
+      'class' => array('interactive-menu toolbar-list'),
     ),
   );
   $menu['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
