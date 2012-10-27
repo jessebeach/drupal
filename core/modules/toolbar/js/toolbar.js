@@ -17,7 +17,7 @@ Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
     var options = _.extend(this.options, settings);
     var $toolbar = $(context).find('.toolbar-main').once('toolbar');
-    $toolbar.on('trayRegistered', decorateInteractiveMenu);
+    $toolbar.on('trayregistered', decorateInteractiveMenu);
     if ($toolbar.length) {
       var toolbar = new ToolBar($toolbar);
       var tray, $tray, $trays, tab, $tab, $tabs, name, i;
@@ -148,7 +148,7 @@ $.extend(ToolBar.prototype, {
    */
   registerTray: function (tray) {
     this.trays.push(tray);
-    this.$toolbar.trigger('trayRegistered', tray);
+    this.$toolbar.trigger('trayregistered', tray);
   },
   /**
    *
@@ -166,6 +166,7 @@ $.extend(ToolBar.prototype, {
       };
       tab.toggle();
       this.setHeight();
+      this.$toolbar.trigger('traytoggled', tab.tray);
     }
   },
   /**
@@ -184,7 +185,7 @@ $.extend(ToolBar.prototype, {
    */
   registerTab: function (tab) {
     this.tabs.push(tab);
-    this.$toolbar.trigger('tabRegistered', tab);
+    this.$toolbar.trigger('tabregistered', tab);
   },
   /**
    *
@@ -195,6 +196,7 @@ $.extend(ToolBar.prototype, {
     var tray = $button.closest('.tray').data('toolbar').tray;
     this.changeOrientation(tray, orientation, true);
     this.setHeight();
+    this.$toolbar.trigger('toolbarorientationchanged', orientation);
   },
   /**
    *
@@ -203,6 +205,7 @@ $.extend(ToolBar.prototype, {
     var orientation = (mql.matches) ? 'horizontal' : 'vertical';
     this.changeOrientation(this.trays, orientation);
     this.setHeight();
+    this.$toolbar.trigger('toolbarorientationchanged', orientation);
   },
   /**
    *
