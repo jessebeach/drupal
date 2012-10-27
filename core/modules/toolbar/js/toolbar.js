@@ -238,7 +238,10 @@ _.extend(Tray.prototype, {
    *
    */
   setup: function () {
-    this.$el.addClass(this.orientation);
+    this.$el
+      .addClass(this.orientation)
+      .find('.lining')
+      .append(Drupal.theme('toolbarOrientationToggle'));
   },
   /**
    *
@@ -294,6 +297,17 @@ _.extend(Tab.prototype, {
     this.tray = tray;
   },
 });
+
+/**
+ * A toggle is an interactive element often bound to a click handler.
+ *
+ * @return {String}
+ *   A string representing a DOM fragment.
+ */
+Drupal.theme.toolbarOrientationToggle = function () {
+  return '<div class="toggle-orientation"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div>';
+};
+
 /**
  * Interactive menu setup methods.
  */

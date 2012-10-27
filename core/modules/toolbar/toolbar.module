@@ -267,7 +267,7 @@ function theme_toolbar_tray($trays) {
   foreach ($trays['element']['#trays'] as $key => $tray) {
     $output .= '<nav id="toolbar-tray-' . $key . '" class="tray ' .  $key . '" data-toolbar-tray="' . $key . '"><div class="lining slider clearfix">';
     $output .= render($tray);
-    $output .= '<div class="toggle-orientation"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div></div></nav>';
+    $output .= '</div></nav>';
   }
 
   return $output;
