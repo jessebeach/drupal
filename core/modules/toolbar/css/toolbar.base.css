@@ -65,9 +65,8 @@ body.toolbar {
     display: inline-block;
   }
 }
-.js .toolbar-main .tray {
+.toolbar-main .tray {
   background-color: white;
-  top: 3.6em;
 }
 /**
  * Toolbar tray - vertical.
@@ -154,9 +153,9 @@ body.toolbar {
 }
 .toolbar-main .interactive-menu {
   height: 100%;
-  position: relative;
 }
-.toolbar-main .interactive-menu {
+.toolbar-main .interactive-menu-offset {
+  height: 100%;
   position: relative;
 }
 .toolbar-main .box {
@@ -202,25 +201,7 @@ body.toolbar {
 .toolbar-main .horizontal .interactive-menu li {
   float: left;
 }
-.toolbar-main .horizontal .interactive-menu .level-1 ul {
-  height: 23.6667em;
-  position: absolute;
-  top: 4em;
-  width: 12.5%;
-}
-.toolbar-main .horizontal .level-1 > li {
-max-width: 14%;
-}
+.toolbar-main .horizontal .interactive-menu .handle,
 .toolbar-main .horizontal .interactive-menu .level-2 {
-  left: 0;
-}
-.toolbar-main .horizontal .interactive-menu .level-2 li {
-  display: block;
-  float: none;
-}
-.toolbar-main .horizontal .interactive-menu .level-2 ul {
-  bottom: 0;
-  left: 100%;
-  top: 0;
-  width: 100%;
+  display: none;
 }

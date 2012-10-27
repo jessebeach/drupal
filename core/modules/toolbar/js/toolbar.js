@@ -389,7 +389,6 @@ var interactiveMenuDecorator = function () {
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
     // Toggle the item list visibility.
     $list
-      ['slide' + ((isHidden) ? 'Down' : 'Up')](50)
       [((isHidden) ? 'remove' : 'add') + 'Class']('dormant');
     // Twist the toggle.
     $toggle
@@ -399,7 +398,7 @@ var interactiveMenuDecorator = function () {
       .text((isHidden) ? ui.handleClose : ui.handleOpen)
       .attr('aria-pressed', isHidden);
     // Fire an event to signify that a list has been toggled.
-    $item.trigger('itemToggled', [$item.parent().data('toolbar').level, !isHidden]);
+    $item.trigger('itemtoggled', [$item.parent().data('toolbar').level, !isHidden]);
   };
   var initItems = function (event) {
     // The accordion wrapper.
@@ -502,7 +501,7 @@ var interactiveMenuDecorator = function () {
         // Wrap the list in a div to provide a positioning context.
         $wrapper = $().add($wrapper).add(
           $root
-          .wrap('<div class="interactive-menu-wrapper"></div>')
+          .wrap('<div class="interactive-menu-offset"></div>')
           .parent()
           // Bind event handlers.
           .on('setup.toolbar', _.bind(processLists, context))
