@@ -339,6 +339,16 @@ _.extend(Tab.prototype, {
 Drupal.theme.toolbarOrientationToggle = function () {
   return '<div class="toggle-orientation"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div>';
 };
+/**
+ * A toggle is an interactive element often bound to a click handler.
+ *
+ * @return {String}
+ *   A string representing a DOM fragment.
+ */
+Drupal.theme.interactionMenuItemToggle = function (options) {
+  return '<button aria-pressed="false" class="' + options['class'] + '">' + options.text + '</button>';
+};
+
 
 /**
  * Interactive menu setup methods.
@@ -354,6 +364,11 @@ function decorateInteractiveMenu (event, tray) {
  * Decorate a menu with markup and classes for attaching behaviors.
  */
 var interactiveMenuDecorator = function () {
+
+  var ui = {
+    'handleOpen': Drupal.t('Open'),
+    'handleClose': Drupal.t('Close')
+  };
 
   var processLists = function (event) {
     event.stopPropagation();
@@ -379,6 +394,10 @@ var interactiveMenuDecorator = function () {
     // Twist the toggle.
     $toggle
       [((isHidden) ? 'add' : 'remove') + 'Class']('open');
+    // Adjust the toggle text.
+    $toggle
+      .text((isHidden) ? ui.handleClose : ui.handleOpen)
+      .attr('aria-pressed', isHidden);
     // Fire an event to signify that a list has been toggled.
     $item.trigger('itemToggled', [$item.parent().data('toolbar').level, !isHidden]);
   };
@@ -423,10 +442,9 @@ var interactiveMenuDecorator = function () {
         if ($item.children('ul').length > 0) {
           $item
             .children('.' + boxClass)
-            .prepend(
-              $('<span>', {
+            .prepend(Drupal.theme('interactionMenuItemToggle', {
                 'class': handleClass,
-                text: ''
+                'text': ui.handleOpen
               })
             );
         }
