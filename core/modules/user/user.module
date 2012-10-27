@@ -3130,7 +3130,7 @@ function user_toolbar_pre_render($toolbar) {
     '#links' => $links,
     '#heading' => array('text' => t('User account actions'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
-  
+
   return $user_links;
 }
 
