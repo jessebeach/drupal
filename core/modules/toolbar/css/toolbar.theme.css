@@ -27,7 +27,6 @@
   color: #ffffff;
 }
 .toolbar-main .bar .toggle-tray.active {
-  background-color: white;
   color: black;
 }
 .toolbar-main .bar .tab {
@@ -48,7 +47,6 @@
  * Toolbar tray.
  */
 .toolbar-main .tray {
-  background-color: white;
   border-right: 1px solid #aaaaaa;
   -moz-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
   -o-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
