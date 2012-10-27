@@ -27,10 +27,6 @@ body.toolbar {
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   tap-highlight-color: rgba(0,0,0,0);
   text-align: left; /* LTR */
-  -moz-text-size-adjust: none;
-  -o-text-size-adjust: none;
-  -webkit-text-size-adjust: none;
-  text-size-adjust: none;
   -moz-touch-callout: none;
   -o-touch-callout: none;
   -webkit-touch-callout: none;
@@ -47,30 +43,30 @@ body.toolbar {
 /**
  * Administration menu.
  */
-.toolbar-main .bar {
+.js .toolbar-main .bar {
   left: 0;
   position: fixed;
   right: 0;
+  top: 0;
   z-index: 600;
 }
-.toolbar-main .bar {
-  top: 0;
-}
+
 @media screen and (max-width: 28.124em) {
   .toolbar-main .bar {
     position: absolute;
   }
 }
 @media screen and (min-width: 16.5em) {
-  .toolbar-main .bar li {
+  .js .toolbar-main .bar li {
     display: block;
     float: left; /* LTR */
   }
-  .toolbar-main .bar a {
+  .js .toolbar-main .bar a {
     display: inline-block;
   }
 }
-.toolbar-main .tray {
+.js .toolbar-main .tray {
+  background-color: white;
   top: 3.6em;
 }
 /**
@@ -88,7 +84,7 @@ body.toolbar {
   width: 15rem;
   z-index: 600;
 }
-.toolbar-main .tray.vertical > .slider {
+.js .toolbar-main .tray.vertical > .slider {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
@@ -149,18 +145,12 @@ body.toolbar {
   z-index: 600;
 }
 .toolbar-main .horizontal.active {
-  height: 3.3333em;
-}
-.toolbar-main .horizontal.expand {
-  height: 27.6667em;
-}
-.toolbar-main .horizontal .level-2 a {
-  padding: 0.6667em 1em;
+  height: 3em;
 }
 /**
  * Menus.
  */
-.toolbar-main .menu {
+.js .toolbar-main .menu {
   list-style: none;
   margin: 0;
   padding: 0;
