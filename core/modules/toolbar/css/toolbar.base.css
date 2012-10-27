@@ -133,19 +133,16 @@ body.toolbar {
  * Toolbar tray - horizontal.
  */
 .toolbar-main .tray.horizontal {
+  display: none;
   left: 0; /* LTR */
   height: 0;
-  overflow: hidden;
   position: fixed;
-  -moz-transition: height, 0.05s ease-out;
-  -o-transition: height, 0.05s ease-out;
-  -webkit-transition: height, 0.05s ease-out;
-  transition: height, 0.05s ease-out;
   width: 100%;
   z-index: 600;
 }
 .toolbar-main .horizontal.active {
-  height: 3em;
+  display: block;
+  height: auto;
 }
 /**
  * Menus.
