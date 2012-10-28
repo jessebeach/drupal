@@ -366,14 +366,17 @@
 
 .toolbar-main .handle {
   background-attachment: scroll;
+  background-color: transparent;
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iNjEycHgiIGhlaWdodD0iNzkycHgiIHZpZXdCb3g9IjAgMCA2MTIgNzkyIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA2MTIgNzkyIiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBmaWxsPSIjOTk5OTk5IiBkPSJNMjk2LDM5NmMwLDUuNTIsNC40OCwxMCwxMCwxMGM1LjUyLDAsMTAtNC40OCwxMC0xMA0KCWMwLTUuNTItNC40OC0xMC0xMC0xMEMzMDAuNDgsMzg2LDI5NiwzOTAuNDgsMjk2LDM5NnogTTI5NywzOTZjMC00Ljk3LDQuMDMtOSw5LTljNC45NzEsMCw5LDQuMDMsOSw5YzAsNC45NzEtNC4wMjksOS05LDkNCglDMzAxLjAzLDQwNSwyOTcsNDAwLjk3MSwyOTcsMzk2eiIvPg0KPHBvbHlnb24gZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGw9IiM1MTgxQzIiIHBvaW50cz0iMzA2LDM5OSAzMDEsMzk0IDMxMSwzOTQgIi8+DQo8L3N2Zz4NCg==);
   background-position: -279px -374px;
   background-repeat: no-repeat;
+  border: 0;
   bottom: 0;
   display: block;
   height: 100%;
   position: absolute;
   right: 0;
+  text-indent: -999em;
   top: 0;
   -moz-transform: rotate(0deg);
   -moz-transition: -webkit-transform 0.1s ease-in;

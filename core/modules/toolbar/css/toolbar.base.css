@@ -82,13 +82,16 @@ body.toolbar {
 /**
  * Toolbar tray - vertical.
  */
+.toolbar-main .tray {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .toolbar-main .tray.vertical {
   bottom: 0;
   left: -240px;
   left: -15rem;
   max-width: 92%;
-  overflow-x: hidden;
-  overflow-y: auto;
   position: fixed;
   width: 240px;
   width: 15rem;
