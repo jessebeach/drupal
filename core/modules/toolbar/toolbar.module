@@ -228,9 +228,9 @@ function toolbar_get_menu_tree() {
   $tree = array();
   $admin_link = db_query('SELECT * FROM {menu_links} WHERE menu_name = :menu_name AND module = :module AND link_path = :path', array(':menu_name' => 'admin', ':module' => 'system', ':path' => 'admin'))->fetchAssoc();
   if ($admin_link) {
-    $tree = menu_tree_all_data('management');
+    $tree = menu_tree_all_data('admin');
   }
-  // Return the sub-menus of the management menu root.
+  // Return the sub-menus of the admin menu root.
   foreach ($tree as $key => $menu) {
     return (!empty($tree[$key]['below'])) ? $tree[$key]['below'] : array();
   }
