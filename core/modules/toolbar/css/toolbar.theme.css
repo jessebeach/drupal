@@ -28,7 +28,7 @@
  * Toolbar bar.
  */
 .toolbar-main .bar {
-  background-color: #383838;
+  background-color: #0f0f0f;
   color: #dddddd;
 }
 .toolbar-main .bar a {
@@ -243,8 +243,8 @@
  */
 
 .toolbar-main.icons .bar li.active {
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.15) 10%, transparent 140%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.15) 10%, transparent 140%);
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
+  background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
 
 @media screen and (min-width: 16.5em) and (max-width: 34em) {
@@ -422,9 +422,10 @@
 }
 .toolbar-main .toggle-orientation button {
   background-color: transparent;
-  border: 3px solid #b0b0b0;
+  border: 1px solid #b0b0b0;
   cursor: pointer;
   display: inline-block;
+  float: left;
   height: 1.33333em;
   text-indent: -999em;
   width: 1.6667em;
