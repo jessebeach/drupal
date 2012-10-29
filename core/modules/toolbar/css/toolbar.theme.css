@@ -266,7 +266,7 @@
  */
   .toolbar-main.icons .bar .tab {
     background-attachment: scroll;
-    background-position: 0.7545em 0.9em;
+    background-position: 0.4545em 0.6em;
     background-repeat: no-repeat;
     background-size: 25px 25px;
     width: 3.3333em;
@@ -286,22 +286,23 @@
   }
 }
 
-.toolbar-main.icons .level-1 > li > .box > a {
+.toolbar-main.icons .level-1 > li > .box > a,
+.toolbar-main.icons .horizontal .toolbar-list a {
   margin-left: 0.75em;
   margin-right: 2em;
   padding-bottom: 1.15em;
   padding-top: 1.15em;
 }
-.toolbar-main.icons .horizontal .level-1 > li > .box > a {
-  margin-left: 1.5em;
+.toolbar-main.icons .horizontal .level-1 > li > .box > a,
+.toolbar-main.icons .horizontal .toolbar-list a {
+  margin-left: 1em;
   margin-right: 2em;
   }
 .toolbar-main.icons .vertical .level-1 > li > .box > a {
   padding-left: 2em;
   padding-right: 2em;
 }
-.toolbar-main .level-1 > li > .box > .handle + a,
-.toolbar-main .horizontal .level-1 > li > .box > .handle + a {
+.toolbar-main .vertical .level-1 > li > .box > .handle + a {
   margin-right: 4em;
 }
 
@@ -351,7 +352,7 @@
 
 @media screen and (min-width: 34em) {
   .toolbar-main.icons .bar .tab {
-    padding: 1.4667em 2em 1.1667em 3.25em;
+    padding: 0.8667em 1em 0.8667em 2.5em;
     width: auto;
   }
 }
@@ -363,7 +364,8 @@
   border-style: solid;
   border-width: 0 0 1px 0;
 }
-.toolbar-main.icons .horizontal .level-1 > li {
+.toolbar-main.icons .horizontal .level-1 > li,
+.toolbar-main .toolbar-list li {
   border-color: #ccc;
   border-style: solid;
   border-width: 0 1px 0 0;
@@ -415,7 +417,7 @@
 
 .toolbar-main .toggle-orientation {
   float: right;
-  padding: 0 1em;
+  padding: 1em;
 }
 .toolbar-main .toggle-orientation button {
   background-color: transparent;
@@ -427,8 +429,9 @@
   width: 1.6667em;
 }
 .toolbar-main .toggle-orientation [value="vertical"] {
-  border-left-width: 10px
+  border-left-width: 10px;
+  margin-left: 1em;
 }
 .toolbar-main .toggle-orientation [value="horizontal"] {
-  border-top-width: 7px
+  border-top-width: 7px;
 }
