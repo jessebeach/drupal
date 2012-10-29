@@ -15,11 +15,13 @@ var transitionEnd = "transitionEnd.toolbar webkitTransitionEnd.toolbar transitio
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
-    var options = _.extend(this.options, settings);
-    var $toolbar = $(context).find('.toolbar-main').once('toolbar');
-    $toolbar.on('trayregistered', decorateInteractiveMenu);
+    var options = _.extend(this.options, ('toolbar' in settings) ? settings.toolbar : {});
+    var $toolbar = $(context).find('#toolbar').once('toolbar');
     if ($toolbar.length) {
-      var toolbar = new ToolBar($toolbar);
+      $toolbar
+      .addClass('toolbar-main')
+      .on('trayregistered', decorateInteractiveMenu);
+      var toolbar = new ToolBar($toolbar, options);
       var tray, $tray, $trays, tab, $tab, $tabs, name, i;
       // Register trays.
       Drupal.toolbar.trays = [];
@@ -52,8 +54,8 @@ Drupal.behaviors.toolbar = {
       }
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar trays based on a breakpoint.
-      if (options.toolbar.breakpoints && options.toolbar.breakpoints['module.toolbar.wide'] !== undefined) {
-        var mql = matchMedia(settings.toolbar.breakpoints['module.toolbar.wide']);
+      if (options.breakpoints && options.breakpoints['module.toolbar.wide'] !== undefined) {
+        var mql = matchMedia(options.breakpoints['module.toolbar.wide']);
         mql.addListener(toolbar.mediaQueryChangeHandler);
         toolbar.mediaQueries.push(mql);
         if (mql.matches) {
@@ -63,15 +65,14 @@ Drupal.behaviors.toolbar = {
     }
   },
   options: {
-    toolbar: {
-      breakpoints: null
-    }
+    breakpoints: null,
+    icons: false
   }
 };
 /**
  * A toolbar is an administration action button container.
  */
-function ToolBar ($toolbar) {
+function ToolBar ($toolbar, options) {
   this.$toolbar = $toolbar;
   this.$bar = $toolbar.find('.bar');
   this.height = 0;
@@ -85,7 +86,9 @@ function ToolBar ($toolbar) {
     'trayOpenBodyClass': 'toolbar-tray-open',
   };
   // Show icons if JavaScript is enabled.
-  this.$toolbar.addClass('icons');
+  if ('icons' in options && options.icons) {
+    this.$toolbar.addClass('icons');
+  }
   // Bind all ToolBar methods to the instance.
   _.bindAll(this);
   // Recalculate the offset top on screen resize.

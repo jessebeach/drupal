@@ -310,6 +310,14 @@ function toolbar_library_info() {
     'version' => VERSION,
     'js' => array(
       drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
+        array(
+        'data' => array(
+          'toolbar' => array(
+            'icons' => false,
+          ),
+        ),
+        'type' => 'setting',
+      ),
     ),
     'css' => array(
       drupal_get_path('module', 'toolbar') . '/css/toolbar.base.css',
