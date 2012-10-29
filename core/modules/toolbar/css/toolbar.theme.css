@@ -23,22 +23,22 @@
 /**
  * Toolbar bar.
  */
-.js .toolbar-main .bar {
+.toolbar-main .bar {
   background-color: #0f0f0f;
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.3333);
   color: #dddddd;
 }
-.js .toolbar-main .bar a {
+.toolbar-main .bar a {
   color: #ffffff;
 }
-.js .toolbar-main .bar .tab {
+.toolbar-main .bar .tab {
   cursor: pointer;
   padding: 0.4545em 0.25em;
 }
 /**
  * Toolbar tray.
  */
-.js .toolbar-main .tray {
+.toolbar-main .tray {
   background-color: white;
   border-right: 1px solid #aaaaaa;
   -moz-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
@@ -46,13 +46,13 @@
   -webkit-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
   box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.4);
 }
-.js .toolbar-main .tray.vertical > .slider {
+.toolbar-main .tray.vertical > .slider {
   -moz-transition: left, 0.05s ease-out;
   -o-transition: left, 0.05s ease-out;
   -webkit-transition: left, 0.05s ease-out;
   transition: left, 0.05s ease-out;
 }
-.js .toolbar-main .tray a {
+.toolbar-main .tray a {
   color: #333333;
 }
 .toolbar-main .vertical .interactive-menu {
@@ -60,7 +60,7 @@
   border-bottom-style: solid;
   border-bottom-width: 1px;
 }
-.js .toolbar-main .tray li {
+.toolbar-main .tray li {
   padding: 0;
 }
 .toolbar-main .vertical li .box {

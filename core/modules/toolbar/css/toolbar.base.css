@@ -12,8 +12,8 @@ body.toolbar-tray-open {
   box-sizing: border-box;
   width: 100%;
 }
-.js .toolbar-main,
-.js .toolbar-main * {
+.toolbar-main,
+.toolbar-main * {
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -23,13 +23,13 @@ body.toolbar-tray-open {
   padding: 0;
   vertical-align: baseline;
 }
-.js .toolbar-main {
+.toolbar-main {
   font-size: 100%;
   line-height: 1;
 }
-.js .toolbar-main ul,
-.js .toolbar-main ul li,
-.js .toolbar-main .menu li {
+.toolbar-main ul,
+.toolbar-main ul li,
+.toolbar-main .menu li {
   list-style: none;
 }
 .toolbar-main .menu li {
@@ -38,34 +38,36 @@ body.toolbar-tray-open {
 /**
  * Administration menu.
  */
-.js .toolbar-main .bar {
+.toolbar-main .bar {
   left: 0;
   position: absolute;
   right: 0;
   top: 0;
   z-index: 600;
 }
+.toolbar-main .bar li {
+  display: block;
+}
+.toolbar-main .bar a {
+  display: block;
+}
 @media screen and (min-width: 16.5em) {
-  .js .toolbar-main .bar li {
-    display: block;
+  .toolbar-main .bar li {
     float: left; /* LTR */
   }
-  .js .toolbar-main .bar li + li {
+  .toolbar-main .bar li + li {
     padding-left: 0.5em; /* LTR */
-  }
-  .js .toolbar-main .bar a {
-    display: block;
   }
 }
 @media screen and (min-width: 28.125em) {
-  .js .toolbar-main .bar {
+  .toolbar-main .bar {
     position: fixed;
   }
 }
 /**
  * Toolbar tray.
  */
-.js .toolbar-main .tray {
+.toolbar-main .tray {
   display: none;
   overflow-x: hidden;
   overflow-y: auto;
@@ -88,7 +90,7 @@ body.toolbar-tray-open {
 .toolar-main .tray .lining {
   position: relative;
 }
-.js .toolbar-main .tray.vertical > .slider {
+.toolbar-main .tray.vertical > .slider {
   left: -100%; /* LTR */
   overflow:hidden;
   position: absolute;
@@ -125,7 +127,7 @@ body.toolbar-tray-open {
 /**
  * Toolbar menus.
  */
-.js .toolbar-main .menu {
+.toolbar-main .menu {
   list-style: none;
   margin: 0;
   padding: 0;
