@@ -9,6 +9,14 @@
   font-family: "Source Sans Pro", "Lucida Grande", Verdana, sans-serif;
   /* Set base font size to 13px based on root ems. */
   font-size: 0.8125rem;
+  -moz-tap-highlight-color: rgba(0,0,0,0);
+  -o-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  tap-highlight-color: rgba(0,0,0,0);
+  -moz-touch-callout: none;
+  -o-touch-callout: none;
+  -webkit-touch-callout: none;
+  touch-callout: none;
 }
 .toolbar-main a {
   text-decoration: none;
@@ -47,6 +55,7 @@
  * Toolbar tray.
  */
 .toolbar-main .tray {
+  background-color: white;
   border-right: 1px solid #aaaaaa;
   -moz-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);
   -o-box-shadow: 0px 1px 7px 0px rgba(0, 0, 0, 0.4);

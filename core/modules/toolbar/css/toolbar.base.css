@@ -5,15 +5,15 @@
  * Aggressive resets so we can achieve a consistent look in hostile CSS
  * environments.
  */
-body.toolbar {
+body.toolbar-tray-open {
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 100%;
 }
-.toolbar-main,
-.toolbar-main * {
+.js .toolbar-main,
+.js .toolbar-main * {
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -21,26 +21,15 @@ body.toolbar {
   margin: 0;
   outline: 0;
   padding: 0;
-  -moz-tap-highlight-color: rgba(0,0,0,0);
-  -o-tap-highlight-color: rgba(0,0,0,0);
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  tap-highlight-color: rgba(0,0,0,0);
-  text-align: left; /* LTR */
-  -moz-touch-callout: none;
-  -o-touch-callout: none;
-  -webkit-touch-callout: none;
-  touch-callout: none;
-  user-select: none;
   vertical-align: baseline;
 }
-.toolbar-main {
+.js .toolbar-main {
   font-size: 100%;
-  font-size: 1rem;
   line-height: 1;
 }
-.toolbar-main ul,
-.toolbar-main ul li,
-.toolbar-main .menu li {
+.js .toolbar-main ul,
+.js .toolbar-main ul li,
+.js .toolbar-main .menu li {
   list-style: none;
 }
 .toolbar-main .menu li {
@@ -51,15 +40,10 @@ body.toolbar {
  */
 .js .toolbar-main .bar {
   left: 0;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
   z-index: 600;
-}
-@media screen and (max-width: 28.124em) {
-  .toolbar-main .bar {
-    position: absolute;
-  }
 }
 @media screen and (min-width: 16.5em) {
   .js .toolbar-main .bar li {
@@ -73,29 +57,38 @@ body.toolbar {
     display: inline-block;
   }
 }
-.toolbar-main .tray {
-  background-color: white;
-}
-.toolar-main .tray .lining {
-  position: relative;
+@media screen and (min-width: 28.125em) {
+  .js .toolbar-main .bar {
+    position: fixed;
+  }
 }
 /**
- * Toolbar tray - vertical.
+ * Toolbar tray.
  */
-.toolbar-main .tray {
+.js .toolbar-main .tray {
+  display: none;
   overflow-x: hidden;
   overflow-y: auto;
 }
-
 .toolbar-main .tray.vertical {
   bottom: 0;
   left: -240px;
   left: -15rem;
   max-width: 92%;
-  position: fixed;
+  position: absolute;
   width: 240px;
   width: 15rem;
   z-index: 600;
+}
+.toolbar-main .tray.horizontal {
+  left: 0; /* LTR */
+  height: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 600;
+}
+.toolar-main .tray .lining {
+  position: relative;
 }
 .js .toolbar-main .tray.vertical > .slider {
   left: -100%; /* LTR */
@@ -103,20 +96,20 @@ body.toolbar {
   position: absolute;
   width: 100%;
 }
+.toolbar-main .tray.active {
+  display: block;
+}
+.toolbar-main .horizontal.active {
+  height: auto;
+}
 .toolbar-main .tray.vertical.active,
 .toolbar-main .tray.vertical.active > .slider {
   left: 0; /* LTR */
 }
-/**
- * At larger screen sizes, the tray pushes the page content
- * using padding instead of left.
- */
-@media screen and (max-width: 28.124em) {
-  body.toolbar-tray-open.toolbar-vertical {
-    overflow: hidden;
-  }
+@media screen and (min-width: 28.125em) {
+  .toolbar-main .tray.horizontal,
   .toolbar-main .tray.vertical {
-    position: absolute;
+    position: fixed;
   }
 }
 /**
@@ -125,36 +118,15 @@ body.toolbar {
  */
 @media screen and (min-width: 28.125em) {
   body.toolbar-tray-open.toolbar-vertical {
+    overflow: auto;
+  }
+  body.toolbar-tray-open.toolbar-vertical {
     padding-left: 272px;
     padding-left: 17rem;
   }
-  .toolbar-main .tray.vertical {
-    left: -272px;
-    left: -17rem;
-    width: 272px;
-    width: 17rem;
-  }
-}
-.toolbar-main .tray .interactive-menu li a {
-  display: block;
 }
 /**
- * Toolbar tray - horizontal.
- */
-.toolbar-main .tray.horizontal {
-  display: none;
-  left: 0; /* LTR */
-  height: 0;
-  position: fixed;
-  width: 100%;
-  z-index: 600;
-}
-.toolbar-main .horizontal.active {
-  display: block;
-  height: auto;
-}
-/**
- * Menus.
+ * Toolbar menus.
  */
 .js .toolbar-main .menu {
   list-style: none;
@@ -193,17 +165,14 @@ body.toolbar {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.toolbar-main .tray .interactive-menu li a {
+  display: block;
+}
 .toolbar-main .handle {
   float: right;
 }
 .toolbar-main .handle:hover {
   cursor: pointer;
-}
-/**
- * Toolbar tray main menu.
- */
-.toolbar-main .vertical .interactive-menu {
-  overflow: hidden;
 }
 .toolbar-main .horizontal .toolbar-list li {
   float: left;
@@ -216,7 +185,7 @@ body.toolbar {
   display: none;
 }
 /**
- * Toolbar tray toggle.
+ * Toolbar tray orientation toggle.
  */
 .toolbar-main .horizontal .toggle-orientation {
   position: absolute;
