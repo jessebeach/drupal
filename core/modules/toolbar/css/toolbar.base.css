@@ -10,7 +10,6 @@ body.toolbar-tray-open {
   -o-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  width: 100%;
 }
 .toolbar-main,
 .toolbar-main * {
@@ -74,10 +73,10 @@ body.toolbar-tray-open {
 }
 .toolbar-main .tray.vertical {
   bottom: 0;
-  left: -13em
-  max-width: 92%;
+  height: 100%;
+  left: -100%;
   position: absolute;
-  width: 13em;
+  width: 100%;
   z-index: 600;
 }
 .toolbar-main .tray.horizontal {
@@ -92,7 +91,6 @@ body.toolbar-tray-open {
 }
 .toolbar-main .tray.vertical > .slider {
   left: -100%; /* LTR */
-  overflow:hidden;
   position: absolute;
   width: 100%;
 }
@@ -105,6 +103,14 @@ body.toolbar-tray-open {
 .toolbar-main .tray.vertical.active,
 .toolbar-main .tray.vertical.active > .slider {
   left: 0; /* LTR */
+}
+@media screen and (min-width: 16.5em) {
+  .toolbar-main .tray.vertical {
+    bottom: 0;
+    max-width: 92%;
+    position: absolute;
+    width: 13em;
+  }
 }
 @media screen and (min-width: 28.125em) {
   .toolbar-main .tray.horizontal,
@@ -121,7 +127,7 @@ body.toolbar-tray-open {
     overflow: auto;
   }
   body.toolbar-tray-open.toolbar-vertical {
-    padding-left: 13eem;
+    padding-left: 13em;
   }
 }
 /**
@@ -187,6 +193,9 @@ body.toolbar-tray-open {
 /**
  * Toolbar tray orientation toggle.
  */
+.toolbar-main .toggle-orientation {
+  display: none;
+}
 .toolbar-main .horizontal .toggle-orientation {
   position: absolute;
   right: 0;
@@ -194,4 +203,17 @@ body.toolbar-tray-open {
 }
 .toolbar-main .vertical .toggle-orientation {
   float: right;
+}
+@media screen and (min-width: 16.5em) {
+  .toolbar-main .toggle-orientation {
+    display: block;
+  }
+  .toolbar-main .administration .toggle-orientation {
+    display: none;
+  }
+}
+@media screen and (min-width: 28.125em) {
+  .toolbar-main .administration .toggle-orientation {
+    display: block;
+  }
 }
