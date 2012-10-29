@@ -165,7 +165,8 @@ body.toolbar-tray-open {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.toolbar-main .tray .interactive-menu li a {
+.toolbar-main .tray .interactive-menu li a,
+.toolbar-main .toolbar-list a {
   display: block;
 }
 .toolbar-main .handle {
@@ -178,7 +179,7 @@ body.toolbar-tray-open {
   float: left;
 }
 .toolbar-main .horizontal .toolbar-list li + li {
-  margin-left: 0.6667em; /* LTR */
+  margin-left: 0.5em; /* LTR */
 }
 .toolbar-main .horizontal .interactive-menu .handle,
 .toolbar-main .horizontal .interactive-menu .level-2 {
