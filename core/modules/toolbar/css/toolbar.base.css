@@ -51,10 +51,10 @@ body.toolbar-tray-open {
     float: left; /* LTR */
   }
   .js .toolbar-main .bar li + li {
-    margin-left: 0.6667em; /* LTR */
+    padding-left: 0.5em; /* LTR */
   }
   .js .toolbar-main .bar a {
-    display: inline-block;
+    display: block;
   }
 }
 @media screen and (min-width: 28.125em) {
@@ -72,12 +72,10 @@ body.toolbar-tray-open {
 }
 .toolbar-main .tray.vertical {
   bottom: 0;
-  left: -240px;
-  left: -15rem;
+  left: -13em
   max-width: 92%;
   position: absolute;
-  width: 240px;
-  width: 15rem;
+  width: 13em;
   z-index: 600;
 }
 .toolbar-main .tray.horizontal {
@@ -121,8 +119,7 @@ body.toolbar-tray-open {
     overflow: auto;
   }
   body.toolbar-tray-open.toolbar-vertical {
-    padding-left: 272px;
-    padding-left: 17rem;
+    padding-left: 13eem;
   }
 }
 /**
