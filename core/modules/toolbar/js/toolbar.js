@@ -317,7 +317,7 @@ _.extend(Tab.prototype, {
    */
   toggle: function (open) {
     this.active = (open !== undefined) ? open : !this.active;
-    this.$el.toggleClass('active', this.active);
+    this.$el.parent('li').toggleClass('active', this.active);
     if (this.tray) {
       this.tray.toggle(this.active);
     }
