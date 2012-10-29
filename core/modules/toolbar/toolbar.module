@@ -90,7 +90,6 @@ function toolbar_preprocess_html(&$vars) {
  * down, so it appears below the toolbar.
  */
 function toolbar_preprocess_toolbar(&$variables) {
-  $variables['attributes']['class'][] = "toolbar-main";
   $variables['attributes']['class'][] = "overlay-displace-top";
 }
 
