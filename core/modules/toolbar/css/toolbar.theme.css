@@ -39,12 +39,12 @@
 .toolbar-main .bar a {
   color: #ffffff;
   cursor: pointer;
-  padding: 1em 0.25em;
+  padding: 1em 0.3333em;
 }
 @media screen and (min-width: 16.5em) {
   .toolbar-main .bar a {
-    padding-left: 1.25em;
-    padding-right: 1.25em;
+    padding-left: 1.3333em;
+    padding-right: 1.3333em;
   }
 }
 /**
@@ -65,7 +65,7 @@
   background-color: #ffffff;
 }
 .toolbar-main .toolbar-list a {
-  padding: 1em 0.25em;
+  padding: 1em 0.3333em;
 }
 .toolbar-main .vertical .toolbar-list {
   border-bottom: 1px solid #dddddd;
@@ -226,9 +226,6 @@
 }
 .toolbar-main .horizontal .toggle-orientation {
   border-left: 1px solid #c9c9c9; /* LTR */
-}
-.toolbar-main .vertical .toggle-orientation {
-  border-top: 1px solid #c9c9c9;
 }
 .toolbar-main .toggle-orientation > .lining {
   background-color: #ffffff;
