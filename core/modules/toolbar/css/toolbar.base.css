@@ -105,7 +105,8 @@ body.toolbar-tray-open {
   .toolbar-main .tray.vertical {
     bottom: 0;
     position: absolute;
-    width: 15em;
+    width: 240px;
+    width: 15rem;
   }
 }
 @media screen and (min-width: 28.125em) {
@@ -123,7 +124,8 @@ body.toolbar-tray-open {
     overflow: auto;
   }
   body.toolbar-tray-open.toolbar-vertical {
-    padding-left: 15em;
+    padding-left: 240px;
+    padding-left: 15rem;
   }
 }
 /**
