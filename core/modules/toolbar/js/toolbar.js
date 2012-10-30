@@ -265,6 +265,7 @@ _.extend(Tray.prototype, {
       .addClass(this.orientation)
       .find('.lining')
       .append(Drupal.theme('toolbarOrientationToggle'));
+    this.toggleOrientationToggle();
   },
   /**
    *
@@ -288,12 +289,14 @@ _.extend(Tray.prototype, {
       this.$el
         .removeClass('vertical')
         .addClass('horizontal');
+      this.toggleOrientationToggle();
     }
     if (orientation === 'vertical' && this.orientation === 'horizontal') {
       this.orientation = orientation;
       this.$el
         .removeClass('horizontal')
         .addClass('vertical');
+      this.toggleOrientationToggle();
     }
   },
   /**
@@ -302,6 +305,16 @@ _.extend(Tray.prototype, {
   getOrientation: function () {
     return (this.isOrientationLocked) ? 'vertical' : this.orientation;
   },
+  /**
+   * Change the orientation toggle active state.
+   */
+  toggleOrientationToggle: function () {
+    this.$el
+    .find('[value="' + this.orientation + '"]')
+    .removeClass('active')
+    .siblings()
+    .addClass('active');
+  }
 });
 
 function Tab ($tab) {
@@ -340,7 +353,7 @@ _.extend(Tab.prototype, {
  *   A string representing a DOM fragment.
  */
 Drupal.theme.toolbarOrientationToggle = function () {
-  return '<div class="toggle-orientation"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div>';
+  return '<div class="toggle-orientation"><div class="lining"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div></div>';
 };
 /**
  * A toggle is an interactive element often bound to a click handler.

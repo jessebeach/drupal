@@ -199,6 +199,7 @@ body.toolbar-tray-open {
 }
 .toolbar-main .vertical .toggle-orientation {
   float: right;
+  width: 100%;
 }
 @media screen and (min-width: 16.5em) {
   .toolbar-main .toggle-orientation {
