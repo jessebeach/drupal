@@ -55,8 +55,14 @@
   border-right: 1px solid #aaaaaa;
   box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.3333);
 }
+.toolbar-main .horizontal .tray {
+  background-color: #f5f5f5;
+}
 .toolbar-main .tray a {
   color: #333333;
+}
+.toolbar-main .horizontal .toolbar-list {
+  background-color: #ffffff;
 }
 .toolbar-main .toolbar-list a {
   padding: 1em 0.25em;
@@ -215,8 +221,20 @@
 /* Orientation toggle */
 
 .toolbar-main .toggle-orientation {
-  float: right;
+  background-color: #f5f5f5;
   padding: 1em;
+}
+.toolbar-main .horizontal .toggle-orientation {
+  border-left: 1px solid #c9c9c9; /* LTR */
+}
+.toolbar-main .vertical .toggle-orientation {
+  border-top: 1px solid #c9c9c9;
+}
+.toolbar-main .toggle-orientation > .lining {
+  background-color: #ffffff;
+  border: 1px solid #c9c9c9;
+  float: right; /* LTR */
+  padding: 0.1667em;
 }
 .toolbar-main .toggle-orientation button {
   background-color: transparent;
@@ -224,14 +242,17 @@
   cursor: pointer;
   display: inline-block;
   float: left;
-  height: 1.33333em;
+  height: 0.9em;
   text-indent: -999em;
-  width: 1.6667em;
+  width: 1.4562em;
 }
 .toolbar-main .toggle-orientation [value="vertical"] {
-  border-left-width: 10px;
-  margin-left: 1em;
+  border-left-width: 7px;
+  margin-left: 0.5em;
 }
 .toolbar-main .toggle-orientation [value="horizontal"] {
-  border-top-width: 7px;
+  border-top-width: 4px;
+}
+.toolbar-main .toggle-orientation .active {
+  border-color: #3F9AD3;
 }
