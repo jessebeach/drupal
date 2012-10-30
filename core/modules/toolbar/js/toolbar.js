@@ -65,8 +65,7 @@ Drupal.behaviors.toolbar = {
     }
   },
   options: {
-    breakpoints: null,
-    icons: false
+    breakpoints: null
   }
 };
 /**
@@ -85,10 +84,6 @@ function ToolBar ($toolbar, options) {
     'activeClass': 'active',
     'trayOpenBodyClass': 'toolbar-tray-open',
   };
-  // Show icons if JavaScript is enabled.
-  if ('icons' in options && options.icons) {
-    this.$toolbar.addClass('icons');
-  }
   // Bind all ToolBar methods to the instance.
   _.bindAll(this);
   // Recalculate the offset top on screen resize.

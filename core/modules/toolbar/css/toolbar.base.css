@@ -187,12 +187,26 @@ body.toolbar-tray-open {
   display: none;
 }
 /**
- * Toolbar tray orientation toggle.
+ * ToolBar icons.
+ */
+.toolbar-main .bar .tab,
+.toolbar-main .bar .active .tab,
+.toolbar-main .bar .tab:active,
+.toolbar-main .level-1 > li > .box > a {
+  background-attachment: scroll;
+  background-color: transparent;
+  background-image: none;
+  background-position: -999em -999em;
+  background-repeat: no-repeat;
+}
+/**
+ * ToolBar tray orientation toggle.
  */
 .toolbar-main .toggle-orientation {
   display: none;
 }
 .toolbar-main .horizontal .toggle-orientation {
+  bottom: 0;
   position: absolute;
   right: 0;
   top: 0;

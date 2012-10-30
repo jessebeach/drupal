@@ -3101,9 +3101,6 @@ function user_toolbar_pre_render($toolbar) {
       'logout' => array(
         'title' => t('Log out'),
         'href' => 'user/logout',
-        'attributes' => array(
-          'class' => array('tab'),
-        ),
       ),
       'account' => array(
         'title' => t('View profile'),
@@ -3111,7 +3108,6 @@ function user_toolbar_pre_render($toolbar) {
         'html' => TRUE,
         'attributes' => array(
           'title' => t('User account'),
-          'class' => array('tab'),
         ),
       ),
     );
