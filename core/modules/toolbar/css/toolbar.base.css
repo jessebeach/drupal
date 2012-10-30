@@ -163,8 +163,6 @@ body.toolbar-tray-open {
   display: block;
   line-height: 1;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .toolbar-main .tray .interactive-menu li a,
 .toolbar-main .toolbar-list a {
