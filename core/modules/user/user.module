@@ -3098,10 +3098,6 @@ function user_toolbar_pre_render($toolbar) {
   // Add logout & user account links or login link.
   if ($user->uid) {
     $links = array(
-      'logout' => array(
-        'title' => t('Log out'),
-        'href' => 'user/logout',
-      ),
       'account' => array(
         'title' => t('View profile'),
         'href' => 'user',
@@ -3109,6 +3105,10 @@ function user_toolbar_pre_render($toolbar) {
         'attributes' => array(
           'title' => t('User account'),
         ),
+      ),
+      'logout' => array(
+        'title' => t('Log out'),
+        'href' => 'user/logout',
       ),
     );
   }
