@@ -42,7 +42,7 @@ body.toolbar-tray-open {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 250;
+  z-index: 750;
 }
 .toolbar-main .bar li {
   display: block;
@@ -80,6 +80,7 @@ body.toolbar-tray-open {
   left: 0; /* LTR */
   height: 0;
   position: absolute;
+  z-index: 750;
 }
 .toolar-main .tray .lining {
   position: relative;
