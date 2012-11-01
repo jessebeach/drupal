@@ -139,6 +139,7 @@ $.extend(ToolBar.prototype, {
       // Alter the padding on the top of the body element.
       $('body').css('padding-top', height);
       $(document).trigger('offsettopchange', height);
+      $(window).triggerHandler('resize');
     }
   },
   /**
