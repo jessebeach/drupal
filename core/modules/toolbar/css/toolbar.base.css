@@ -42,7 +42,7 @@ body.toolbar-tray-open {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 600;
+  z-index: 250;
 }
 .toolbar-main .bar li {
   display: block;
@@ -67,21 +67,19 @@ body.toolbar-tray-open {
   display: none;
   overflow-x: hidden;
   overflow-y: auto;
+  width: 100%;
+  z-index: 250;
 }
 .toolbar-main .tray.vertical {
   bottom: 0;
   height: 100%;
   left: -100%;
   position: absolute;
-  width: 100%;
-  z-index: 600;
 }
 .toolbar-main .tray.horizontal {
   left: 0; /* LTR */
   height: 0;
   position: absolute;
-  width: 100%;
-  z-index: 600;
 }
 .toolar-main .tray .lining {
   position: relative;
@@ -120,9 +118,6 @@ body.toolbar-tray-open {
  * using padding instead of left.
  */
 @media screen and (min-width: 28.125em) {
-  body.toolbar-tray-open.toolbar-vertical {
-    overflow: auto;
-  }
   body.toolbar-tray-open.toolbar-vertical {
     padding-left: 240px;
     padding-left: 15rem;
