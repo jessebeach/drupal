@@ -3080,6 +3080,9 @@ function user_toolbar_register_tabs() {
       'title' => user_format_name($user),
       'href' => '',
       'html' => FALSE,
+      'attributes' => array(
+        'title' => t('My account'),
+      ),
     ),
     'tray' => array(
       '#pre_render' => array('user_toolbar_pre_render'),

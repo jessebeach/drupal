@@ -110,6 +110,54 @@ function toolbar_system_info_alter(&$info, $file, $type) {
 }
 
 /**
+ * Implements hook_toolbar_register_tabs().
+ */
+function toolbar_toolbar_register_tabs() {
+  $tab = array();
+
+  $tab['home'] = array(
+    'tab' => array(
+      'title' => t('Home'),
+      'href' => '<front>',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Home page'),
+      ),
+    ),
+    'weight' => -10,
+  );
+
+  // Build the default toolbar navigation links.
+  // Retrieve the administration menu from the database.
+  $tree = toolbar_get_menu_tree();
+  // Add attributes to the links before rendering.
+  toolbar_menu_navigation_links($tree);
+  $menu = array();
+  $menu['toolbar_administration'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('interactive-menu toolbar-list'),
+    ),
+    'administration_menu' => menu_tree_output($tree),
+  );
+
+  $tab['administration'] = array(
+    'tab' => array(
+      'title' => t('Menu'),
+      'href' => '',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Admin menu'),
+      ),
+    ),
+    'tray' => $menu,
+    'weight' => -5,
+  );
+
+  return $tab;
+}
+
+/**
  * Builds the admin menu as a structured array ready for drupal_render().
  *
  * @return
@@ -140,45 +188,15 @@ function toolbar_view() {
         'type' => 'setting',
       )
     );
-    // // Load the breakpoints for toolbar.
+    // Load the breakpoints for toolbar.
     foreach ($breakpoints->breakpoints as $key => $breakpoint) {
       $build['#attached']['js'][0]['data']['toolbar']['breakpoints'][$key] = $breakpoint->mediaQuery;
     }
   }
 
-  // Build the default toolbar navigation links.
-  // Retrieve the administration menu from the database.
-  $tree = toolbar_get_menu_tree();
-  // Add attributes to the links before rendering.
-  toolbar_menu_navigation_links($tree);
-  $menu['toolbar_administration'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('interactive-menu toolbar-list'),
-    ),
-  );
-  $menu['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
-
-  $toolbar_groups = array(
-    'home' => array(
-      'tab' => array(
-        'title' => t('Home'),
-        'href' => '<front>',
-        'html' => FALSE,
-      ),
-    ),
-    'administration' => array(
-      'tab' => array(
-        'title' => t('Menu'),
-        'href' => '',
-        'html' => FALSE,
-      ),
-      'tray' => $menu,
-    ),
-  );
-
-  // Get groups from other modules.
-  $toolbar_groups = array_merge($toolbar_groups, module_invoke_all('toolbar_register_tabs'));
+  // Get groups from all modules.
+  $toolbar_groups = module_invoke_all('toolbar_register_tabs');
+  uasort($toolbar_groups, 'drupal_sort_weight');
 
   // Bar tabs.
   $toolbar_tabs = array();
@@ -208,7 +226,7 @@ function toolbar_view() {
     ),
     '#heading' => array('text' => t('Drupal toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
-  //// Assign the tabs to the build.
+  // Assign the trays to the build.
   $build['toolbar_trays'] = array(
     '#theme' => 'toolbar_tray',
     '#trays' => $toolbar_trays,
