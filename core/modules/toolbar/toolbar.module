@@ -110,9 +110,9 @@ function toolbar_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implements hook_toolbar_register_tabs().
+ * Implements hook_toolbar().
  */
-function toolbar_toolbar_register_tabs() {
+function toolbar_toolbar() {
   $tab = array();
 
   $tab['home'] = array(
@@ -194,8 +194,10 @@ function toolbar_view() {
     }
   }
 
-  // Get groups from all modules.
-  $toolbar_groups = module_invoke_all('toolbar_register_tabs');
+  // Get groups from all modules that implement hook_toolbar() or
+  // hook_toolbar_alter().
+  $toolbar_groups = module_invoke_all('toolbar');
+  drupal_alter('toolbar', $toolbar_groups);
   uasort($toolbar_groups, 'drupal_sort_weight');
 
   // Bar tabs.

@@ -3070,9 +3070,9 @@ function user_file_download_access($field, EntityInterface $entity, File $file) 
 }
 
 /**
- * Implements hook_toolbar_register_tabs().
+ * Implements hook_toolbar().
  */
-function user_toolbar_register_tabs() {
+function user_toolbar() {
   global $user;
 
   $tab['user'] = array(

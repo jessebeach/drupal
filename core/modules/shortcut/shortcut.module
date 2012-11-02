@@ -713,9 +713,9 @@ function shortcut_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_toolbar_register_tabs().
+ * Implements hook_toolbar().
  */
-function shortcut_toolbar_register_tabs() {
+function shortcut_toolbar() {
   $tab['shortcuts'] = array(
     'tab' => array(
       'title' => t('Shortcuts'),
