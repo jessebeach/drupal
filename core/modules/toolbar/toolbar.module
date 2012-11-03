@@ -199,6 +199,13 @@ function toolbar_view() {
   // Build the tabs and trays from the toolbar groups.
   $toolbar_tabs = array();
   $toolbar_trays = array();
+  $tab_defaults = array(
+    'title' => '',
+    'href' => '',
+    'html' => FALSE,
+    'attributes' => array(),
+  );
+
   foreach ($toolbar_groups as $category => $items) {
     if ($tab = $items['tab']) {
       // Log a warning if the tab is already defined.
@@ -208,10 +215,16 @@ function toolbar_view() {
         );
       }
 
+      // Merge in the defaults.
+      $tab += $tab_defaults;
+      $tab['attributes'] += array('class' => array());
+      $tab['attributes']['class'] += array('tab');
+
       // Provide a data attribute linking each tab to the corresponding tray.
+      // Unlike the defaults above, these properties may override values.
       $tab['attributes']['data-toolbar-tray'] = $category;
-      $tab['attributes']['class'][] = 'tab';
       $tab['attributes']['role'] = 'button';
+
       $toolbar_tabs[$category] = $tab;
     }
     if (!empty($items['tray'])) {
