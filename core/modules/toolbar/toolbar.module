@@ -160,10 +160,14 @@ function toolbar_toolbar() {
 }
 
 /**
- * Builds the admin menu as a structured array ready for drupal_render().
+ * Builds the Toolbar as a structured array ready for drupal_render().
  *
  * @return
- *   Array of links and settings relating to the admin menu.
+ *   A renderable arrray, with two children:
+ *   - 'toolbar_tabs': an array of links, rendered by theme('links').
+ *   - 'toolbar_tray': an array of render elements, at moat one of which is
+ *     displayed at once, when the corresponding tab is activated. The trays
+ *     are rendered by theme('toolbar_tray').
  */
 function toolbar_view() {
 
@@ -186,7 +190,7 @@ function toolbar_view() {
     );
   }
 
-  // Get groups from all modules that implement hook_toolbar() or
+  // Get toolbar items from all modules that implement hook_toolbar() or
   // hook_toolbar_alter().
   $toolbar_groups = module_invoke_all('toolbar');
   drupal_alter('toolbar', $toolbar_groups);
@@ -195,20 +199,28 @@ function toolbar_view() {
   // Build the tabs and trays from the toolbar groups.
   $toolbar_tabs = array();
   $toolbar_trays = array();
-  foreach ($toolbar_groups as $category => $components) {
-    if (!empty($components['tab'])) {
-      // Provide a data attribute to each bar link that associates it with its
-      // tray.
-      $components['tab']['attributes']['data-toolbar-tray'] = $category;
-      if (!isset($components['tab']['attributes']['class'])) {
-        $components['tab']['attributes']['class'] = array();
+  foreach ($toolbar_groups as $category => $items) {
+    if ($tab = $items['tab']) {
+      // Log a warning if the tab is already defined.
+      if (array_key_exists($category, $toolbar_tabs)) {
+        $message = t('Toolbar tab %category is already defined.',
+          array('$category' => $category));
+        drupal_set_message($message, 'warning');
       }
-      $components['tab']['attributes']['class'][] = 'tab';
-      $components['tab']['attributes']['role'] = 'button';
-      $toolbar_tabs[$category] = $components['tab'];
+
+      // Provide a data attribute linking each tab to the corresponding tray.
+      $tab['attributes']['data-toolbar-tray'] = $category;
+      $tab['attributes']['class'][] = 'tab';
+      $tab['attributes']['role'] = 'button';
+      $toolbar_tabs[$category] = $tab;
     }
-    if (!empty($components['tray'])) {
-      $toolbar_trays[$category] = $components['tray'];
+    if (!empty($items['tray'])) {
+      if (array_key_exists($category, $toolbar_trays)) {
+        array_merge($toolbar_trays[$category], $items['tray']);
+      }
+      else {
+        $toolbar_trays[$category] = $items['tray'];
+      }
     }
   }
 
