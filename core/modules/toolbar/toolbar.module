@@ -113,9 +113,10 @@ function toolbar_system_info_alter(&$info, $file, $type) {
  * Implements hook_toolbar().
  */
 function toolbar_toolbar() {
-  $tab = array();
+  $items = array();
 
-  $tab['home'] = array(
+  // The 'Home' tab is a simple link, with no corresponding tray.
+  $items['home'] = array(
     'tab' => array(
       'title' => t('Home'),
       'href' => '<front>',
@@ -142,7 +143,7 @@ function toolbar_toolbar() {
     'administration_menu' => menu_tree_output($tree),
   );
 
-  $tab['administration'] = array(
+  $items['administration'] = array(
     'tab' => array(
       'title' => t('Menu'),
       'href' => '',
@@ -155,7 +156,7 @@ function toolbar_toolbar() {
     'weight' => -5,
   );
 
-  return $tab;
+  return $items;
 }
 
 /**

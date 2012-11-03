@@ -3075,7 +3075,7 @@ function user_file_download_access($field, EntityInterface $entity, File $file) 
 function user_toolbar() {
   global $user;
 
-  $tab['user'] = array(
+  $items['user'] = array(
     'tab' => array(
       'title' => user_format_name($user),
       'href' => '',
@@ -3089,7 +3089,7 @@ function user_toolbar() {
     ),
   );
 
-  return $tab;
+  return $items;
 }
 
 /**
