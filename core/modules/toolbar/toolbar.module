@@ -203,9 +203,9 @@ function toolbar_view() {
     if ($tab = $items['tab']) {
       // Log a warning if the tab is already defined.
       if (array_key_exists($category, $toolbar_tabs)) {
-        $message = t('Toolbar tab %category is already defined.',
-          array('$category' => $category));
-        drupal_set_message($message, 'warning');
+        watchdog('toolbar', 'Toolbar tab %category is already defined.',
+          array('$category' => $category)
+        );
       }
 
       // Provide a data attribute linking each tab to the corresponding tray.
