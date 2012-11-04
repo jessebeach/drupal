@@ -3078,7 +3078,7 @@ function user_toolbar() {
   $items['user'] = array(
     'tab' => array(
       'title' => user_format_name($user),
-      'href' => '',
+      'href' => 'user',
       'html' => FALSE,
       'attributes' => array(
         'title' => t('My account'),

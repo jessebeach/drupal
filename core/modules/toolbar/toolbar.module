@@ -146,7 +146,7 @@ function toolbar_toolbar() {
   $items['administration'] = array(
     'tab' => array(
       'title' => t('Menu'),
-      'href' => '',
+      'href' => 'admin',
       'html' => FALSE,
       'attributes' => array(
         'title' => t('Admin menu'),

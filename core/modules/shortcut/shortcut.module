@@ -719,7 +719,7 @@ function shortcut_toolbar() {
   $items['shortcuts'] = array(
     'tab' => array(
       'title' => t('Shortcuts'),
-      'href' => '',
+      'href' => 'admin/config/user-interface/shortcut',
       'html' => FALSE,
       'attributes' => array(
         'title' => t('Shortcuts'),
