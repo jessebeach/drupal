@@ -358,7 +358,7 @@ _.extend(Tab.prototype, {
  *   A string representing a DOM fragment.
  */
 Drupal.theme.toolbarOrientationToggle = function () {
-  return '<div class="toggle-orientation"><div class="lining"><button value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div></div>';
+  return '<div class="toggle-orientation"><div class="lining"><button type="button" value="horizontal">Horizontal</button><button value="vertical">Vertical</button></div></div>';
 };
 /**
  * A toggle is an interactive element often bound to a click handler.
