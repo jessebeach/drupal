@@ -20,37 +20,26 @@ Drupal.behaviors.toolbar = {
     if ($toolbar.length) {
       $toolbar
       .addClass('toolbar-main')
-      .on('trayregistered', decorateInteractiveMenu);
+      .on('itemregistered', decorateInteractiveMenu);
       var toolbar = new ToolBar($toolbar, options);
-      var tray, $tray, $trays, tab, $tab, $tabs, name, i;
-      // Register trays.
-      Drupal.toolbar.trays = [];
-      $trays = $toolbar.find('.tray');
-      for (i = 0; i < $trays.length; i++) {
-        $tray = $($trays[i]);
-        tray = new Tray($tray);
-        Drupal.toolbar.trays.push(tray);
-        $tray.data('toolbar', {
-          'tray': tray
-        });
-        toolbar.registerTray(tray);
-      }
-      // Associate the bar tabs with the trays.
+      // Find and register tabs. Each tab may have an associated tray.
+      var item, tray, $tray, $trays, tab, $tab, $tabs, name, i;
       Drupal.toolbar.tabs = [];
       $tabs = $toolbar.find('.bar .tab');
+      $trays = $toolbar.find('.tray');
       for (i = 0; i < $tabs.length; i++) {
         $tab = $($tabs[i]);
+        name = $tab.attr('data-toolbar-tray') || '';
+        $tray = $trays.filter('[data-toolbar-tray="' + name + '"]');
         tab = new Tab($tab);
-        Drupal.toolbar.tabs.push(tab);
-        name = tab.$el.data().toolbarTray || '';
-        if (name.length) {
-          tray = toolbar.getTray(name);
-          $tab.data('toolbar', {
-            'tab': tab
-          });
-          tab.registerTray(tray);
-          toolbar.registerTab(tab);
+        item = {
+          name: name,
+          tab: tab
+        };
+        if ($tray.length) {
+          item.tray = new Tray($tray);
         }
+        toolbar.registerTab(item);
       }
       // Set up switching between the vertical and horizontal presentation
       // of the toolbar trays based on a breakpoint.
@@ -62,6 +51,8 @@ Drupal.behaviors.toolbar = {
           toolbar.mediaQueryChangeHandler(mql);
         }
       }
+      // Assign the toolbar to the Drupal global object.
+      Drupal.toolbar = toolbar;
     }
   },
   options: {
@@ -76,9 +67,8 @@ function ToolBar ($toolbar, options) {
   this.$bar = $toolbar.find('.bar');
   this.height = 0;
   this.barHeight = 0;
-  this.trays = [];
-  this.tabs = [];
-  this.activeTab = null;
+  this.items = [];
+  this.activeItem = null;
   this.mediaQueries = [];
   this.ui = {
     'activeClass': 'active',
@@ -88,10 +78,10 @@ function ToolBar ($toolbar, options) {
   _.bindAll(this);
   // Recalculate the offset top on screen resize.
   // Use throttle to prevent setHeight from being called too frequently.
-  var windowResizeHandler = _.debounce(this.windowResizeHandler, 250);
+  var setHeight = _.debounce(this.setHeight, 250);
   $(window)
     .on({
-      'resize.toolbar': windowResizeHandler
+      'resize.toolbar': setHeight
     });
   // Toolbar event handlers.
   this.$toolbar
@@ -104,7 +94,7 @@ function ToolBar ($toolbar, options) {
 /**
  * Extend the prototype of the ToolBar class.
  */
-$.extend(ToolBar.prototype, {
+_.extend(ToolBar.prototype, {
   /**
    * The height of the toolbar offsets the top of the page content.
    *
@@ -144,38 +134,46 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  registerTray: function (tray) {
-    this.trays.push(tray);
-    this.$toolbar.trigger('trayregistered', tray);
-  },
-  /**
-   *
-   */
   toggleTray: function (event) {
     var $tab = $(event.target);
-    var tab = $tab.data('toolbar').tab;
-    if (tab.tray) {
+    var item = this.getItem($tab.data('toolbar').tab.name);
+    var tab = item.tab;
+    if (item.tray) {
+      var tray = item.tray;
       event.preventDefault();
-      var disableTabs = _.without(this.tabs, tab);
-      for (var i = disableTabs.length - 1; i >= 0; i--) {
-        if (disableTabs[i]) {
-          disableTabs[i].toggle(false);
-        }
+      var disableTrays = _.without(this.getTrays(), tray);
+      for (var i = disableTrays.length - 1; i >= 0; i--) {
+        disableTrays[i].toggle(false);
+        this.getItem(disableTrays[i].name).tab.toggle(false);
       };
       tab.toggle();
-      this.activeTab = (tab.active) ? tab : null;
+      tray.toggle(tab.active);
+      this.activeItem = (tab.active) ? item : null;
       this.setBodyState();
       this.setHeight();
-      this.$toolbar.trigger('traytoggled', tab.tray);
+      this.$toolbar.trigger('itemtoggled', item);
     }
   },
   /**
    *
    */
-  getTray: function (name) {
-    for (var i = 0; i < this.trays.length; i++) {
-      if (this.trays[i].name === name) {
-        return this.trays[i];
+  registerTab: function (item) {
+    this.items.push(item);
+    // Save references to the tab and tray instances on the corresponding DOM
+    // elements.
+    item.tab.$el.data('toolbar', {tab: item.tab});
+    if (item.tray) {
+      item.tray.$el.data('toolbar', {tray: item.tray});
+    }
+    this.$toolbar.trigger('itemregistered', item);
+  },
+  /**
+   *
+   */
+  getItem: function (name) {
+    for (var i = this.items.length - 1; i >= 0; i--) {
+      if (this.items[i].name === name) {
+        return this.items[i];
       }
     }
     return;
@@ -183,9 +181,24 @@ $.extend(ToolBar.prototype, {
   /**
    *
    */
-  registerTab: function (tab) {
-    this.tabs.push(tab);
-    this.$toolbar.trigger('tabregistered', tab);
+  getTabs: function () {
+    var tabs = [];
+    for (var i = this.items.length - 1; i >= 0; i--) {
+      tabs.push(this.items[i].tab);
+    }
+    return tabs;
+  },
+  /**
+   *
+   */
+  getTrays: function () {
+    var trays = [];
+    for (var i = this.items.length - 1; i >= 0; i--) {
+      if (this.items[i].tray) {
+        trays.push(this.items[i].tray);
+      }
+    }
+    return trays;
   },
   /**
    *
@@ -204,7 +217,7 @@ $.extend(ToolBar.prototype, {
    */
   mediaQueryChangeHandler: function (mql) {
     var orientation = (mql.matches) ? 'horizontal' : 'vertical';
-    this.changeOrientation(this.trays, orientation);
+    this.changeOrientation(this.getTrays(), orientation);
     this.setBodyState();
     this.setHeight();
     this.$toolbar.trigger('toolbarorientationchanged', orientation);
@@ -224,10 +237,10 @@ $.extend(ToolBar.prototype, {
   setBodyState: function () {
     var $body = $('body')
       .removeClass('toolbar-vertical toolbar-horizontal');
-    if (this.activeTab) {
+    if (this.activeItem) {
       $body
         .addClass('toolbar-tray-open')
-        .addClass('toolbar-' + this.activeTab.tray.getOrientation());
+        .addClass('toolbar-' + this.activeItem.tray.getOrientation());
     }
     else {
       $body
@@ -316,7 +329,6 @@ function Tab ($tab) {
   this.$el = $tab;
   this.active = false;
   this.name = this.$el.data()['toolbarTray'] || this.$el.attr('id') ||'no name';
-  this.tray;
 }
 
 /**
@@ -329,16 +341,7 @@ _.extend(Tab.prototype, {
   toggle: function (open) {
     this.active = (open !== undefined) ? open : !this.active;
     this.$el.parent('li').toggleClass('active', this.active);
-    if (this.tray) {
-      this.tray.toggle(this.active);
-    }
-  },
-  /**
-   *
-   */
-  registerTray: function (tray) {
-    this.tray = tray;
-  },
+  }
 });
 
 /**
@@ -364,10 +367,10 @@ Drupal.theme.interactionMenuItemToggle = function (options) {
 /**
  * Interactive menu setup methods.
  */
-function decorateInteractiveMenu (event, tray) {
-  if (tray.name === 'administration') {
-    tray.decorate = interactiveMenuDecorator();
-    tray.decorate('.interactive-menu > .menu');
+function decorateInteractiveMenu (event, item) {
+  if (item.tray && item.tray.name === 'administration') {
+    item.tray.decorate = interactiveMenuDecorator();
+    item.tray.decorate('.interactive-menu > .menu');
   }
 }
 
