@@ -11,7 +11,12 @@ Drupal.toolbar = Drupal.toolbar || {};
 var transitionEnd = "transitionEnd.toolbar webkitTransitionEnd.toolbar transitionend.toolbar msTransitionEnd.toolbar oTransitionEnd.toolbar";
 
 /**
- * Attach toggling behavior and notify the overlay of the toolbar.
+ * Register tabs with the toolbar.
+ *
+ * The Drupal toolbar allows modules to register top-level tabs. These may point
+ * directly to a resource or toggle the visibility of a tray.
+ *
+ * Modules register tabs with hook_toolbar_register_tabs.
  */
 Drupal.behaviors.toolbar = {
   attach: function(context, settings) {
@@ -132,6 +137,8 @@ _.extend(ToolBar.prototype, {
     }
   },
   /**
+   * Toggle a toolbar tab and the associated tray.
+   *
    *
    */
   toggleTray: function (event) {
