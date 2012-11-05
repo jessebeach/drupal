@@ -88,10 +88,10 @@ function ToolBar ($toolbar, options) {
   _.bindAll(this);
   // Recalculate the offset top on screen resize.
   // Use throttle to prevent setHeight from being called too frequently.
-  var setHeight = _.debounce(this.setHeight, 250);
+  var windowResizeHandler = _.debounce(this.windowResizeHandler, 250);
   $(window)
     .on({
-      'resize.toolbar': setHeight
+      'resize.toolbar': windowResizeHandler
     });
   // Toolbar event handlers.
   this.$toolbar
@@ -127,11 +127,10 @@ $.extend(ToolBar.prototype, {
     };
     // Get the height of the active horizontal tray and include it in the total
     // height of the toolbar.
-    $tray = $trays.filter('.active.horizontal');
-    if ($tray.length > 0) {
-      var trayH = $tray.outerHeight();
-      height += trayH;
-    }
+    height += $trays.filter('.active.horizontal').height('auto').outerHeight() || 0;
+    // Set the height of the vertical tray to the scrollHeight of the
+    // documentElement.
+    $trays.filter('.active.vertical').height(document.documentElement.scrollHeight);
     // Indicate the height of the toolbar in the attribute data-offset-top.
     if (this.height !== height) {
       this.height = height;
@@ -262,7 +261,6 @@ _.extend(Tray.prototype, {
       .find('.lining')
       .append(Drupal.theme('toolbarOrientationToggle'));
     this.toggleOrientationToggle();
-    this.setHeight();
   },
   /**
    *
@@ -287,7 +285,6 @@ _.extend(Tray.prototype, {
         .removeClass('vertical')
         .addClass('horizontal');
       this.toggleOrientationToggle();
-      this.setHeight();
     }
     if (orientation === 'vertical' && this.orientation === 'horizontal') {
       this.orientation = orientation;
@@ -295,7 +292,6 @@ _.extend(Tray.prototype, {
         .removeClass('horizontal')
         .addClass('vertical');
       this.toggleOrientationToggle();
-      this.setHeight();
     }
   },
   /**
@@ -313,17 +309,6 @@ _.extend(Tray.prototype, {
     .removeClass('active')
     .siblings()
     .addClass('active');
-  },
-  /**
-   *
-   */
-  setHeight: function () {
-    if (this.orientation === 'vertical') {
-      this.$el.height(document.documentElement.scrollHeight);
-    }
-    else {
-      this.$el.height('auto');
-    }
   }
 });
 
