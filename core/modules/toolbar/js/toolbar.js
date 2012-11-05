@@ -262,6 +262,7 @@ _.extend(Tray.prototype, {
       .find('.lining')
       .append(Drupal.theme('toolbarOrientationToggle'));
     this.toggleOrientationToggle();
+    this.setHeight();
   },
   /**
    *
@@ -286,6 +287,7 @@ _.extend(Tray.prototype, {
         .removeClass('vertical')
         .addClass('horizontal');
       this.toggleOrientationToggle();
+      this.setHeight();
     }
     if (orientation === 'vertical' && this.orientation === 'horizontal') {
       this.orientation = orientation;
@@ -293,6 +295,7 @@ _.extend(Tray.prototype, {
         .removeClass('horizontal')
         .addClass('vertical');
       this.toggleOrientationToggle();
+      this.setHeight();
     }
   },
   /**
@@ -310,6 +313,17 @@ _.extend(Tray.prototype, {
     .removeClass('active')
     .siblings()
     .addClass('active');
+  },
+  /**
+   *
+   */
+  setHeight: function () {
+    if (this.orientation === 'vertical') {
+      this.$el.height(document.documentElement.scrollHeight);
+    }
+    else {
+      this.$el.height('auto');
+    }
   }
 });
 
