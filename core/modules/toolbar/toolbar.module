@@ -172,7 +172,7 @@ function toolbar_toolbar() {
 function toolbar_view() {
 
   $build = array('#theme' => 'toolbar');
-  $build['#attached']['library'][] = array('toolbar', 'drupal.toolbar');
+  $build['#attached']['library'][] = array('toolbar', 'toolbar');
 
   // Get the configured breakpoint for switch from vertical to horizontal
   // toolbar presentation.
@@ -347,7 +347,7 @@ function toolbar_in_active_trail($path) {
  * Implements hook_library_info().
  */
 function toolbar_library_info() {
-  $libraries['drupal.toolbar'] = array(
+  $libraries['toolbar'] = array(
     'title' => 'Toolbar',
     'version' => VERSION,
     'js' => array(
@@ -366,6 +366,18 @@ function toolbar_library_info() {
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
       array('system', 'jquery.cookie'),
+      array('toolbar', 'toolbar.interactiveMenu'),
+    ),
+  );
+
+  $libraries['toolbar.interactiveMenu'] = array(
+    'title' => 'Toolbar interactive menu decorator',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'toolbar') . '/js/interactivemenu.js' => array(),
+    ),
+    'css' => array(
+      drupal_get_path('module', 'toolbar') . '/css/interactivemenu.css',
     ),
   );
 
