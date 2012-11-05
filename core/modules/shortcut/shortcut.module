@@ -713,13 +713,13 @@ function shortcut_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_toolbar_register_tabs().
+ * Implements hook_toolbar().
  */
-function shortcut_toolbar_register_tabs() {
-  $tab['shortcuts'] = array(
+function shortcut_toolbar() {
+  $items['shortcuts'] = array(
     'tab' => array(
       'title' => t('Shortcuts'),
-      'href' => '',
+      'href' => 'admin/config/user-interface/shortcut',
       'html' => FALSE,
       'attributes' => array(
         'title' => t('Shortcuts'),
@@ -729,8 +729,7 @@ function shortcut_toolbar_register_tabs() {
       '#pre_render' => array('shortcut_toolbar_pre_render'),
     ),
   );
-
-  return $tab;
+  return $items;
 }
 
 /**

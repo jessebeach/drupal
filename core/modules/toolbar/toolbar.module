@@ -110,35 +110,83 @@ function toolbar_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Builds the admin menu as a structured array ready for drupal_render().
+ * Implements hook_toolbar().
+ */
+function toolbar_toolbar() {
+  $items = array();
+
+  // The 'Home' tab is a simple link, with no corresponding tray.
+  $items['home'] = array(
+    'tab' => array(
+      'title' => t('Home'),
+      'href' => '<front>',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Home page'),
+      ),
+    ),
+    'weight' => -10,
+  );
+
+  // Retrieve the administration menu from the database.
+  $tree = toolbar_get_menu_tree();
+
+  // Add attributes to the links before rendering.
+  toolbar_menu_navigation_links($tree);
+
+  $menu = array();
+  $menu['toolbar_administration'] = array(
+    '#type' => 'container',
+    '#attributes' => array(
+      'class' => array('interactive-menu', 'toolbar-list'),
+    ),
+    'administration_menu' => menu_tree_output($tree),
+  );
+
+  $items['administration'] = array(
+    'tab' => array(
+      'title' => t('Menu'),
+      'href' => 'admin',
+      'html' => FALSE,
+      'attributes' => array(
+        'title' => t('Admin menu'),
+      ),
+    ),
+    'tray' => $menu,
+    'weight' => -5,
+  );
+
+  return $items;
+}
+
+/**
+ * Builds the Toolbar as a structured array ready for drupal_render().
  *
  * @return
- *   Array of links and settings relating to the admin menu.
+ *   A renderable arrray, with two children:
+ *   - 'toolbar_tabs': an array of links, rendered by theme('links').
+ *   - 'toolbar_tray': an array of render elements, at moat one of which is
+ *     displayed at once, when the corresponding tab is activated. The trays
+ *     are rendered by theme('toolbar_tray').
  */
 function toolbar_view() {
 
-  $build = array(
-    '#theme' => 'toolbar',
-    '#attached'=> array(
-      'library' => array(
-        array('toolbar', 'drupal.toolbar'),
-      ),
-    ),
-  );
+  $build = array('#theme' => 'toolbar');
+  $build['#attached']['library'][] = array('toolbar', 'drupal.toolbar');
 
   // Get the configured breakpoint for switch from vertical to horizontal
   // toolbar presentation.
   $breakpoints = entity_load('breakpoint_group', 'module.toolbar.toolbar');
   if (!empty($breakpoints)) {
-    $build['#attached']['js'] = array(
-        array(
-        'data' => array(
-          'toolbar' => array(
-            'breakpoints' => array(),
-          ),
-        ),
-        'type' => 'setting',
-      )
+    $media_queries = array();
+    $media_queries['toolbar']['breakpoints'] = array_map(
+      function($object) {return $object->mediaQuery;},
+      $breakpoints->breakpoints);
+
+    $build['#attached']['js'] = array();
+    $build['#attached']['js'][] = array(
+      'data' => $media_queries,
+      'type' => 'setting',
     );
     // // Load the breakpoints for toolbar.
     foreach ($breakpoints->breakpoints as $key => $breakpoint) {
@@ -146,56 +194,50 @@ function toolbar_view() {
     }
   }
 
-  // Build the default toolbar navigation links.
-  // Retrieve the administration menu from the database.
-  $tree = toolbar_get_menu_tree();
-  // Add attributes to the links before rendering.
-  toolbar_menu_navigation_links($tree);
-  $menu['toolbar_administration'] = array(
-    '#type' => 'container',
-    '#attributes' => array(
-      'class' => array('interactive-menu toolbar-list'),
-    ),
-  );
-  $menu['toolbar_administration']['administration_menu'] = menu_tree_output($tree);
+  // Get toolbar items from all modules that implement hook_toolbar() or
+  // hook_toolbar_alter().
+  $toolbar_groups = module_invoke_all('toolbar');
+  drupal_alter('toolbar', $toolbar_groups);
+  uasort($toolbar_groups, 'drupal_sort_weight');
 
-  $toolbar_groups = array(
-    'home' => array(
-      'tab' => array(
-        'title' => t('Home'),
-        'href' => '<front>',
-        'html' => FALSE,
-      ),
-    ),
-    'administration' => array(
-      'tab' => array(
-        'title' => t('Menu'),
-        'href' => '',
-        'html' => FALSE,
-      ),
-      'tray' => $menu,
-    ),
-  );
-
-  // Get groups from other modules.
-  $toolbar_groups = array_merge($toolbar_groups, module_invoke_all('toolbar_register_tabs'));
-
-  // Bar tabs.
+  // Build the tabs and trays from the toolbar groups.
   $toolbar_tabs = array();
   $toolbar_trays = array();
-  foreach ($toolbar_groups as $category => $components) {
-    if (!empty($components['tab'])) {
-      // Provide a data attribute to each bar link that associates it with its tray.
-      $components['tab']['attributes']['data-toolbar-tray'] = $category;
-      if (!isset($components['tab']['attributes']['class'])) {
-        $components['tab']['attributes']['class'] = array();
+  $tab_defaults = array(
+    'title' => '',
+    'href' => '',
+    'html' => FALSE,
+    'attributes' => array(),
+  );
+
+  foreach ($toolbar_groups as $category => $items) {
+    if ($tab = $items['tab']) {
+      // Log a warning if the tab is already defined.
+      if (array_key_exists($category, $toolbar_tabs)) {
+        watchdog('toolbar', 'Toolbar tab %category is already defined.',
+          array('$category' => $category)
+        );
       }
-      $components['tab']['attributes']['class'][] = 'tab';
-      $components['tab']['attributes']['role'] = 'button';
-      $toolbar_tabs[$category] = $components['tab'];
+
+      // Merge in the defaults.
+      $tab += $tab_defaults;
+      $tab['attributes'] += array('class' => array());
+      $tab['attributes']['class'] += array('tab');
+
+      // Provide a data attribute linking each tab to the corresponding tray.
+      // Unlike the defaults above, these properties may override values.
+      $tab['attributes']['data-toolbar-tray'] = $category;
+      $tab['attributes']['role'] = 'button';
+
+      $toolbar_tabs[$category] = $tab;
     }
-    if (!empty($components['tray'])) {
-      $toolbar_trays[$category] = $components['tray'];
+    if (!empty($items['tray'])) {
+      if (array_key_exists($category, $toolbar_trays)) {
+        array_merge($toolbar_trays[$category], $items['tray']);
+      }
+      else {
+        $toolbar_trays[$category] = $items['tray'];
+      }
     }
   }
 
@@ -208,7 +250,8 @@ function toolbar_view() {
     ),
     '#heading' => array('text' => t('Drupal toolbar'), 'level' => 'h2', 'class' => 'element-invisible'),
   );
-  //// Assign the tabs to the build.
+
+  // Assign the trays to the build.
   $build['toolbar_trays'] = array(
     '#theme' => 'toolbar_tray',
     '#trays' => $toolbar_trays,
