@@ -23,7 +23,7 @@
      * Implements Backbone Views' initialize() function.
      */
     initialize: function() {
-      _.bindAll(this, 'appStateChange', 'acceptEditorStateChange', 'editorStateChange');
+      _.bindAll(this, 'appStateChange', 'acceptEditorStateChange', 'editorStateChange', 'returnToStandby');
 
       // VIE instance for Edit.
       this.vie = new VIE();
@@ -75,6 +75,9 @@
 
       // When view/edit mode is toggled in the menu, update the editor widgets.
       this.model.on('change:isViewing', this.appStateChange);
+
+      // Document events.
+      $(document).on('keyup.edit', this.returnToStandby);
     },
 
     /**
@@ -312,6 +315,24 @@
         editor.decorationView.stateChange(data.previous, data.current);
         editor.toolbarView.stateChange(data.previous, data.current);
       });
+    },
+    /**
+     * Respond to a press of the 'esc' key.
+     *
+     * Return an active editor to candidate status.
+     *
+     * @param event
+     */
+    returnToStandby: function (event) {
+      if (event.keyCode === 27) {
+        event.preventDefault();
+        var activeEditor = this.model.get('activeEditor');
+        if (activeEditor) {
+          var editableEntity = activeEditor.options.widget;
+          var predicate = activeEditor.options.property;
+          editableEntity.setState('candidate', predicate, { reason: 'overlay' });
+        }
+      }
     }
   });
 
