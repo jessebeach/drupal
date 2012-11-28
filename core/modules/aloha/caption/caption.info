@@ -1,0 +1,4 @@
+name = Caption
+description = Create captions and align images.
+package = Input filters
+core = 8.x

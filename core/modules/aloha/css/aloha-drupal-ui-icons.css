@@ -1,0 +1,23 @@
+/**
+ * @file
+ * Icon font for Drupal's Aloha Editor UI.
+ */
+
+
+@font-face {
+  font-family: 'aloha_icons';
+  src: url('../fonts/aloha_icons.eot');
+  src: url('../fonts/aloha_icons.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/aloha_icons.svg#aloha_icons') format('svg'),
+    url('../fonts/aloha_icons.woff') format('woff'),
+    url('../fonts/aloha_icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.drupal-aloha-icon[data-icon]:before,
+[data-icon]:before {
+  font-family: 'aloha_icons';
+  content: attr(data-icon);
+  speak: none;
+}

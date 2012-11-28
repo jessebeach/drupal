@@ -1,0 +1,7 @@
+name = Aloha Editor integration for Edit
+description = Make Aloha Editor work with in-place editing.
+package = User interface
+core = 8.x
+
+dependencies[] = edit
+dependencies[] = aloha
