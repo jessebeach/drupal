@@ -80,6 +80,7 @@
       this.$formContainer
         .find('.edit-form')
         .addClass('edit-editable edit-highlighted edit-editing')
+        .attr('role', 'dialog')
         .css('background-color', $editorElement.css('background-color'));
 
       // Insert form container in DOM.

@@ -91,6 +91,13 @@
       this.$entityElements.each(function() {
         $(this).createEditable('setState', newState);
       });
+      // Manage the page's tab indexes.
+      if (newState === 'candidate') {
+        this._manageDocumentFocus();
+      }
+      else {
+        this._releaseDocumentFocusManagement();
+      }
     },
 
     /**
@@ -312,6 +319,139 @@
         editor.decorationView.stateChange(data.previous, data.current);
         editor.toolbarView.stateChange(data.previous, data.current);
       });
+    },
+    /**
+     * Makes elements other than the editables unreachable via the tab key.
+     *
+     * @todo refactoring.
+     *
+     * This method is currently overloaded, handling elements of state modeling
+     * and application control. The state of the application is spread between
+     * this view, its model and aspects of the UI widgets in Create.js. In order
+     * to drive focus management from the application state (and have it
+     * influence that state of the application), we need to distall state out
+     * of Create.js components.
+     *
+     * This method introduces behaviors that support accessibility of the edit
+     * application. Although not yet integrated into the application properly,
+     * it does provide us with the opportunity to collect feedback from
+     * users who will interact with edit primarily through keyboard input. We
+     * want this feedback sooner than we can have a refactored application.
+     */
+    _manageDocumentFocus: function () {
+      var editablesSelector = '.edit-candidate.edit-editable';
+      var inputsSelector = 'a:visible, button:visible, input:visible, textarea:visible, select:visible';
+      var $editables = $(editablesSelector)
+        .attr({
+          'tabindex': 0,
+          'role': 'button'
+        });
+      // Store the first editable in the set.
+      var $currentEditable;
+      // We're using simple function scope to manage 'this' for the internal
+      // handler, so save this as that.
+      var that = this;
+      // Turn on focus management.
+      $(document).on('keydown.edit', function (event) {
+        var activeEditor, editableEntity, predicate;
+        // Handle esc key press. Close any active editors.
+        if (event.keyCode === 27) {
+          event.preventDefault();
+          activeEditor = that.model.get('activeEditor');
+          if (activeEditor) {
+            editableEntity = activeEditor.options.widget;
+            predicate = activeEditor.options.property;
+            editableEntity.setState('candidate', predicate, { reason: 'overlay' });
+          }
+          else {
+            $(editablesSelector).trigger('tabOut.edit');
+            // This should move into the state management for the app model.
+            location.hash = "#view";
+            that.model.set('isViewing', true);
+          }
+          return;
+        }
+        // Handle enter or space key presses.
+        if (event.keyCode === 13 || event.keyCode === 32) {
+          if ($currentEditable && $currentEditable.is(editablesSelector)) {
+            $currentEditable.trigger('click');
+            // Squelch additional handlers.
+            event.preventDefault();
+            return;
+          }
+        }
+        // Handle tab key presses.
+        if (event.keyCode === 9) {
+          var context = '';
+          // Include the view mode toggle with the editables selector.
+          var selector = editablesSelector + ', .edit_view-edit-toggle.edit-view';
+          activeEditor = that.model.get('activeEditor');
+          var $confirmDialog = $('#edit_modal');
+          // If the edit modal is active, that is the tabbing context.
+          if ($confirmDialog.length) {
+            context = $confirmDialog;
+            selector = inputsSelector;
+            if (!$currentEditable.length || $currentEditable.is(editablesSelector)) {
+              $currentEditable = $(selector, context).eq(-1);
+            }
+          }
+          // If an editor is active, then the tabbing context is the editor and
+          // its toolbar.
+          else if (activeEditor) {
+            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el);
+            // Include the view mode toggle with the editables selector.
+            selector = inputsSelector + ', .edit_view-edit-toggle.edit-view';
+            if (!$currentEditable.length || $currentEditable.is(editablesSelector)) {
+              $currentEditable = $(selector, context).eq(-1);
+            }
+          }
+          // Otherwise the tabbing context is the list of editable predicates.
+          var $editables = $(selector, context);
+          if (!$currentEditable) {
+            $currentEditable = $editables.eq(-1);
+          }
+          var count = $editables.length - 1;
+          var index = $editables.index($currentEditable);
+          console.log(index + " of " + count);
+          // Navigate backwards.
+          if (event.shiftKey) {
+            // Beginning of the set, loop to the end.
+            if (index === 0) {
+              index = count;
+            }
+            else {
+              index -= 1;
+            }
+          }
+          // Navigate forewards.
+          else {
+            // End of the set, loop to the start.
+            if (index === count) {
+              index = 0;
+            }
+            else {
+              index += 1;
+            }
+          }
+          // Tab out of the current editable.
+          $currentEditable.trigger('tabOut.edit');
+          // Update the current editable.
+          $currentEditable = $editables
+            .eq(index)
+            .focus()
+            .trigger('tabIn.edit');
+          // Squelch additional handlers.
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+    },
+    /**
+     * Removes key management and edit accessibility features from the DOM.
+     */
+    _releaseDocumentFocusManagement: function () {
+      $(document).off('keydown.edit');
+      $('.edit-candidate.edit-editable').removeAttr('tabindex role');
     }
   });
 
