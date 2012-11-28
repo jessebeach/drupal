@@ -278,7 +278,7 @@ Drupal.edit.views.ToolbarView = Backbone.View.extend({
         classes: 'ops',
         buttons: [
           { label: Drupal.t('Save'), classes: 'field-save save gray-button' },
-          { label: '<span class="close"></span>', classes: 'field-close close gray-button' }
+          { label: '<span class="close">' + Drupal.t('Close') + '</span>', classes: 'field-close close gray-button' }
         ]
       }));
     this.show('ops');

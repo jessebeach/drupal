@@ -89,6 +89,8 @@ function edit_toolbar() {
             'href' => request_path(),
             'fragment' => 'view',
             'attributes' => array(
+              'title' => t('Exit quick edit mode.'),
+              'role' => 'button',
               'class' => array('edit_view-edit-toggle', 'edit-view'),
             ),
           ),
@@ -97,6 +99,8 @@ function edit_toolbar() {
             'href' => request_path(),
             'fragment' => 'quick-edit',
             'attributes' => array(
+              'title' => t('Enter quick edit mode.'),
+              'role' => 'button',
               'class' => array('edit_view-edit-toggle', 'edit-edit'),
             ),
           ),
