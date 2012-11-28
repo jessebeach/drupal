@@ -22,7 +22,9 @@ Drupal.edit.views.PropertyEditorDecorationView = Backbone.View.extend({
 
   events: {
     'mouseenter.edit' : 'onMouseEnter',
-    'mouseleave.edit' : 'onMouseLeave'
+    'mouseleave.edit' : 'onMouseLeave',
+    'tabIn.edit': 'onMouseEnter',
+    'tabOut.edit': 'onMouseLeave'
   },
 
   /**
