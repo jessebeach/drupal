@@ -332,7 +332,7 @@
      */
     _manageDocumentFocus: function () {
       var editablesSelector = '.edit-candidate.edit-editable';
-      var inputsSelector = 'a:visible, input:visible, textarea:visible, select:visible';
+      var inputsSelector = 'a:visible, button:visible, input:visible, textarea:visible, select:visible';
       var $editables = $(editablesSelector)
         .attr({
           'tabindex': 0,
@@ -344,7 +344,7 @@
       // handler, so save this as that.
       var that = this;
       // Turn on focus management.
-      $(document).on('keyup.edit', function (event) {
+      $(document).on('keydown.edit', function (event) {
         var activeEditor, editableEntity, predicate;
         // Handle esc key press. Close any active editors.
         if (event.keyCode === 27) {
@@ -365,7 +365,7 @@
         }
         // Handle enter or space key presses.
         if (event.keyCode === 13 || event.keyCode === 32) {
-          if ($currentEditable.is(editablesSelector)) {
+          if ($currentEditable && $currentEditable.is(editablesSelector)) {
             $currentEditable.trigger('click');
             // Squelch additional handlers.
             event.preventDefault();
@@ -377,19 +377,32 @@
           var context = '';
           var selector = editablesSelector;
           activeEditor = that.model.get('activeEditor');
-          if (activeEditor) {
-            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el);
+          var $confirmDialog = $('#edit_modal');
+          // If the edit modal is active, that is the tabbing context.
+          if ($confirmDialog.length) {
+            context = $confirmDialog;
             selector = inputsSelector;
-            if (!$currentEditable || $currentEditable.is(editablesSelector)) {
+            if (!$currentEditable.length || $currentEditable.is(editablesSelector)) {
               $currentEditable = $(selector, context).eq(-1);
             }
           }
+          // If an editor is active, then the tabbing context is the editor and
+          // its toolbar.
+          else if (activeEditor) {
+            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el);
+            selector = inputsSelector;
+            if (!$currentEditable.length || $currentEditable.is(editablesSelector)) {
+              $currentEditable = $(selector, context).eq(-1);
+            }
+          }
+          // Otherwise the tabbing context is the list of editable predicates.
           var $editables = $(selector, context);
           if (!$currentEditable) {
             $currentEditable = $editables.eq(-1);
           }
           var count = $editables.length - 1;
           var index = $editables.index($currentEditable);
+          console.log(index + " of " + count);
           // Navigate backwards.
           if (event.shiftKey) {
             // Beginning of the set, loop to the end.
