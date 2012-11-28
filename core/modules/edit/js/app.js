@@ -23,7 +23,7 @@
      * Implements Backbone Views' initialize() function.
      */
     initialize: function() {
-      _.bindAll(this, 'appStateChange', 'acceptEditorStateChange', 'editorStateChange', 'returnToStandby');
+      _.bindAll(this, 'appStateChange', 'acceptEditorStateChange', 'editorStateChange');
 
       // VIE instance for Edit.
       this.vie = new VIE();
@@ -94,6 +94,13 @@
       this.$entityElements.each(function() {
         $(this).createEditable('setState', newState);
       });
+      // Re-index that page's tab indexes.
+      if (newState === 'candidate') {
+        this._manageDocumentFocus();
+      }
+      else {
+        this._releaseDocumentFocusManagement();
+      }
     },
 
     /**
@@ -317,22 +324,109 @@
       });
     },
     /**
-     * Respond to a press of the 'esc' key.
+     * Makes elements other than the editables unreachable via the tab key.
      *
-     * Return an active editor to candidate status.
-     *
-     * @param event
+     * @param context
+     *   The part of the DOM that should have its tabindexes changed. Defaults
+     *   to the entire page.
      */
-    returnToStandby: function (event) {
-      if (event.keyCode === 27) {
-        event.preventDefault();
-        var activeEditor = this.model.get('activeEditor');
-        if (activeEditor) {
-          var editableEntity = activeEditor.options.widget;
-          var predicate = activeEditor.options.property;
-          editableEntity.setState('candidate', predicate, { reason: 'overlay' });
+    _manageDocumentFocus: function () {
+      var editablesSelector = '.edit-candidate.edit-editable';
+      var inputsSelector = 'a:visible, input:visible, textarea:visible, select:visible';
+      var $editables = $(editablesSelector)
+        .attr({
+          'tabindex': 0,
+          'role': 'button'
+        });
+      // Store the first editable in the set.
+      var $currentEditable;
+      // We're using simple function scope to manage 'this' for the internal
+      // handler, so save this as that.
+      var that = this;
+      // Turn on focus management.
+      $(document).on('keyup.edit', function (event) {
+        var activeEditor, editableEntity, predicate;
+        // Handle esc key press. Close any active editors.
+        if (event.keyCode === 27) {
+          event.preventDefault();
+          activeEditor = that.model.get('activeEditor');
+          if (activeEditor) {
+            editableEntity = activeEditor.options.widget;
+            predicate = activeEditor.options.property;
+            editableEntity.setState('candidate', predicate, { reason: 'overlay' });
+          }
+          return;
         }
-      }
+        // Handle enter or space key presses.
+        if (event.keyCode === 13 || event.keyCode === 32) {
+          if ($currentEditable.is(editablesSelector)) {
+            $currentEditable.trigger('click');
+            // Squelch additional handlers.
+            event.preventDefault();
+            return;
+          }
+        }
+        // Handle tab key presses.
+        if (event.keyCode === 9) {
+          var context = '';
+          var selector = editablesSelector;
+          activeEditor = that.model.get('activeEditor');
+          if (activeEditor) {
+            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el).css({'background-color': 'red'});
+            selector = inputsSelector;
+            if ($currentEditable.is(editablesSelector)) {
+              $currentEditable = $(selector, context).eq(-1);
+            }
+          }
+          var $editables = $(selector, context).css({'outline': '3px dotted red', 'outline-offset': '-3px'});
+          if (!$currentEditable) {
+            $currentEditable = $editables.eq(-1);
+          }
+          var count = $editables.length - 1;
+          var index = $editables.index($currentEditable);
+          // Navigate backwards.
+          if (event.shiftKey) {
+            // Beginning of the set, loop to the end.
+            if (index === 0) {
+              index = count;
+            }
+            else {
+              index -= 1;
+            }
+          }
+          // Navigate forewards.
+          else {
+            // End of the set, loop to the start.
+            if (index === count) {
+              index = 0;
+            }
+            else {
+              index += 1;
+            }
+          }
+          // Tab out of the current editable.
+          $currentEditable.trigger('tabOut.edit');
+          // Update the current editable.
+          $currentEditable = $editables
+            .eq(index)
+            .focus()
+            .trigger('tabIn.edit');
+          // Squelch additional handlers.
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+    },
+    /**
+     * Restores the original tabindex value of a group of elements.
+     *
+     * @param context
+     *   The part of the DOM that should have its tabindexes restored. Defaults
+     *   to the entire page.
+     */
+    _releaseDocumentFocusManagement: function (context) {
+      $(document).off('.edit');
+      $('.edit-candidate.edit-editable').removeAttr('tabindex role');
     }
   });
 
