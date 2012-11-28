@@ -355,6 +355,12 @@
             predicate = activeEditor.options.property;
             editableEntity.setState('candidate', predicate, { reason: 'overlay' });
           }
+          else {
+            $(editablesSelector).trigger('tabOut.edit');
+            // This should move into the state management for the app model.
+            location.hash = "#view";
+            that.model.set('isViewing', true);
+          }
           return;
         }
         // Handle enter or space key presses.
@@ -372,13 +378,13 @@
           var selector = editablesSelector;
           activeEditor = that.model.get('activeEditor');
           if (activeEditor) {
-            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el).css({'background-color': 'red'});
+            context = $(activeEditor.$formContainer).add(activeEditor.toolbarView.$el);
             selector = inputsSelector;
-            if ($currentEditable.is(editablesSelector)) {
+            if (!$currentEditable || $currentEditable.is(editablesSelector)) {
               $currentEditable = $(selector, context).eq(-1);
             }
           }
-          var $editables = $(selector, context).css({'outline': '3px dotted red', 'outline-offset': '-3px'});
+          var $editables = $(selector, context);
           if (!$currentEditable) {
             $currentEditable = $editables.eq(-1);
           }
