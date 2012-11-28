@@ -1,0 +1,390 @@
+<?php
+
+/**
+ * @file
+ * Provides in-place content editing functionality for fields.
+ *
+ * The Edit module makes content editable in-place. Rather than having to visit
+ * a separate page to edit content, it may be edited in-place.
+ *
+ * Technically, this module adds classes and data- attributes to fields and
+ * entities, enabling them for in-place editing.
+ */
+
+use Drupal\Core\Template\Attribute;
+use Drupal\field\FieldInstance;
+use Drupal\edit\Plugin\Type\ProcessedTextEditorManager;
+
+// @todo: POSTPONED_ON(Drupal core, http://drupal.org/node/1839516)
+// Remove this when Entity Access API is ready.
+// Edit needs the Entity Access API. Sadly, http://drupal.org/node/1696660 is
+// just the framework, it still needs to be used; currently it will simply
+// always return FALSE (i.e. "no access").
+function edit_entity_access($op, $entity_type, $entity = NULL, $account = NULL) {
+  if ($entity_type == 'node') {
+    return node_access($op, $entity, $account);
+  }
+
+  // Currently, only editing of nodes is supported. See the above issue.
+  return FALSE;
+}
+
+/**
+ * Implements hook_menu()
+ */
+function edit_menu() {
+  $items = array();
+  $items['admin/edit/field/%/%/%/%/%'] = array(
+    // Access is controlled after we have inspected the entity, which can't
+    // easily happen until after the callback.
+    'access arguments' => array(TRUE),
+    'access callback'  => TRUE,
+    'page callback'    => 'edit_field_edit',
+    'page arguments'   => array(3, 4, 5, 6, 7),
+    'theme callback'   => 'ajax_base_page_theme',
+    'file'             => 'edit.pages.inc',
+  );
+  $items['admin/render-without-transformations/field/%/%/%/%/%'] = array(
+    // Access is controlled after we have inspected the entity, which can't
+    // easily happen until after the callback.
+    'access arguments' => array(TRUE),
+    'access callback'  => TRUE,
+    'page callback'    => 'edit_text_field_render_without_transformation_filters',
+    'page arguments'   => array(3, 4, 5, 6, 7),
+    'theme callback'   => 'ajax_base_page_theme',
+    'file'             => 'edit.pages.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_toolbar().
+ */
+function edit_toolbar() {
+  if (path_is_admin(current_path())) {
+    return;
+  }
+
+  $tab['edit'] = array(
+    'tab' => array(
+      'title' => t('Edit'),
+      'href' => '',
+      'html' => FALSE,
+      'attributes' => array(
+        'class' => array('icon', 'icon-edit', 'edit-nothing-editable-hidden'),
+      ),
+    ),
+    'tray' => array(
+      '#heading' => t('In-place editing operations'),
+      'view_edit_toggle' => array(
+        '#theme' => 'links__toolbar_edit',
+        '#attributes' => array(
+          'id' => 'edit_view-edit-toggles',
+          'class' => 'menu',
+        ),
+        '#links' => array(
+          'view' => array(
+            'title' => t('View'),
+            'href' => request_path(),
+            'fragment' => 'view',
+            'attributes' => array(
+              'class' => array('edit_view-edit-toggle', 'edit-view'),
+            ),
+          ),
+          'edit' => array(
+            'title' => t('Quick edit'),
+            'href' => request_path(),
+            'fragment' => 'quick-edit',
+            'attributes' => array(
+              'class' => array('edit_view-edit-toggle', 'edit-edit'),
+            ),
+          ),
+        ),
+        '#attached' => array(
+          'library' => array(
+            array('edit', 'edit'),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  return $tab;
+}
+
+/**
+ * Implements hook_library().
+ */
+function edit_library_info() {
+  $path = drupal_get_path('module', 'edit');
+  $options = array(
+    'scope' => 'footer',
+    'attributes' => array('defer' => TRUE),
+  );
+  $libraries['edit'] = array(
+    'title' => 'Edit: in-place editing',
+    'website' => 'http://drupal.org/project/edit',
+    'version' => VERSION,
+    'js' => array(
+      // Core.
+      $path . '/js/edit.js' => $options,
+      $path . '/js/app.js' => $options,
+      // Routers.
+      $path . '/js/routers/edit-router.js' => $options,
+      // Models.
+      $path . '/js/models/edit-app-model.js' => $options,
+      // Views.
+      $path . '/js/views/propertyeditordecoration-view.js' => $options,
+      $path . '/js/views/menu-view.js' => $options,
+      $path . '/js/views/modal-view.js' => $options,
+      $path . '/js/views/overlay-view.js' => $options,
+      $path . '/js/views/toolbar-view.js' => $options,
+      // Backbone.sync implementation on top of Drupal forms.
+      $path . '/js/backbone.drupalform.js' => $options,
+      // VIE service.
+      $path . '/js/viejs/EditService.js' => $options,
+      // Create.js subclasses.
+      $path . '/js/createjs/editable.js' => $options,
+      $path . '/js/createjs/storage.js' => $options,
+      $path . '/js/createjs/editingWidgets/formwidget.js' => $options,
+      $path . '/js/createjs/editingWidgets/drupalcontenteditablewidget.js' => $options,
+      // Other.
+      $path . '/js/util.js' => $options,
+      $path . '/js/theme.js' => $options,
+      // Basic settings.
+      array(
+        'data' => array('edit' => array(
+          'fieldFormURL' => url('admin/edit/field/!entity_type/!id/!field_name/!langcode/!view_mode'),
+          'rerenderProcessedTextURL' => url('admin/render-without-transformations/field/!entity_type/!id/!field_name/!langcode/!view_mode'),
+          'context' => 'body',
+        )),
+        'type' => 'setting',
+      ),
+    ),
+    'css' => array(
+      $path . '/css/edit.css' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'underscore'),
+      array('system', 'backbone'),
+      array('system', 'vie.core'),
+      array('system', 'create.editonly'),
+      array('system', 'jquery.form'),
+      array('system', 'drupal.form'),
+      array('system', 'drupal.ajax'),
+      array('system', 'drupalSettings'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
+ * Implements hook_field_attach_view_alter().
+ */
+function edit_field_attach_view_alter(&$output, $context) {
+  // Special case for this special mode.
+  if ($context['display'] == 'edit-render-without-transformation-filters') {
+    $children = element_children($output);
+    $field_name = reset($children);
+    $langcode = $output[$field_name]['#language'];
+    foreach (array_keys($output[$field_name]['#items']) as $item) {
+      $text      = $output[$field_name]['#items'][$item]['value'];
+      $format_id = $output[$field_name]['#items'][$item]['format'];
+      $untransformed = check_markup($text, $format_id, $langcode, FALSE, array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE));
+      $output[$field_name][$item]['#markup'] = $untransformed;
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field.tpl.php.
+ */
+function edit_preprocess_field(&$variables) {
+  $entity = $variables['element']['#object'];
+  $field_name = $variables['element']['#field_name'];
+  $langcode = $variables['element']['#language'];
+  $view_mode = $variables['element']['#view_mode'];
+  $formatter_type = $variables['element']['#formatter'];
+  $items = $entity->{$field_name}[$langcode];;
+  $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
+
+  $entity_access = edit_entity_access('update', $entity->entityType(), $entity);
+  $field_access = field_access('edit', $field_name, $entity->entityType(), $entity);
+  $editor = _edit_get_field_editor($items, $instance, $formatter_type);
+  if ($entity_access && $field_access && $editor != 'disabled') {
+    // Mark this field as editable and provide metadata through data- attributes.
+    $variables['attributes']['data-edit-field-label'] = $instance->definition['label'];
+    $variables['attributes']['data-edit-id'] = $entity->entityType() . ':' . $entity->id() . ':' . $field_name . ':' . $langcode . ':' . $view_mode;
+    $variables['attributes']['class'][] = 'edit-field';
+    $variables['attributes']['class'][] = 'edit-allowed';
+    $variables['attributes']['class'][] = 'edit-type-' . $editor;
+    if ($editor == 'direct-with-wysiwyg') {
+      $variables['attributes']['class'][] = 'edit-type-direct';
+      $format_id = $entity->{$field_name}[$langcode][0]['format'];
+      _edit_preprocess_field_wysiwyg($variables, $format_id);
+    }
+  }
+}
+
+/**
+ * Sets attributes on a field that have 'direct-with-wysiwyg' editor.
+ *
+ * @param array $variables
+ *   An associative array containing: the key 'attributes'. See the
+ *   theme_field() function for information about these variables.
+ * @param string $format_id
+ *   A text format id.
+ *
+ * @see theme_field()
+ */
+function _edit_preprocess_field_wysiwyg(&$variables, $format_id) {
+  // Let the WYSIWYG editor know the text format.
+  $variables['attributes']['data-edit-text-format'] = $format_id;
+
+  // Let the JavaScript logic know whether transformation filters are used
+  // in this format, so it can decide whether to re-render the text or not.
+  $filter_types = filter_get_filter_types_by_format($format_id);
+  $transformation_filter_types = array(
+    FILTER_TYPE_TRANSFORM_REVERSIBLE,
+    FILTER_TYPE_TRANSFORM_IRREVERSIBLE
+  );
+  if (count(array_intersect($transformation_filter_types, $filter_types))) {
+    $variables['attributes']['class'][] = 'edit-text-with-transformation-filters';
+  }
+  else {
+    $variables['attributes']['class'][] = 'edit-text-without-transformation-filters';
+  }
+}
+
+/**
+ * Determines editor given a field, its instance info and its formatter.
+ *
+ * @param array $field
+ *   The field's field array.
+ * @param FieldInstance $instance
+ *   The field's instance info.
+ * @param string $formatter_type
+ *   The field's formatter type name.
+ *
+ * @return string
+ *   The editor: 'disabled', 'form', 'direct' or 'direct-with-wysiwyg'.
+ */
+function _edit_get_field_editor($items, FieldInstance $instance, $formatter_type) {
+  $field_name = $instance['field_name'];
+
+  // If the formatter doesn't contain the edit property, default it to 'form'
+  // editor, which should always work.
+  $formatter_info = field_info_formatter_types($formatter_type);
+  if (empty($formatter_info['edit']['editor'])) {
+    $formatter_info['edit']['editor'] = 'form';
+  }
+
+  $editor = $formatter_info['edit']['editor'];
+
+  // If editing is explicitly disabled for this field, return early to avoid
+  // any further processing.
+  if ($editor == 'disabled') {
+    return;
+  }
+
+  // If directly editable, check the cardinality. If the cardinality is greater
+  // than 1, use a form to edit the field.
+  if ($editor == 'direct') {
+    $field = field_info_field($field_name);
+    if ($field['cardinality'] != 1) {
+      $editor = 'form';
+    }
+  }
+
+  // If still directly editable, check whether "regular" direct editing (almost
+  // bare contentEditable) editing should be used or WYSIWYG-based direct
+  // editing should be used. In the latter case
+  if ($editor == 'direct') {
+    // If this field is configured to not use text processing; it is plain text
+    // "regular" direct editing should be used, which is already set.
+    // On the other hand, if it is configured to use text processing; then we
+    // must check whether 'direct-with-wysiwyg' or 'form' editor should be
+    // used.
+    if (!empty($instance['settings']['text_processing'])) {
+      $format_id = $items[0]['format'];
+      $editor = _edit_wysiwyg_get_field_editor($format_id);
+    }
+  }
+
+  return $editor;
+}
+
+/**
+ * Determines editor given a directly editable field with text processing.
+ *
+ * Given a text field (with cardinality 1) that defaults to 'direct' editor
+ * and has text processing enabled, check whether the text format allows it to
+ * use WYSIWYG-powered direct editing or whether 'form' based editing needs to
+ * be used.
+ *
+ * @param string|NULL $format_id
+ *   The field's current text format.
+ *
+ * @return string
+ *   The editor: 'direct-with-wysiwyg' or 'form'.
+ */
+function _edit_wysiwyg_get_field_editor($format_id = NULL) {
+  $wysiwyg_plugin = &drupal_static(__FUNCTION__);
+
+  // If no format is assigned yet, (e.g. when the field is still empty (NULL)),
+  // then provide form-based editing, so that the user is able to select a text
+  // format. (Direct editing doesn't allow the user to change the format.)
+  if (empty($format_id)) {
+    return 'form';
+  }
+
+  // NOTE: this code will pick the first processed text PropertyEditor widget
+  // plug-in that is available and consider that the only available choice.
+  // @todo: make it possible to have multiple processed text PropertyEditor
+  // widgets.
+  if (!isset($wysiwyg_plugin) && isset($format_id)) {
+    $definitions = drupal_container()->get('plugin.manager.edit.processed_text_editor')->getDefinitions();
+    if (count($definitions)) {
+      $plugin_ids = array_keys($definitions);
+      $plugin_id = $plugin_ids[0];
+      $wysiwyg_plugin = drupal_container()->get('plugin.manager.edit.processed_text_editor')->createInstance($plugin_id);
+      $wysiwyg_plugin->settingsAdded = FALSE;
+    }
+  }
+
+  // If no WYSIWYG editor is available, then fall back to form-based editing.
+  if (!isset($wysiwyg_plugin)) {
+    return 'form';
+  }
+  // If the WYSIWYG editor is not compatible with the current format, then fall
+  // back to form-based editing.
+  else {
+    $match = $wysiwyg_plugin->checkFormatCompatibility($format_id);
+    if (!$match) {
+      return 'form';
+    }
+    else if ($match) {
+      // Only load the WYSIWYG editor's JavaScript if it hasn't been already.
+      if ($wysiwyg_plugin->settingsAdded === FALSE) {
+        $definition = $wysiwyg_plugin->getDefinition();
+        if (!empty($definition['library'])) {
+          drupal_add_library($definition['library']['module'], $definition['library']['name']);
+        }
+        $wysiwyg_plugin->addJsSettings();
+
+        // Let Create.js know which WYSIWYG editor widget it should use.
+        if (!empty($definition['propertyEditorName'])) {
+          drupal_add_js(array('edit' => array(
+            'wysiwygEditorWidgetName' => $definition['propertyEditorName'],
+          )), 'setting');
+        }
+
+        $wysiwyg_plugin->settingsAdded = TRUE;
+      }
+      return 'direct-with-wysiwyg';
+    }
+  }
+}
