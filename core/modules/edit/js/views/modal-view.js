@@ -69,6 +69,8 @@ Drupal.edit.views.ModalView = Backbone.View.extend({
     setTimeout(function() {
       that.$el.removeClass('edit-animate-invisible');
     }, 0);
+
+    Drupal.edit.setMessage(Drupal.t('Confirmation dialog open'));
   },
 
   /**
