@@ -222,6 +222,7 @@ function edit_preprocess_field(&$variables) {
     // Mark this field as editable and provide metadata through data- attributes.
     $variables['attributes']['data-edit-field-label'] = $instance->definition['label'];
     $variables['attributes']['data-edit-id'] = $entity->entityType() . ':' . $entity->id() . ':' . $field_name . ':' . $langcode . ':' . $view_mode;
+    $variables['attributes']['aria-label'] = t('Edit entity @type @id, field @field', array('@type' => $entity->entityType(), '@id' => $entity->id(), '@field' => $instance->definition['label']));
     $variables['attributes']['class'][] = 'edit-field';
     $variables['attributes']['class'][] = 'edit-allowed';
     $variables['attributes']['class'][] = 'edit-type-' . $editor;

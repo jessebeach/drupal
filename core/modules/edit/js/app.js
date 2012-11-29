@@ -94,9 +94,11 @@
       // Manage the page's tab indexes.
       if (newState === 'candidate') {
         this._manageDocumentFocus();
+        Drupal.edit.setMessage(Drupal.t('In place edit mode is active'), Drupal.t('Page navigation is limited to editable items.'), Drupal.t('Press escape to exit'));
       }
       else {
         this._releaseDocumentFocusManagement();
+        Drupal.edit.setMessage(Drupal.t('Edit mode is inactive.'), Drupal.t('Resume normal page navigation'));
       }
     },
 
@@ -276,6 +278,7 @@
       // Keep track of the active editor in the global state.
       if (_.indexOf(this.activeEditorStates, to) !== -1 && this.model.get('activeEditor') !== editor) {
         this.model.set('activeEditor', editor);
+        Drupal.edit.setMessage(Drupal.t('An editor is active'));
       }
       else if (this.model.get('activeEditor') === editor && to === 'candidate') {
         this.model.set('activeEditor', null);
