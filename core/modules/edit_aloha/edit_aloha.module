@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * This module only exists temporarily, until Aloha has been committed to Drupal
+ * core. Once Edit is also committed to core, this "edit_aloha" module can be
+ * merged with the Aloha module.
+ */
+
+/**
+ * Implements hook_library_info().
+ */
+function edit_aloha_library_info() {
+  $module_path = drupal_get_path('module', 'edit_aloha');
+  $libraries['aloha.edit'] = array(
+    'title' => 'Integrate Aloha Editor with the Edit module.',
+    'version' => ALOHA_VERSION,
+    'js' => array(
+      $module_path . '/js/createjs/drupalalohawidget.js' => array('defer' => TRUE),
+    ),
+    'css' => array(
+      $module_path . '/css/drupal.aloha.edit.css',
+    ),
+    'dependencies' => array(
+      array('aloha', 'aloha'),
+      array('edit', 'edit')
+    )
+  );
+  return $libraries;
+}
+

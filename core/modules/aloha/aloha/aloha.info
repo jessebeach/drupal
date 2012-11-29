@@ -1,0 +1,4 @@
+name = Aloha Editor
+description = WYSIWYG editing for rich text fields using Aloha Editor.
+package = User interface
+core = 8.x
